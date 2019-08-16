@@ -1,0 +1,13 @@
+	Env1	Env2	Site	Fertilizer	Dose
+Plot1	0	5	a	Y	Small
+Plot2	2	5	a	N	Small
+Plot3	1	0	a	Y	Small
+Plot4	3	3	a	N	Small
+Plot5	3	0	a	Y	Mid
+Plot6	0	0	a	N	Mid
+Plot7	1	0	b	Y	Mid
+Plot8	3	3	b	N	Mid
+Plot9	5	3	b	Y	Large
+Plot10	1	5	b	N	Large
+Plot11	3	5	b	Y	Large
+Plot12	1	4	b	N	Large

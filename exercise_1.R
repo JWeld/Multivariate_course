@@ -1,182 +1,48 @@
 #Excercise 1
 library(tidyverse)
+library(vegan) # Package for multivariate analyses of ecological data
 
 
-#constrained ordination
-setwd("C:/Users/grandin/Documents/Ulf IVM/Undervisning/MVA molecular data/2015/Exercises")
 
-library("vegan") # Package for multivariate analyses of ecological data
-library("labdsv") # Another package for multivariate analyses of ecological data
-library("reshape2")
-library("dendextend")
-library("sparcl")
-library("outliers")
-library("gdata")
-library("caret")
+setwd("/home/james/Documents/R/Multivariate_course")
+
 
 
 ##### Read data ###########################
 
-# Read small species dataset
-spe<-read.table("Data/species12x10.txt", sep="\t",header=T,row.names=1)
+# Read dune species dataset
+dune <- read.table("Data/Data_for_R/dune.txt", sep=";",header=T,row.names=1)
 
 # Read environmental  dataset
-env<-read.table("Data/env12x5.txt", sep="\t",header=T,row.names=1)
+env<-read.table("Data/Data_for_R/env.txt", sep="\t",header=T,row.names=1)
+env$Management <- as.factor(env$Management) #convert to factor
+#Management factor is character but we need it to be numeric for analyses. Convert to "dummy" variables...
+#note! if you are converting a factor that is numbers already you need as.numeric(as.character(x))
+management <- env$Management #keep the character data in case we need it later
+env$Management <- as.numeric(env$Management)
+
+
 
 ###########################################
 
+#Question 2: Do a PCA on the environmental data related to the Dune meadow dataset
 
-#########################
-#### START of constrained analyses
+env.pca <- rda(env, scale = TRUE)
+plot(env.pca)
+biplot(env.pca)
+env.pca
 
+#Question 3 : Try a CA on the environmental data
 
-###########
-## Screening for relationships
-# Make a CA
-spe.CA<-cca(spe)
+#unconstrained ordination on environmental data (CA)
+env.ca <- cca(env) #yes, the function is called cca instead of ca
+plot(env.ca)
+env.ca
 
-par(mfrow=c(1,4)) # Three plots per page
-test_env<-envfit(spe.CA, env, permutations = 999)#, display = "sites")
-test_env
-plot(spe.CA, main="CA, all env.var.", display="sites", type = "n", cex.main=1.4)
-text(spe.CA, display = "sites", cex=1.2)
-plot(test_env,cex=1.7) # Plot only vars with p-values max = 0.05
+#Question 4 : Do a CA-ordination on the Dune Meadow species dataset
+#unconstrained ordination on species (CA)
+dune.ca <- cca(dune)
+plot(dune.ca)
+ordipointlabel(dune.ca)#easier to read
 
-plot(spe.CA, main="CA, env. p<0.05", display="sites", type="n", cex.main=1.4)
-text(spe.CA, display = "sites", cex=1.2)
-plot(test_env, p.max=0.05, cex=1.7) # Plot only vars with p-values max = 0.05
-
-#Compare with a shotgun CCA with all environmental data
-shotgun<-cca(formula = spe~., data = env) # the dot means all variables in data set env
-shotgun
-plot(shotgun, type="n",main="CCA all env vars", cex.main=1.4)
-text(shotgun, dis="cn", col = "blue", cex=1.7)
-text(shotgun, "sites", cex=1.2)
-
-# Compare CCA with only "Site" and "Dose" as explanatoty variables
-new_cca<-cca(formula = spe~Site+Dose, data = env)
-plot(new_cca, type="n",main="CCA with sign. expl. var.", cex.main=1.4)
-text(new_cca, dis="cn", col = "blue", cex=1.7)
-text(new_cca, "sites", cex=1.2)
-par(mfrow=c(1,1)) # Reset to one plot per page
-
-# Test the variance inflation factor
-# 1. Run on original data
-vif.cca(shotgun)
-
-# 2. Create a new env data set with one correlated variable
-env4<-env
-env4$Env3<-env4$Env2+rnorm(mean = 0, sd = 0.6,n=12)
-env4
-
-#Test the correlation
-cor.test(env4$Env2, env4$Env3)
-plot(env4$Env2, env4$Env3)
-abline(lm(env4$Env2~env4$Env3))
-
-# 3. Make a new CCA
-shotgun2<-cca(spe~., env4)
-plot(shotgun2)
-
-# 4. Check variance inflation factor using the env. data
-vif.cca(shotgun2)
-
-#### END screening #############
-##########################################
-
-
-#############################################
-### Different ways of building models
-
-# Start by make ordinations
-cca0<-cca(formula = spe~1, data = env) # model with only intercept
-cca1<-cca(spe~.,env) # full model (with all explanatory variables)
-cca1
-plot(cca1, main="CCA, all data")
-
-# 1. Stepwise approach, using "step"
-step1f<-step(cca0, scope = formula(cca1), direction = "forward")
-step1f$anova
-plot(step1f, main="Forward selection")
-step1b<-step(cca0, scope = formula(cca1), direction = "backward")
-step1b$anova
-plot(step1b, main="Backward elimination")
-
-# 2. Stepwise approach, using "ordistep"
-step2<-ordistep(cca0, scope = formula(cca1), perm.max=200)
-step2$anova
-
-
-# 3. Model selection using permutations
-
-# 3a. Overall test
-anova(cca1)
-
-# 3b. By terms
-anova(cca1, by="term", perm.max = 200)
-# 3b. By margin
-anova(cca1, by="margin", perm.max = 200)
-# 3b. By axis
-anova(cca1, by="axis", perm.max = 200)
-
-# New model with only significant explanatory variables
-cca3<-cca(spe~Site+Dose, env)
-cca3
-plot(cca3, main="CCA with sign. expl. var.")
-with(env, ordispider(cca3, group=Site, lty=3, col="blue"))
-
-# Test of significane in the new model
-anova(cca3, by="term", perm =200)
-anova(cca3, by="margin", perm =200)
-anova(cca3, by="axis", perm =200)
-
-
-# Site scores as WA or LC?
-plot(cca3, display = c("lc", "wa"), type = "t", main = "LC vs. WS scores")
-ordispider(cca3, col="blue")
-
-
-
-#############################
-#### Partial Ordinations
-
-# Partial CCA with "Site" as explanatory var. and effect of "Dose" removed
-(pCCA<-cca(spe~Site+Condition(Dose), env))
-
-plot(pCCA, main = "pCCA")
-with(env, ordispider(pCCA, group=Site, lty=3, col="blue"))
-
-anova(pCCA)
-anova(pCCA, by="margin")
-anova(pCCA, by="axis")
-
-# CCA and pCCA beside each other
-par(mfrow=c(1,2))
-plot(cca3, main="CCA with sign. expl. var.")
-with(env, ordispider(cca3, group=Site, lty=3, col="blue"))
-plot(pCCA, main = "pCCA")
-with(env, ordispider(pCCA, group=Site, lty=3, col="blue"))
-par(mfrow=c(1,1))
-
-# Compare CCA and pCCA, using procrustes rotation
-(pro1<-protest(X = cca3, Y = pCCA, scores = "sites"))
-plot(pro1, main = "Comparing CCA and pCCA")
-text(pro1, cex=0.7)
-plot(pro1, kind = 2, xlab = "Sample number")
-
-
-
-#####################################
-## Variance partitioning with two factors
-(v_part2<-varpart(spe, ~Site, ~Dose, data = env, transfo = "hellinger"))
-showvarparts(2, labels = c("Site","Site+Dose","Dose",""), bg = c("hotpink","skyblue"))
-plot(v_part2, bg = c("hotpink","skyblue"), cex=1.5)
-
-# Add a third factor
-(v_part3<-varpart(spe, ~Site, ~Dose, ~Fertilizer , data = env, transfo = "hellinger"))
-showvarparts(3, bg = c("hotpink","skyblue","Goldenrod"))
-plot(v_part3, bg = c("hotpink","skyblue","Goldenrod"), cex=1.5)
-
-# END
-#######################
-
+dune.cca
