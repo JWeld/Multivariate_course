@@ -1,0 +1,78 @@
+---
+title: "MVA Course, Questions 1-5"
+output: html_notebook
+---
+
+First we need to import the data we will be using. This is included in the "vegan" package.
+
+```{r}
+library(vegan) # Package for multivariate analyses of ecological data
+data("dune")
+data("dune.env")
+#Management factor is character but we need it to be numeric for some analyses. Convert to "dummy" variables...
+#If you are converting a factor that is numbers already you need as.numeric(as.character(x))
+
+#give each management method its own column
+dummy_management <- as.data.frame(model.matrix( ~ Management - 1, data=dune.env )) 
+#add these to the dataset
+dune.env <- dune.env %>% select(A1, Moisture, Manure, Use) %>% cbind(.,dummy_management) 
+dune.env$Moisture <- as.numeric(as.character(dune.env$Moisture)) #make numeric
+dune.env$Manure <- as.numeric(as.character(dune.env$Manure))
+dune.env$Use <- as.numeric(dune.env$Use)
+```
+***
+#### Question 2: Do a PCA on the environmental data related to the Dune meadow dataset.
+What are the results telling you? In what way do objects/samples to the left differ from objects to the right, and at the bottom from those at the top? Which are the most important gradients in the dataset? Which descriptor variables are related, and which are unrelated? 
+
+```{r}
+env.pca <- rda(dune.env, scale = TRUE) #vegan uses the same function for PCA and RDA
+biplot(env.pca)#plot the results
+env.pca #summarise results
+summary(eigenvals(env.pca)) #see variance explained
+```
+***
+#### Question 3: For comparison, do also a CA on the Dune Meadow Environmental variables and compare the result with the PCA on the same data! 
+
+Why do the results in exercise 2 and 3 differ?
+
+```{r}
+#unconstrained ordination on environmental data (CA)
+env.ca <- cca(dune.env) #vegan uses the same function for CA and CCA
+plot(env.ca)
+env.ca
+summary(eigenvals(env.ca)) #proportion variance explained
+```
+***
+#### Question 4: Do a CA-ordination on the Dune Meadow species dataset.What are the results telling you? 
+
+Give a conceptual description on why objects/samples and descriptors/species to the left differ from objects and descriptors to the right, and those at the bottom from those at the top! (Plant ecologists may give a more detailed description, using their knowledge about the species in the dataset).
+```{r}
+dune.ca <- cca(dune)
+plot(dune.ca)
+dune.ca
+summary(eigenvals(dune.ca)) #proportion variance explained
+```
+***
+#### Question 5: Repeat exercise 4, but with DCA ordination instead. 
+
+Look at the eigenvalues, the length of gradient, the total variation and the ordination diagram. 
+Explain the differences between results from CA and DCA.
+
+```{r}
+dune.dca <- decorana(dune)
+dune.dca 
+#Detrended correspondence analysis (function decorana).
+#The total amount of variation is undefined in detrended 
+#correspondence analysis and therefore proportions from total
+#are unknown and undefined. 
+#DCA is not a method for decomposition of variation, and therefore
+#these proportions would not make sense either.
+
+plot(dune.dca)
+
+```
+
+
+
+
+
