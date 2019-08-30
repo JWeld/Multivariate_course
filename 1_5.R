@@ -23,8 +23,23 @@ spe<-read.table("Data/species12x10.txt", sep="\t",header=T,row.names=1)
 # Read environmental  dataset
 env<-read.table("Data/env12x5.txt", sep="\t",header=T,row.names=1)
 
-###########################################
+#Ulf's version with ells
+dune.u <- read.table("Data/Data_for_R/dune.txt", sep=";",header=T,row.names=1)
+dune.mean.ell <- read_csv("Data/exports_from_canoco/meanell.csv", col_types = cols(Plot = col_skip()))
+dune.env.u <- read.table("Data/Data_for_R/env.txt", sep="\t",header=T,row.names=1)
 
+#Zeleny version with traits and ellenbergs
+# Species and environmental data
+dune2.spe <- read.delim ('https://raw.githubusercontent.com/zdealveindy/anadat-r/master/data/dune2.spe.txt', row.names = 1)
+dune2.env <- read.delim ('https://raw.githubusercontent.com/zdealveindy/anadat-r/master/data/dune2.env.txt', row.names = 1)
+
+# Species attributes
+dune2.traits <- read.delim ('https://raw.githubusercontent.com/zdealveindy/anadat-r/master/data/dune2.traits.txt', row.names = 1)
+dune2.ell <- read.delim ('https://raw.githubusercontent.com/zdealveindy/anadat-r/master/data/dune2.ell.txt', row.names = 1)
+
+###########################################
+#CCA analysis
+CCA.Ellenberg.all <- cca(dune2.spe ~ ., data = dune2.ell)
 
 #########################
 #### START of constrained analyses
