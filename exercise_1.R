@@ -106,6 +106,10 @@ summary(eigenvals(dune.ca))
 dune.dca <- decorana(dune)
 dune.dca
 plot(dune.dca)
+ordiplot (dune.dca, display = 'sp', type = 'n')
+#orditorp (dune.dca, display = 'species')
+
+
 #Detrended correspondence analysis (function decorana). The total amount of variation
 #is undefined in detrended correspondence analysis, and therefore proportions from total
 #are unknown and undefined. DCA is not a method for decomposition of variation, and therefore

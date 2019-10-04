@@ -1,20 +1,27 @@
 ---
 title: "MVA Course"
 output:
-  pdf_document: default
   html_document:
     df_print: paged
+  pdf_document: default
 ---
 
-First we need to import the data we will be using. This is included in the "vegan" package.
+First we need to import the data we will be using. This is included in the "vegan" package but we will be using a slightly modified and extended version.
 
-```{r}
+```{r message=FALSE, warning=FALSE}
 library(vegan)# Package for multivariate analyses of ecological data
-library(tidyverse)
-data("dune")
-data("dune.env")
-#Management factor is character but we need it to be numeric for some analyses. Convert to "dummy" variables...
-#If you are converting a factor that is numbers already you need as.numeric(as.character(x))
+library(dplyr)# Package for data transformation
+
+#Lets's load the data, which is packaged as an RDS object
+load("MVM_data.RDS")
+
+#change names to match what is seen in Canoco based presentations 
+dune.env <- EnvVar
+dune <- Species
+
+
+#Management factor is character data but we need it to be numeric data for some analyses. Convert to "dummy" variables...
+#Note:If you are converting a factor that is numeric already you need as.numeric(as.character(x))
 
 #give each management method its own column
 dummy_management <- as.data.frame(model.matrix( ~ Management - 1, data=dune.env )) 
@@ -24,13 +31,16 @@ dune.env <- dune.env %>% select(A1, Moisture, Manure, Use) %>% cbind(.,dummy_man
 dune.env$Moisture <- as.numeric(as.character(dune.env$Moisture)) #make numeric
 dune.env$Manure <- as.numeric(as.character(dune.env$Manure))
 dune.env$Use <- as.numeric(dune.env$Use)
+#make column names shorter
+dune.env <- dune.env %>% rename(BF = ManagementBF, HF = ManagementHF,
+                                NM = ManagementNM, SF = ManagementSF)
 ```
 ***
 #### Question 2: Do a PCA on the environmental data related to the Dune meadow dataset.
 What are the results telling you? In what way do objects/samples to the left differ from objects to the right, and at the bottom from those at the top? Which are the most important gradients in the dataset? Which descriptor variables are related, and which are unrelated? 
 
 ```{r}
-env.pca <- rda(dune.env, scale = TRUE) #vegan uses the same function for PCA and RDA
+env.pca <- rda(dune.env, scale = TRUE) #vegan uses the same function for PCA and RDA, just depends on if it is constrained or not.
 biplot(env.pca)#plot the results
 env.pca #summarise results
 summary(eigenvals(env.pca)) #see variance explained
@@ -82,14 +92,19 @@ plot(dune.dca)
 Experienced plant ecologists may already have looked at the species in the Dune Meadow ordination graphs and concluded that species with similar traits occur together. This is possible if you have good knowledge about plant species ecological preferences, and if there are relatively few species in your dataset. In this exercise we will use tabulated data on species ecological preferences (the Ellenberg indicator values) to interpret the results of the ordinations. The Ellenberg indicator values are described on the first page in this booklet. Which Ellenberg values are most important for the distribution of the species? What do the different axes represent in terms of environmental gradients?
 
 ```{r}
-#Ulf's version of Dune data with ellenbergs
-dune.u <- read.table("Data/Data_for_R/dune.txt", sep=";",header=T,row.names=1)
-dune.ell.u <- read_csv("Data/exports_from_canoco/Ellenberg.csv")
-dune.mean.ell <- read_csv("Data/exports_from_canoco/meanell.csv", col_types = cols(Plot = col_skip()))
-dune.env.u <- read.table("Data/Data_for_R/env.txt", sep="\t",header=T,row.names=1)
+#rename data with Ellenberg values to match Canoco based presentations
 
-## Quick code to replace missing values with the column mean, forward selection fails with NA
-## Need to tweak dune data really
+dune.ell <- Ellenberg
+dune.mean.ell <- Mean_Ellenberg
+dune.mean.ell <- dune.mean.ell
+
+#The vegan implementation of forward selection of variables does not accept NA values.
+#To get around this we will replace the two NAs with the mean value for all plots in that column.
+#Do not do this in a real analysis without seriously thinking about how it affects your results!
+
+
+## Quick code to replace missing values with the column mean, and save the results as a new dataframe
+## called dune.mean.ell.impute.
 
 dune.mean.ell.impute <- data.frame(
     sapply(
@@ -102,13 +117,13 @@ dune.mean.ell.impute <- data.frame(
 #CCA analysis
 #create global model with CCA (including all variables) and test it's significance, and if it is significant,
 #we use the ordistep function with appropriate arguments to do forward selection of variables.
-cca1 <- cca(dune.u ~ ., data = dune.mean.ell.impute) # full model (with all explanatory variables)
+cca1 <- cca(dune ~ ., data = dune.mean.ell.impute) # full model (with all explanatory variables)
 anova(cca1) #overall model is significant
 adjR2.cca <- RsquareAdj (cca1)$adj.r.squared 
 
-# Start by make ordinations
-cca0 <- cca (dune.u~ 1, data = dune.mean.ell.impute) # empty model only with intercept
-cca1 <- cca(dune.u ~ ., data = dune.mean.ell.impute, na.action = na.omit) # full model (with all explanatory variables)
+# Start by making ordinations
+cca0 <- cca (dune~ 1, data = dune.mean.ell.impute) # empty model only with intercept
+cca1 <- cca(dune ~ ., data = dune.mean.ell.impute, na.action = na.omit) # full model (with all explanatory variables)
 cca1
 plot(cca1, main="CCA, all data")
 
@@ -121,16 +136,14 @@ step2$anova # N F T L S sig
 
 #or model selection using permutations
 # By terms
-#anova(cca1, by="term", perm.max = 200)
-# By margin
-#anova(cca1, by="margin", perm.max = 200)
-# By axis
-#anova(cca1, by="axis", perm.max = 200)
+#anova(cca1, by="term", perm.max = 1500)
+
 
 # New model with only significant explanatory variables?
-cca3 <- cca(dune.u ~ N + F + T + L + S, data = dune.mean.ell.impute)
+cca3 <- cca(dune ~ N + F + T + L + S, data = dune.mean.ell.impute)
 cca3
 ordiplot(cca3, main = "CCA, significant variables only", type = "text")
+
 
 ```
 
@@ -155,24 +168,20 @@ How much of the total variation (% of All) is explained by:
 - jointly by Soil and Management (the interaction)
 - Not by Soil or Management?
 
+
 ```{r}
 ## variance partitioning
 
-# because management is a factor we need to convert it into 
-# a dummy matrix using the function dummies::dummy
-library(dummies)
-management <-  dummy(dune.env.original$Management)
-#management <- dune.env[,c("ManagementBF" + "ManagementHF" + "ManagementNM" + "ManagementSF")]
-soil <- dune.env.original[,c("A1", "Moisture")]
+management <- dune.env[,c("BF", "HF", "NM", "SF")]
+soil <- dune.env[,c("A1", "Moisture")]
 # examine the explanatory variable of each class of variables.
 varp <- varpart(dune, management, soil)
 
 
-#varp2 <- varpart (dune, ~ ManagementBF + ManagementHF + ManagementNM + ManagementSF,
+#varp2 <- varpart (dune, ~ BF + HF + NM + SF,
 # ~ A1 + Moisture, data = dune.env)
 varp
-plot (varp, digits = 2, Xnames = c('Management', 'Soil'), bg = c('navy', 'tomato'))
-
+plot (varp, digits = 2, Xnames = c('Management', 'Soil'), bg = c('red', 'blue'))
 ```
 
 
@@ -186,12 +195,13 @@ Use the resulting data table to find the two top indicator species for each of t
 
 ```{r}
 library(labdsv)
+library(tibble)
 
-iva <- indval(dune, dune.env.original$Management)
+iva <- indval(dune, dune.env.original$Management) #this time we don't need dummy variables for management
 
 iva.df <- as.data.frame(iva$indval)
-#arrange in order to find best indicator species, change BF to other management types as needed
-arrange(rownames_to_column(iva.df), BF)
+#arrange in descending order to find best indicator species, change BF to other management types as needed
+arrange(rownames_to_column(iva.df), desc(HF))
 
 #or create dataframe of best results for each management
 #gr <- iva$maxcls[iva$pval<0.1]
@@ -209,40 +219,37 @@ arrange(rownames_to_column(iva.df), BF)
 
 Quite often vegetation ecologists have data from repeated inventories in permanent plots. The overall question to answer is if there has been a significant and directional change in the species composition. In this exercise we have rearranged the Dune Meadow data so that it consists of only 10 plots, each analysed 2 times (same species as in all other exercises, just grouping and rearrangement of plots). We want to analyse if there has been a consistent change in species composition between the two inventories. We are thus not interested in differences between the ten plots. 
 
-```{r}
-#import data
-EnvTS <- read_csv("~/Documents/Courses/MVA R version/exports from canoco/EnvTS.csv")
-SpeTS <- read_csv("~/Documents/Courses/MVA R version/exports from canoco/SpeTS.csv")
-rownames(EnvTS) <- EnvTS$X1
-rownames(SpeTS) <- SpeTS$X1
-EnvTS$X1 <- NULL
-SpeTS$X1 <- NULL
-
-```
-
 
 ```{r}
 #This partials out the effect of Plot before analysing the effects of Time
+
 time.cca <- cca(SpeTS ~ Time + Condition(Plot), data=EnvTS)
 time.cca
-#permutation test
-anova(time.cca, by="term", perm=999)
-#with(EnvTS, anova(time.cca, by="term", perm=500, strata=Plot))
+
+
+treat <- EnvTS$Time
+plot(time.cca)
+ordihull(time.cca, groups=treat, draw="polygon",col="grey70", label=T)
+plot(time.cca, display = c("lc"))
+
+#plot(time.cca, dis=c("wa","lc"))
+#ordispider(time.cca, groups = treat, label = T)
 
 ```
+
+```{r}
+#permutation test
+with(EnvTS, anova(time.cca, by="term", perm=500, strata=Plot))
+```
+
+
 
 ```{r}
 #Compare with results for time as only explanatory variable and no cofactors
 time2.cca <- cca(SpeTS ~ Time, data=EnvTS)
 time2.cca
 #permutation test
-anova(time2.cca, by="term", perm=999)
-
-```
-
-```{r}
-#ordiplot(time.cca)
-#ordihull(time.cca, groups=treat, draw="polygon",col="grey70", label=T)
+with(EnvTS, anova(time2.cca, by="term", perm=500, strata=Plot))
 
 ```
 
@@ -253,7 +260,7 @@ anova(time2.cca, by="term", perm=999)
 ## plot ellipsoid hulls
 
 treat <- EnvTS$Time
-ordiplot(time2.cca)
+plot(time2.cca)
 ordihull(time2.cca,groups=treat,draw="polygon",col="grey70",label=T)
 ```
 
@@ -272,7 +279,14 @@ The question you want to answer is if the treatment caused a change in species c
 ```{r}
 
 baci <- cca(SpeTS ~ Treat + Condition(Plot + Time), data=EnvTS)
-baci
+#baci <- cca(SpeTS,EnvTS)
+
+summary(baci)
+#baci
+#plot(baci)
+plot(baci, dis=c("lc","bp"))
+#ordihull(baci,groups=treat,draw="polygon",col="grey70",label=T)
+
 ```
 
 
@@ -293,32 +307,66 @@ with(EnvTS, anova(baci, by="term", perm=500, strata=Treat))
 treat <- EnvTS$Treat
 ordiplot(baci,type="points")
 ordihull(baci,groups=treat,draw="polygon",col="grey70",label=T)
+plot(baci)
 ```
 
 
 
 #### Question 26: SIMCA PLS STUFF
 ```{r}
-library(readxl)
-Trend_Lakes_2015_PLS <- read_excel("Data/Data_for_PLS/Trend Lakes 2015_PLS.xls")
 data.pls <- Trend_Lakes_2015_PLS
 #View(data.pls)
 
 install.packages("pls")
 library(pls)
+#PLS regression, like PCA, seeks to find components which maximize the variability of predictors but differs from PCA as PLS requires #the components to have maximum correlation with the response. PLS is a supervised procedure whereas PCA is unsupervised.
 
-pls.fit <- plsr(`Abs_F 420 (/5cm)` + `Abs_F 436 (/5cm)` ~ ., data = data.pls[c(8:35)], scale = TRUE, validation = "LOO")
-pcr.fit <- pcr(`Abs_F 436 (/5cm)` ~ ., data = data.pls[c(9:35)],scale = TRUE, validation = "CV")
+pls.fit <- plsr(`Biovolym (mm3/l)` ~ ., data = data.pls[c(9:35)], scale = TRUE, validation = "CV")
+pls.pred = predict(pls.fit, data.pls[1:5, ], ncomp=1:2)
 
-summary(pls.fit)
+#pcr.fit <- plsr(`Abs_F 420 (/5cm)` ~ ., data = data.pls[c(11:35)],scale = TRUE, validation = "CV")
+
+#But how do we know from what number of predictors to choose? We can check the output of #summary(plsFit), which is truncated into two parts. We should look for component number which adequately explains both predictors and response variances.
+
+#The first section displays the root mean squared error of prediction (RMSEP), cross-validation estimate, as well as the adj-CV, which #is adjusted for bias. Take note of the dimensions of X and Y of the data towards the top of the output.
+
+#The next section shows the percent of variance explained by components for predictors and response. See how the variance explained #rises quickly from 1 component and stabilizes above 10..13 components. That would be a good component range for the pls model.
+
+
+
+#PLS is a dimensionality reduction technique with some similarity to principal component analysis. The predictor variables are mapped #to a smaller set of variables, and within that smaller space we perform a regression against the outcome variable. In Principal #Component Analysis the dimension reduction procedure ignores #the outcome variable. However PLS aims to choose new mapped variables #that maximally explain the outcome variable.
+
+#The next step is to remove unwanted variables and then build a model.  
+#Cross validation is used to find the optimal number of retained dimensions.
+#Then the model is rebuilt with this optimal number of dimensions. 
+# Find the number of dimensions with lowest cross validation error
+cv <- RMSEP(pls.fit)
+best.dims <- which.min(cv$val[estimate = "adjCV", , ]) - 1
+best.dims 
+
+# Rerun the model
+pls.fit2 <-  plsr(`Biovolym (mm3/l)` ~ ., data = data.pls[c(6:35)], ncomp = best.dims)
+
+#Finally, we extract the useful information and format the output.
+coefficients <-  coef(pls.fit2)
+sum.coef <-  sum(sapply(coefficients, abs))
+coefficients <-  coefficients * 100 / sum.coef
+coefficients <-  sort(coefficients[, 1 , 1])
+barplot(tail(coefficients, 5))
+
+#The regression coefficients are normalized so their absolute sum is 100 and the result is sorted.
+
+#The results below show that TPI and ? are positive predictors of Abs_F 436 (/5cm).  You could run the code #barplot(head(coefficients, 5)) to see that at the other end of the scale Siktdjup and pH are negative predictors.
+
+summary(pls.fit2)
 plot(pls.fit)
-validationplot(pls.fit, val.type = "MSEP")
-predplot(pls.fit)
-coefplot(pls.fit)
+validationplot(pls.fit2, val.type = "MSEP")
+predplot(pls.fit2)
+coefplot(pls.fit2)
 
 
-summary(pcr.fit)
-plot(pcr.fit)
+#summary(pcr.fit)
+#plot(pcr.fit)
 ```
 
 
@@ -358,7 +406,7 @@ ANOSIM (ANalysis Of Similarities) is a non-parametric test of significant differ
 What does the result tell you? What other types of predefined clusters could you use?
 
 
-```{r}
+```{r warning=FALSE}
 dune.dist <- vegdist(dune, method = "bray")
 dune.ano <- anosim(dune.dist, fit$cluster)
 summary(dune.ano)
@@ -367,6 +415,8 @@ plot(dune.ano)
 dune.ano2 <- anosim(dune.dist, dune.env.original$Management)
 summary(dune.ano2)
 plot(dune.ano2)
+
+#ANOSIM gives you the P value and a R value. R value close to 1 indicates high separation between levels of your factor while R value #close to 0 indicate no separation between levels of your factor.
 ```
 
 #### Question 28: SIMPER

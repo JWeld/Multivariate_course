@@ -16,6 +16,22 @@ library("caret")
 
 
 ##### Read data ###########################
+Bugs <- column_to_rownames(Bugs,var = "ID")
+Coord <- column_to_rownames(Coord,var = "ID")
+Species <- column_to_rownames(Species,var = "ID")
+EnvVar <- column_to_rownames(EnvVar,var = "ID")
+Mean_Ellenberg <- column_to_rownames(Mean_Ellenberg, var = "ID")
+
+EnvTS <- column_to_rownames(EnvTS,var = "ID")
+SpeTS <- column_to_rownames(SpeTS,var = "ID")
+
+#dune.env <- EnvVar
+#dune <- Species
+
+Trend_Lakes_2015_PLS <- read_excel("Data/Data_for_PLS/Trend Lakes 2015_PLS.xls")
+
+save(Bugs, Coord, Species, EnvVar, Mean_Ellenberg, Ellenberg, EnvTS, SpeTS, Trend_Lakes_2015_PLS, file = "MVM_data.RDS")
+
 
 # Read small species dataset
 spe<-read.table("Data/species12x10.txt", sep="\t",header=T,row.names=1)
@@ -195,3 +211,27 @@ plot(v_part3, bg = c("hotpink","skyblue","Goldenrod"), cex=1.5)
 # END
 #######################
 
+data(varespec)
+data(varechem)
+## Common but bad way: use all variables you happen to have in your
+## environmental data matrix
+vare.cca <- cca(varespec, varechem)
+vare.cca
+plot(vare.cca)
+## Formula interface and a better model
+vare.cca <- cca(varespec ~ Al + P*(K + Baresoil), data=varechem)
+vare.cca
+plot(vare.cca)
+## Partialling out and negative components of variance
+v.cca <- cca(varespec ~ Ca, varechem)
+plot(v.cca)
+vv.cca <- cca(varespec ~ Ca + Condition(pH), varechem)
+plot(vv.cca)
+## RDA
+data(dune)
+data(dune.env)
+dune.Manure <- rda(dune ~ Manure, dune.env)
+plot(dune.Manure) 
+
+
+barplot(tail(coefficients, 5))
