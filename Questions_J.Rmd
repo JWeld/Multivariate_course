@@ -6,7 +6,7 @@ output:
   pdf_document: default
 ---
 
-First we need to import the data we will be using. This is included in the "vegan" package but we will be using a slightly modified and extended version.
+First we need to load the R packages we will be using and import the data. The "dune" dataset is included in the vegan package (an extensive collection of tools for multivariate analysis), but we will be using a slightly modified and extended version of it. In the excercises you may notice that the results returned are sometimes slightly different to those produced by the various graphical interface applications used (Canoco/PAST/Simca). This is a result of different opinions about the best way to implement various design decisions, but the overall patterns seen and the significance of results will be very similar.
 
 ```{r message=FALSE, warning=FALSE}
 library(vegan)# Package for multivariate analyses of ecological data
@@ -23,7 +23,7 @@ dune <- Species
 #Management factor is character data but we need it to be numeric data for some analyses. Convert to "dummy" variables...
 #Note:If you are converting a factor that is numeric already you need as.numeric(as.character(x))
 
-#give each management method its own column
+#We need to give each management method its own column
 dummy_management <- as.data.frame(model.matrix( ~ Management - 1, data=dune.env )) 
 #add these to the dataset
 dune.env.original <- dune.env
@@ -96,15 +96,16 @@ Experienced plant ecologists may already have looked at the species in the Dune 
 
 dune.ell <- Ellenberg
 dune.mean.ell <- Mean_Ellenberg
-dune.mean.ell <- dune.mean.ell
 
 #The vegan implementation of forward selection of variables does not accept NA values.
 #To get around this we will replace the two NAs with the mean value for all plots in that column.
 #Do not do this in a real analysis without seriously thinking about how it affects your results!
+#This also means that the ordinations you produce may look very slightly different to those produced in Canoco, 
+#but the overall patterns and significance of results will be the same.
 
 
-## Quick code to replace missing values with the column mean, and save the results as a new dataframe
-## called dune.mean.ell.impute.
+## Code to replace missing values with the column mean, and save the results as a new dataframe
+## called dune.mean.ell.impute (since we are imputing the missing values).
 
 dune.mean.ell.impute <- data.frame(
     sapply(
@@ -130,13 +131,6 @@ plot(cca1, main="CCA, all data")
 #Stepwise approach, using "ordistep"
 step2<-ordistep(cca0, scope = formula(cca1), perm.max=9999)
 step2$anova # N F T L S sig
-#alternatively
-#sel.osR2 <- ordiR2step (cca0, scope = formula (cca1), R2scope = adjR2.cca, direction = 'forward', permutations = 9999)
-#sel.osR2$anova # N F T L S sig
-
-#or model selection using permutations
-# By terms
-#anova(cca1, by="term", perm.max = 1500)
 
 
 # New model with only significant explanatory variables?
@@ -227,13 +221,17 @@ time.cca <- cca(SpeTS ~ Time + Condition(Plot), data=EnvTS)
 time.cca
 
 
-treat <- EnvTS$Time
-plot(time.cca)
-ordihull(time.cca, groups=treat, draw="polygon",col="grey70", label=T)
-plot(time.cca, display = c("lc"))
+treat <- EnvTS$Time #
 
-#plot(time.cca, dis=c("wa","lc"))
-#ordispider(time.cca, groups = treat, label = T)
+colvec <- c("red2", "green4") #set colours to be applied to different levels of factor "Time"
+
+plot(time.cca, type = "n", display = c("lc"))#plots the axes
+
+with(time.cca, points(time.cca, display = c("lc"), col = colvec[treat],#plots the points
+                      pch = 21, xlim = c(-2,2), bg = colvec[treat]))
+
+
+
 
 ```
 
@@ -260,8 +258,11 @@ with(EnvTS, anova(time2.cca, by="term", perm=500, strata=Plot))
 ## plot ellipsoid hulls
 
 treat <- EnvTS$Time
-plot(time2.cca)
-ordihull(time2.cca,groups=treat,draw="polygon",col="grey70",label=T)
+
+plot(time2.cca, type = "n")#plots the axes
+with(time2.cca, points(time2.cca, col = colvec[treat],#plots the points
+                      pch = 21, bg = colvec[treat]))
+ordihull(time2.cca,groups=treat,draw="polygon",col="grey70",label=T)#draw hulls around area of each level of factor "Time"
 ```
 
 #### Question 25: A multivariate Before-After-Control- Impact (BACI) study
@@ -278,21 +279,15 @@ The question you want to answer is if the treatment caused a change in species c
 
 ```{r}
 
-baci <- cca(SpeTS ~ Treat + Condition(Plot + Time), data=EnvTS)
-#baci <- cca(SpeTS,EnvTS)
+baci.cca <- cca(SpeTS ~ Treat + Condition(Plot + Time), data=EnvTS)
 
-summary(baci)
-#baci
-#plot(baci)
-plot(baci, dis=c("lc","bp"))
-#ordihull(baci,groups=treat,draw="polygon",col="grey70",label=T)
-
+baci.cca
 ```
 
 
 
 ```{r}
-with(EnvTS, anova(baci, by="term", perm=500, strata=Treat))
+with(EnvTS, anova(baci.cca, by="term", perm=500, strata=Treat))
 #Here with() is a special function that makes variables in dune.env visible to
 #the following command. If you only type Moisture in an R prompt, you will get
 #an error of missing variables
@@ -302,12 +297,13 @@ with(EnvTS, anova(baci, by="term", perm=500, strata=Treat))
 
 
 ```{r}
-## plot ellipsoid hulls
+## plot results
 
 treat <- EnvTS$Treat
-ordiplot(baci,type="points")
-ordihull(baci,groups=treat,draw="polygon",col="grey70",label=T)
-plot(baci)
+ordiplot(baci.cca,type="points")
+ordihull(baci.cca,groups=treat,draw="polygon",col="grey70",label=T)#draw hulls around area of each level of factor "Time"
+
+
 ```
 
 
@@ -407,16 +403,19 @@ What does the result tell you? What other types of predefined clusters could you
 
 
 ```{r warning=FALSE}
-dune.dist <- vegdist(dune, method = "bray")
-dune.ano <- anosim(dune.dist, fit$cluster)
-summary(dune.ano)
-plot(dune.ano)
+dune.dist <- vegdist(dune, method = "bray") #create distance matrix based on Bray-Curtis method
 
-dune.ano2 <- anosim(dune.dist, dune.env.original$Management)
-summary(dune.ano2)
-plot(dune.ano2)
+dune.ano <- anosim(dune.dist, fit$cluster) #compare groupings based on cluster analysis
+dune.ano
+plot(dune.ano)
+title(sub = "Anosim, groups = cluster analysis")
 
 #ANOSIM gives you the P value and a R value. R value close to 1 indicates high separation between levels of your factor while R value #close to 0 indicate no separation between levels of your factor.
+```
+```{r warning=FALSE}
+dune.ano2 <- anosim(dune.dist, dune.env.original$Management) #compare groupings based on management
+dune.ano2
+plot(dune.ano2, sub = "Anosim, groups = management")
 ```
 
 #### Question 28: SIMPER
@@ -425,9 +424,7 @@ After a significant ANOSIM, you may want to know which species are primarily res
 ```{r}
 
 sim <- simper(dune, dune.env.original$Management)
-summary(sim)
-#alternate
-#(sim <- with(dune.env.original, simper(dune, Management)))
-#summary(sim)
+sim
+
 ```
 

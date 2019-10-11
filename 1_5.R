@@ -235,3 +235,36 @@ plot(dune.Manure)
 
 
 barplot(tail(coefficients, 5))
+
+
+
+mod <- rda(dune ~ Management, data = dune.env)
+mod <- dune.rda2
+model.matrix(mod)
+with(dune.env, levels(Management))
+scores(mod, display = "cn")
+ordiplot(mod)
+text(mod, display = "cn")
+
+dune.env.original$Management <-  as.factor(dune.env.original$Management)
+
+# RDA 
+dune.rda <- rda(Species ~ . , dune.env.original)
+dune.rda2 <- rda(Species ~ ., dune.env)
+dune.rda
+ordiplot(dune.rda, type="text", main="RDA")
+ordiplot(dune.rda2, type="text", main="RDA2")
+plot(dune.rda, display = "sites")
+text(dune.rda$CCA$envcentre, display = "cn")
+
+ord <- dune.rda
+layout(matrix(1:2, ncol = 2))
+plot(ord, choices = c(1,2))
+plot(ord, choices = c(2,3))
+layout(1)
+# CCA 
+dune.cca <- cca(Species, dune.env.original)
+dune.cca2 <- cca(Species, dune.env)
+dune.cca
+ordiplot(dune.cca, type="text", main="CCA")
+ordiplot(dune.cca2, type="text", main="CCA2")
