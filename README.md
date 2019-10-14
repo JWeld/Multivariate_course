@@ -5,4 +5,4 @@ Open the Questions.html file from the Files list in the bottom right pane (click
 
 Your working file is saved in the cloud when you click the disk icon to save, which is fine, but it would be wise to download it every so often as a backup! (tick the box next to the file name in the bottom right pane, then More > Export from the menu above the files list).
 
-If you mess something up and want to go back to the start you can get the files you started with from the repository they are hosted on at Github (top right pane > Git tab > Pull)
+If you somehow mess everything up and want to go back to the start you can get the files you started with from the repository they are hosted on at Github (Export any work you want to keep!! (as above) then delete all files you have changed and then go to the top right pane > Git tab > Pull). 
