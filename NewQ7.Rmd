@@ -1,0 +1,39 @@
+---
+title: "New Q 7"
+author: "Ulf Grandin"
+date: '2020-10-16'
+output: html_document
+---
+<br>
+
+### <span style="color:cornflowerblue">Question 8:	Effects from increased variation. Add one new sample to the data, then add a cover of 9 for the existing species Chenopodium album "Che_alb" in the new sample. Make a new DCA-ordination. <p>Next, remove the Che alb = 9, and add instead a cover of 5 for the exisiting species Leo_aut and make a new DCA. </span>
+
+#### <span style="color:forestgreen"> What happens with the eigenvalues and ordination after adding Che alb and after adding Leo aut? Why did we choose to add these two species in the new sample? </span>
+
+```{r ex8, inclue=TRUE, warning=FALSE, message=FALSE}
+# figure out the column number for Chenopodium album (abbreviated "Chenalbu")
+which(colnames(dune)=="Che_alb")
+# create a new data frame with a new sample containing Chenopodium album with a cover of 9
+NewSample <- c(rep(0,7), 9, rep(0,22))
+SpeciesNewSample <- data.frame(rbind(dune, NewSample))
+# run a new DCA with the extra sample
+DCANewSample <- decorana(SpeciesNewSample)
+DCANewSample
+# plot the DCA
+ordiplot(DCANewSample, type="text", main="DCA with new sample Chenopodium album")
+# figure out the column number for Leontodon autumnalis (abbreviated "Leo aut")
+which(colnames(dune)=="Leo_aut")
+# create a new data frame with a new sample containing Leontodon autumnalis with a cover of 5
+NewSample <- c(rep(0,15), 5, rep(0,10))
+SpeciesNewSample <- data.frame(rbind(dune, NewSample))
+# run a new DCA with the extra sample
+DCANewSample <- decorana(SpeciesNewSample)
+DCANewSample
+# plot the DCA
+ordiplot(DCANewSample, type="text", main="DCA with new sample Leontodon autumnalis")
+```
+
+
+<br>
+
+***

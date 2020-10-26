@@ -6,8 +6,8 @@ output:
   pdf_document: default
 ---
 ```{r setup, include=FALSE, message=FALSE, warning=FALSE}
-#knitr::opts_chunk$set(echo = TRUE)
-knitr::opts_chunk$set(eval=FALSE)
+knitr::opts_chunk$set(echo = TRUE)
+#knitr::opts_chunk$set(eval=FALSE)
 library(vegan)
 ```
 
@@ -506,19 +506,18 @@ permutest(MN.cca2, permutations=999)
 
 #### <span style="color:forestgreen"> We have now concluded that management type is of subordinate importance. Now, you want to test the importance or significance of individual environmental variables. This is done by Forward selection. What is the effect of Forward selection? In what way do these results differ from the results obtained when the whole Environmental data table was used as explanatory variables? Were the set of explanatory variables selected by the Forward selection the best set? Why would one perform a p-value correction?  </span>
 
-```{r ex20, inclue=TRUE, warning=FALSE, message=FALSE}
-library(adespatial)
-FS2 <- forward.sel(dune, dune.env)
-FS2
-
-# Since there is (a potentially high) number of tests of significance during the forward selection procedure, 
-# it is better to apply a correction for multiple testing issue. Here we apply the Holm correction.
-
-n.tests <- ncol (dune.env)  # number of tests equals # of variables which are being selected
-pval.adj <- p.adjust (FS2$pval, method = 'holm', n = n.tests)
-FS2$pval.adj <- pval.adj
-FS2
-
+```{r ex20, echo=TRUE, message=FALSE, warning=FALSE, inclue=TRUE}
+mod0 <- rda(dune ~ 1, dune.env)  # Model with intercept only
+mod1 <- rda(dune ~ ., dune.env)  # Model with all explanatory variables
+fs <- ordistep(mod0, scope = formula(mod1), direction="forward")
+```
+Since there is (a potentially high) number of tests of significance during the forward selection procedure, 
+it is better to apply a correction for multiple testing issue. Here we apply the Holm correction.
+```{r}
+n.tests <- ncol(dune.env)  # number of tests equals number of variables which are being selected
+pval.adj <- p.adjust(fs$anova$`Pr(>F)`, method = 'holm', n = n.tests)
+fs$anova$`Pr(>F)` <- pval.adj
+fs$anova
 ```
 
 <br>
@@ -830,7 +829,7 @@ summary(sim2)
 
 Unless you are already familiar with PLS in R we suggest that you follow the exercise in SIMCA and then try performing the same analysis by modifying the R code below. Remember you can always read the helpfile for any R function by entering ? and the function name in the console, such as ?plsr in this case.
 
-```{r, warning=FALSE, message=FALSE}
+```{r eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
 data.pls <- Trend_Lakes_2015_PLS
 #View(data.pls)
 library(pls)
