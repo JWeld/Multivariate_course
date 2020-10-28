@@ -1,0 +1,57 @@
+---
+title: "Exercises MVA Course"
+output:
+  html_document:
+    df_print: paged
+---
+
+### <span style="color:cornflowerblue">Exercise 0. Introduction to R Notebooks and Markdown.</span>
+
+This exercise is only to get used to working with R Notebook and R Markdown. The data in exercise 1 are not multivariate and the statistical analysis is a simple linear regression. All following exercises will start with this kind of introduction.
+
+### <span style="color:forestgreen"> For each exercise there will be a number of explicit questions written in green. </span>
+To pass the course, you should give your answers to these questions to one of the teachers during the computer labs. 
+
+#### <span style="color:Red">Write your answers to the questions and any other comments here below. </span>
+Replace this text in each excercise notebook with your answers and comments...
+
+---
+
+#### A quick note on R Notebooks and R Markdown 
+These terms are often used interchangeably to mean a combination of R code, results, and formattable text, such as this one. They allow you to present your results, the code used to generate the results and your interpretation and comments all together in one document that you can easily update, and which is easy for a reader to understand (R Notebooks are a minor update of R Markdown files that allow for easier editing as you can run just part of your code and see the results in a preview. Both notebook and markdown are .Rmd files, and are written in exactly the same way, so don't worry about the difference for this course!).
+
+---
+
+#### Example of a simple analysis
+First we load or create the data we will be using. The box below is an example of a code chunk.
+```{r}
+df <- read.table(header = TRUE, sep = ",", 
+               text = "x,y 
+               1,2
+               1.5,3.5
+               2,5
+               2.5,5
+               3,7")
+
+# Anything you write in a code chunk after a hash mark becomes a comment like this
+# and is ignored when running the code. If you are working in an R markdown notebook
+# such as this however, you can also write your longer notes in the text sections 
+# outside the code chunks.
+```
+So I could write my notes here instead, which is probably easier to read for anything more than a few words of explanation.
+
+Now we can do a simple linear regression. The results are stored in the object "reg".
+```{r}
+reg <- lm(y~x, df) 
+```
+
+Plot the result.
+```{r}
+plot(y~x, df)
+lines(df$x, predict(reg), col = 'red') # Add a regression line to the plot
+```
+
+Get a summary of the results
+```{r}
+summary(reg)
+```
