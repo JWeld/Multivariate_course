@@ -958,20 +958,30 @@ tanglegram(dend2, dend3)
 
 #### <span style="color:forestgreen"> What does the results from anosim and adonis tell you? Give one other example of predefined groups that could be uses as the grouping variable(s)! </span>
 
-ANOSIM (ANalysis Of Similarities) is a non-parametric test of significant difference between two or more groups, based on any distance measure. In this case, use the clusters from the K-means exercise. Change to Bray-Curtis similarity index.
+ANOSIM (Analysis Of Similarities) is a non-parametric test of significant difference between two or more groups, based on any distance measure. In this case, use the clusters from the K-means exercise. Change to Bray-Curtis similarity index.
 
 ANOSIM gives you the P value and an R value. R value close to 1 indicates high separation between levels of your factor while R value close to 0 indicate no separation between levels of your factor.
 
 Try also the recommended alternative "adonis" - Analysis of variance using distance matrices - for partitioning distance matrices among sources of variation and fitting linear models (e.g., factors, polynomial regression) to distance matrices; uses a permutation test with pseudo-F ratios.
 ```{r}
+# Start with a CA with Management as environmental factor and hulls around the different management types
 data("dune")
 data("dune.env")
+dune.ca<-cca(dune)
+fit.mgm<-envfit(dune.ca~Management, dune.env, perm = 0)
+plot(dune.ca, type = "n", scaling = "symmetric")
+with(dune.env, points(dune.ca, display = "sites", scaling = "symmetric", col = as.numeric(Management), pch=16))
+with(dune.env, ordispider(dune.ca, Management, scaling = "symmetric", col="skyblue"))
+with(dune.env, ordihull(dune.ca, Management, scaling = "symmetric",label = TRUE))
+
 dune.dist <- vegdist(dune, method = "bray") #create distance matrix based on Bray-Curtis method
 dune.ano <- anosim(dune.dist, dune.env$Management) #Comparing groupings based on management
 summary(dune.ano)
 plot(dune.ano, xlab = "Anosim, Dune meadow management types")
 
+#ANOSIM gives you the P value and a R value. R value close to 1 indicates high separation between levels of your factor while R value #close to 0 indicate no separation between levels of your factor.
 
+# Try also the recommended alternative "adonis" - Analysis of variance using distance matrices - for partitioning distance matrices among sources of variation and fitting linear models (e.g., factors, polynomial regression) to distance matrices; uses a permutation test with pseudo-F ratios.
 
 dune.ado<-adonis(formula = dune~Management, data = dune.env, method = "bray")
 dune.ado
@@ -990,18 +1000,20 @@ sim <- simper(dune, dune.env$Management) #try management groupings
 summary(sim)
 ```
 
+Visually compare the result from simper with species positions in a biplot.
+
+```{r}
+plot(dune.ca, type = "n", scaling = "species")
+with(dune.env, points(dune.ca, display = "sites", scaling = "species", col = as.numeric(Management), pch=16))
+with(dune.env, orditorp(dune.ca, display = "species", scaling = "species"))
+with(dune.env, ordihull(dune.ca, Management, scaling = "species",label = TRUE))
+```
 
 <br>
 
-***
-<br>
-##Q29
+A complementary/alternative approach to identifying which species are most reposnisble for the differences between the groups is that of indicator species - which species best characterise the groups or clusters that we have identified? 
 
-### <span style="color:cornflowerblue">Question 29: Diagnostic species for a priori defined groups </span>
-
-#### <span style="color:forestgreen"> Use the resulting data table to find the two top indicator species for each of the four Management types! </span>
-
-In this exercise we will investigate if any particular species are indicative for the four different management types.
+In this exercise we will investigate if any particular species are indicative for the four different management types. Use the resulting data table to find the two top indicator species for each of the four Management types! 
 
 ```{r, warning=FALSE, message=FALSE}
 library(labdsv)
@@ -1016,9 +1028,9 @@ arrange(rownames_to_column(iva.df), desc(HF))
 
 ***
 
-##Q30
+##Q29
 
-### <span style="color:cornflowerblue">Question 30: Molecular Data</span>
+### <span style="color:cornflowerblue">Question 29: Molecular Data</span>
 
 #### <span style="color:forestgreen">Molecular </span>
 
@@ -1027,9 +1039,9 @@ arrange(rownames_to_column(iva.df), desc(HF))
 ```
 ***
 <br>
-##Q31
+##Q30
 
-### <span style="color:cornflowerblue">Question 31: PLS </span>
+### <span style="color:cornflowerblue">Question 30: PLS </span>
 
 #### <span style="color:forestgreen"> Examine the p-values to explore which response variables actually give a significant result. </span>
 
