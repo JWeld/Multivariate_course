@@ -1,0 +1,175 @@
+---
+title: "Answers"
+output: html_notebook
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Cmd+Shift+Enter*. 
+
+```{r}
+plot(cars)
+```
+
+Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Cmd+Option+I*.
+
+When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Cmd+Shift+K* to preview the HTML file). 
+
+The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
+
+### Question 1
+
+For each question you can write answers, comments and queries. There is also a code chunk below each question heading where you can copy and paste code from the Questions.Rmd file and run it. You can try changing things, or adding your own code here too.
+
+```{r}
+#copy paste or write code here
+```
+
+### Question 2
+
+Answers? Comments?
+
+```{r}
+#copy paste or write code here
+```
+
+### Question 3
+
+Answers? Comments?
+
+```{r}
+#copy paste or write code here
+```
+### Question 4
+
+Answers? Comments?
+
+```{r}
+#copy paste or write code here
+```
+### Question 5
+
+Answers? Comments?
+
+```{r}
+#copy paste or write code here
+```
+### Question 6
+
+Answers? Comments?
+
+```{r}
+#copy paste or write code here
+```
+### Question 7
+
+Answers? Comments?
+
+```{r}
+#copy paste or write code here
+```
+### Question 8
+
+Answers? Comments?
+
+```{r}
+#copy paste or write code here
+```
+### Question 9
+
+Answers? Comments?
+
+```{r}
+#copy paste or write code here
+```
+### Question 10
+
+Answers? Comments?
+
+```{r}
+#copy paste or write code here
+```
+### Question 11
+
+Answers? Comments?
+
+```{r}
+#copy paste or write code here
+```
+### Question 12
+
+Answers? Comments?
+
+```{r}
+#copy paste or write code here
+```
+### Question 13
+
+Answers? Comments?
+
+```{r}
+#copy paste or write code here
+```
+### Question 14
+
+Answers? Comments?
+
+```{r}
+#copy paste or write code here
+```
+### Question 15
+
+Answers? Comments?
+
+```{r}
+#copy paste or write code here
+```
+### Question 16
+
+Answers? Comments?
+
+```{r}
+#copy paste or write code here
+```
+### Question 17
+
+Answers? Comments?
+
+```{r}
+#copy paste or write code here
+```
+### Question 18
+
+Answers? Comments?
+
+```{r}
+#copy paste or write code here
+```
+### Question 19
+
+Answers? Comments?
+
+```{r}
+#copy paste or write code here
+```
+### Question 20
+
+Answers? Comments?
+
+```{r}
+#copy paste or write code here
+```
+### Question 21
+
+Answers? Comments?
+
+```{r}
+#copy paste or write code here
+```
+### Question 22
+
+Answers? Comments?
+
+```{r}
+#copy paste or write code here
+```
