@@ -1,9 +1,10 @@
 ---
 title: "MVA Course"
-output: 
+output:
   html_document:
     df_print: paged
   pdf_document: default
+  html_notebook: default
 ---
 ```{r setup, include=FALSE, message=FALSE, warning=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -394,7 +395,7 @@ d1r<-t(data.frame(strsplit(row.names(d1), ":")))
 d1rr<-data.frame(d1,d1r)
 d1mean<-tapply(d1rr$unmatrix.as.matrix.dist1.., d1rr$X1, mean)
 sd(d1mean) # Standard deviation of the mean distances. If > 3: strong outlier(s)
-plot(density(d1mean), col = "red", xlab="Distance between observations", main = "Indictive test of multivariate outliers\nData with noise")
+plot(stats::density(d1mean), col = "red", xlab="Distance between observations", main = "Indictive test of multivariate outliers\nData with noise")
 legend("topright",paste("SD =",round(sd(d1mean),1))) # Legend with standard deviation
 
 # Same as above but on the original dune meadow dataset (i.e. without outliers)
@@ -404,7 +405,7 @@ d1r<-t(data.frame(strsplit(row.names(d1), ":")))
 d1rr<-data.frame(d1,d1r)
 d1mean<-tapply(d1rr$unmatrix.as.matrix.dist1.., d1rr$X1, mean)
 sd(d1mean) # Standard deviation of the mean distances. If > 3: strong outlier(s)
-plot(density(d1mean), col = "red", xlab="Distance between observations",main = "Indictive test of multivariate outliers\nOriginal Dune Meadow data")
+plot(stats::density(d1mean), col = "red", xlab="Distance between observations",main = "Indictive test of multivariate outliers\nOriginal Dune Meadow data")
 legend("topright",paste("SD =",round(sd(d1mean),1))) # Legend with standard deviation
 
 ```
@@ -953,41 +954,40 @@ tanglegram(dend2, dend3)
 ***
 ##Q28
 
-### <span style="color:cornflowerblue">Question 28: ANOSIM & SIMPER</span>
+### <span style="color:cornflowerblue">Question 28: Differences between groups. ANOSIM, adonis and SIMPER</span>
 
-#### <span style="color:forestgreen"> What does the result tell you? What other types of predefined clusters could you use? </span>
+#### <span style="color:forestgreen"> What does the results from anosim and adonis tell you? Give one other example of predefined groups that could be uses as the grouping variable(s)! </span>
 
 ANOSIM (ANalysis Of Similarities) is a non-parametric test of significant difference between two or more groups, based on any distance measure. In this case, use the clusters from the K-means exercise. Change to Bray-Curtis similarity index.
 
+ANOSIM gives you the P value and an R value. R value close to 1 indicates high separation between levels of your factor while R value close to 0 indicate no separation between levels of your factor.
 
-
-```{r, warning=FALSE, message=FALSE}
+Try also the recommended alternative "adonis" - Analysis of variance using distance matrices - for partitioning distance matrices among sources of variation and fitting linear models (e.g., factors, polynomial regression) to distance matrices; uses a permutation test with pseudo-F ratios.
+```{r}
+data("dune")
+data("dune.env")
 dune.dist <- vegdist(dune, method = "bray") #create distance matrix based on Bray-Curtis method
-dune.ano <- anosim(dune.dist, fit$cluster) #compare groupings based on cluster analysis
+dune.ano <- anosim(dune.dist, dune.env$Management) #Comparing groupings based on management
 summary(dune.ano)
-#plot(dune.ano)
-#title(sub = "Anosim, groups = cluster analysis")
-#ANOSIM gives you the P value and a R value. R value close to 1 indicates high separation between levels of your factor while R value #close to 0 indicate no separation between levels of your factor.
+plot(dune.ano, xlab = "Anosim, Dune meadow management types")
+
+
+
+dune.ado<-adonis(formula = dune~Management, data = dune.env, method = "bray")
+dune.ado
+
+# You can also have more advanced models in adonis
+dune.ado2<-adonis(dune~Management*A1, data = dune.env)
+dune.ado2
 ```
 
-```{r warning=FALSE}
-dune.ano2 <- anosim(dune.dist, dune.env.original$Management) #try comparing groupings based on management instead
-summary(dune.ano2)
-#plot(dune.ano2, sub = "Anosim, groups = management")
-```
-
-SIMPER
+After a significant ANOSIM, you may want to know which species are primarily responsible for the observed difference between clusters. SIMPER (Similarity Percentage) will do this for you. The test does not come with significance testing. In the output tables, taxa are sorted in descending order of contribution to group difference. 
 
 #### <span style="color:forestgreen"> Compare the different groups and check which species that contributes mostly to the difference between pairs of clusters.  </span>
 
-After a significant ANOSIM, you may want to know which species are primarily responsible for the observed difference between clusters. SIMPER (Similarity Percentage) will do this for you. The test does not come with significance testing. In the output tables, taxa are sorted in descending order of contribution to group difference. 
 ```{r, warning=FALSE, message=FALSE}
-sim <- simper(dune, fit$cluster) #start with kmeans clusters
+sim <- simper(dune, dune.env$Management) #try management groupings
 summary(sim)
-```
-```{r}
-sim2 <- simper(dune, dune.env.original$Management) #try management groupings
-summary(sim2)
 ```
 
 
