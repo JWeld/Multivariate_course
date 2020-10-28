@@ -394,7 +394,7 @@ d1r<-t(data.frame(strsplit(row.names(d1), ":")))
 d1rr<-data.frame(d1,d1r)
 d1mean<-tapply(d1rr$unmatrix.as.matrix.dist1.., d1rr$X1, mean)
 sd(d1mean) # Standard deviation of the mean distances. If > 3: strong outlier(s)
-plot(density(d1mean), col = "red", xlab="Distance between observations", main = "Indictive test of multivariate outliers\nData with noise")
+plot(stats::density(d1mean), col = "red", xlab="Distance between observations", main = "Indictive test of multivariate outliers\nData with noise")
 legend("topright",paste("SD =",round(sd(d1mean),1))) # Legend with standard deviation
 
 # Same as above but on the original dune meadow dataset (i.e. without outliers)
@@ -404,7 +404,7 @@ d1r<-t(data.frame(strsplit(row.names(d1), ":")))
 d1rr<-data.frame(d1,d1r)
 d1mean<-tapply(d1rr$unmatrix.as.matrix.dist1.., d1rr$X1, mean)
 sd(d1mean) # Standard deviation of the mean distances. If > 3: strong outlier(s)
-plot(density(d1mean), col = "red", xlab="Distance between observations",main = "Indictive test of multivariate outliers\nOriginal Dune Meadow data")
+plot(stats::density(d1mean), col = "red", xlab="Distance between observations",main = "Indictive test of multivariate outliers\nOriginal Dune Meadow data")
 legend("topright",paste("SD =",round(sd(d1mean),1))) # Legend with standard deviation
 
 ```
