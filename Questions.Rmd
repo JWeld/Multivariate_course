@@ -12,9 +12,9 @@ knitr::opts_chunk$set(echo = TRUE)
 library(vegan)
 ```
 
-### <span style="color:cornflowerblue">Exercise 1. Introduction to R Notebooks and Markdown.</span>
+### <span style="color:cornflowerblue">Question 1. Introduction to R Notebooks and Markdown.</span>
 
-This exercise is only to get used to working with R Notebook and R Markdown. The data in this first are not multivariate and the statistical analysis is a simple linear regression. All following exercises will start with this kind of introduction.
+This exercise is only to get used to working with R Notebook and R Markdown. The data in this first exercise are not multivariate and the statistical analysis is a simple linear regression. All following exercises will start with this kind of introduction.
 
 ### <span style="color:forestgreen"> For each exercise there will be a number of explicit questions written in green. </span>
 To pass the course, you should give your answers to these questions to one of the teachers during the computer labs. 
@@ -459,7 +459,7 @@ ordiplot(dune.cca, type="text", main="CCA")
 <br>
 ##Q12
 
-### <span style="color:cornflowerblue">Question 12:	Use the results from the CCA ordination in exercise 13 to look at and interpret the variance inflation factor, and to look for warnings about outliers in the explanatory data!   </span>
+### <span style="color:cornflowerblue">Question 12:	Use the results from the CCA ordination in exercise 11 to look at and interpret the variance inflation factor, and to look for warnings about outliers in the explanatory data!   </span>
 
 #### <span style="color:forestgreen"> Look at and interpret the inflation factors for each environmental variable! Are there any extreme values? </span>
 
