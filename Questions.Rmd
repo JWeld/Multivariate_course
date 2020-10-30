@@ -1,10 +1,10 @@
 ---
 title: "MVA Course"
 output:
+  html_notebook: default
+  pdf_document: default
   html_document:
     df_print: paged
-  pdf_document: default
-  html_notebook: default
 ---
 ```{r setup, include=FALSE, message=FALSE, warning=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -74,13 +74,28 @@ The "dune" dataset we will use is included in the vegan package (an extensive co
 <br>
 ##Q2
 
-### <span style="color:cornflowerblue">Question 2: Simple exercise for illustrating effects of different distance metrics. Should not be based on ordination or classification.</span>
+### <span style="color:cornflowerblue">Question 2: Simple exercise for illustrating effects of different distance metrics.</span>
 
-#### <span style="color:forestgreen">Simple exercise for illustrating effects of different distance metrics. Should not be based on ordination or classification.</span>
+#### <span style="color:forestgreen">Here, we will create a simple data set consisting of 2 columns of measurement made at 3 sites we will then calculate a series of distance metrics using the vegdist() function. Questions: 1. How do the metrics differ? 2. Which metric corresponds to a "standard" distance? 3. Where would one find the formula for the Mahalanobis distance?</span>
 
 ```{r, warning=FALSE, message=FALSE}
+library(vegan)
+# create a triangular data set with 2 columns (x and y) and 3 rows
+#
+dt<-data.frame(x=c(5, 5, 10), y=c(5, 10, 10))
+#plot dt
+plot(dt,xlim=c(0,15),ylim=c(0,15))
+# what does vegdist() do?
+#
+help(vegdist)
+#
+# create some distance matrices with using different metrics
+#
+(dt.bray<-vegdist(dt,method="bray"))
+(dt.manhattan<-vegdist(dt,method="manhattan"))
+(dt.euclidean<-vegdist(dt,method="euclidean"))
+(dt.mahalanobis<-vegdist(dt,method="mahalanobis"))
 
-#TBC, Martyn
 ```
               
 
