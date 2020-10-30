@@ -12,9 +12,9 @@ knitr::opts_chunk$set(echo = TRUE)
 library(vegan)
 ```
 
-### <span style="color:cornflowerblue">Exercise 1. Introduction to R Notebooks and Markdown.</span>
+### <span style="color:cornflowerblue">Question 1. Introduction to R Notebooks and Markdown.</span>
 
-This exercise is only to get used to working with R Notebook and R Markdown. The data in this first are not multivariate and the statistical analysis is a simple linear regression. All following exercises will start with this kind of introduction.
+This exercise is only to get used to working with R Notebook and R Markdown. The data in this first exercise are not multivariate and the statistical analysis is a simple linear regression. All following exercises will start with this kind of introduction.
 
 ### <span style="color:forestgreen"> For each exercise there will be a number of explicit questions written in green. </span>
 To pass the course, you should give your answers to these questions to one of the teachers during the computer labs. 
