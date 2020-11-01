@@ -541,7 +541,7 @@ ordiplot(dune.ca,  type="text", main="CA with env. variables fitted after")
 plot(fit)
 
 #CCA 
-dune.cca <- cca(dune ~ . , dune.env.original)
+dune.cca <- cca(dune ~ . , dune.env)
 dune.cca
 ordiplot(dune.cca, type="text", main="CA")
 ```
