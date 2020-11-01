@@ -6,6 +6,13 @@
 
 #ANOSIM (ANalysis Of Similarities) is a non-parametric test of significant difference between two or more groups, based on any distance measure. In this case, use the clusters from the K-means exercise. Change to Bray-Curtis similarity index.
 
+# Start with a CA with Management as environmental factor and hulls around the different management types
+dune.ca<-cca(dune)
+fit.mgm<-envfit(dune.ca~Management, dune.env, perm = 0)
+plot(dune.ca, type = "n", scaling = "symmetric")
+with(dune.env, points(dune.ca, display = "sites", scaling = "symmetric", col = as.numeric(Management), pch=16))
+with(dune.env, ordispider(dune.ca, Management, scaling = "symmetric", col="skyblue"))
+with(dune.env, ordihull(dune.ca, Management, scaling = "symmetric",label = TRUE))
 
 dune.dist <- vegdist(dune, method = "bray") #create distance matrix based on Bray-Curtis method
 dune.ano <- anosim(dune.dist, dune.env$Management) #Comparing groupings based on management
@@ -31,4 +38,10 @@ dune.ado2
 
 sim <- simper(dune, dune.env$Management) #try management groupings
 summary(sim)
+
+# Visually compare the result from simper with species positions in a biplot
+plot(dune.ca, type = "n", scaling = "species")
+with(dune.env, points(dune.ca, display = "sites", scaling = "species", col = as.numeric(Management), pch=16))
+with(dune.env, orditorp(dune.ca, display = "species", scaling = "species"))
+with(dune.env, ordihull(dune.ca, Management, scaling = "species",label = TRUE))
 

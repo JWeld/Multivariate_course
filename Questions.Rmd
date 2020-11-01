@@ -14,12 +14,12 @@ library(vegan)
 
 ### <span style="color:cornflowerblue">Question 1. Introduction to R Notebooks and Markdown.</span>
 
-This exercise is only to get used to working with R Notebook and R Markdown. The data in this first exercise are not multivariate and the statistical analysis is a simple linear regression. All following exercises will start with this kind of introduction.
+This exercise is only to get used to working with R Notebook/R Markdown. The data in this first exercise are not multivariate and the statistical analysis is a simple linear regression. All following exercises will start with this kind of introduction.
 
 ### <span style="color:forestgreen"> For each exercise there will be a number of explicit questions written in green. </span>
 To pass the course, you should give your answers to these questions to one of the teachers during the computer labs. 
 
-#### <span style="color:Red">Write your answers to the questions and any other comments in the Answers.Rmd file </span>
+#### <span style="color:Red">Write your answers to the questions and any other comments or notes using the Answers.Rmd file as a template, or create a new file yourself. </span>
 
 ---
 
@@ -304,7 +304,7 @@ ordiplot(DCANewSample, type="text", main="DCA with new sample Leontodon autumnal
 
 ***
 
-### <span style="color:cornflowerblue">Question 8:Principal Coordinates Analysis (PCoA) </span>
+### <span style="color:cornflowerblue">Question 8: Principal Coordinates Analysis (PCoA) </span>
 Principal Coordinates Analysis (PCoA), also known as Multidimensional Scaling (MDS), is a generalization of the ordination techniques we have already seen as it can be estimated with any distance matrix. In contrast, PCA is restricted to Euclidean distances while CA preserves Chi-Square distances.
 Here, we will explore PCoA on four different distance matrices: 
 (i)   Bray-Curtis
@@ -313,6 +313,7 @@ Here, we will explore PCoA on four different distance matrices:
 (iv)  Mahalanobis
 
 The R base statistics library offers the routine cmdscale() for performing MDS. There are numerous other libraries offering PCoA analysis
+
 #### <span style="color:forestgreen"> After performing the four PCoA analyses, please answer the following questions:
 (i) 	How similar are the ordination plots from the four distance matrices?
 (ii)	Why are some plots more similar than others?
@@ -489,12 +490,12 @@ legend("topright",paste("SD =",round(sd(d1mean),1))) # Legend with standard devi
 
 ```{r ex11, inclue=TRUE, warning=FALSE, message=FALSE}
 # RDA 
-dune.rda <- rda(dune ~ . , dune.env.original)
+dune.rda <- rda(dune ~ . , dune.env)
 summary(dune.rda)
 anova(dune.rda)
 
 # CCA 
-dune.cca <- cca(dune ~ . , dune.env.original)
+dune.cca <- cca(dune ~ . , dune.env)
 summary(dune.cca)
 anova(dune.cca)
 
@@ -902,32 +903,62 @@ ordihull(baci.cca,groups=treat,draw="polygon",col="grey70",label=T)#draw hulls a
 ***
 <br>
 
-### <span style="color:cornflowerblue">Question 24:	Procustes rotation and Co-correspondence analysis  </span>
+### <span style="color:cornflowerblue">Question 24:	Comparing ordinations </span>
 
-#### <span style="color:forestgreen"> Are the two data sets (species and bugs) correlated? Give a very short ecological interpretation of the results! </span>
+#### <span style="color:forestgreen"> Questions:
+(i)  How similar is the arrangemont of sites in ordination space based on plant and insect data?
+(ii) Do the three analyses (Procrustes, Co-Correspondence and Mantel) indicate similar odinations of sites based on plant vs. insect data?
+ </span>
 
 These are two ways of comparing ordinations or the structure in related multivariate datasets. They are used to compare how objects differ when they are described by different sets of descriptors, or if there are repeated samplings of the same objects using the same descriptors.
 
 ```{r ex24, inclue=TRUE, warning=FALSE, message=FALSE}
 library(cocorresp)
+library(vegan)
+data(dune)
+#
 # DCA on the plant species data 
-DCASpecies <- decorana(dune)
+#
+plants.DCA <- decorana(dune)
+#
 # DCA on the insect data (called Bugs)
-Bugs <- readRDS("Bugs.RDS")
-DCABugs <- decorana(Bugs)
-DCABugs
-# procrustes analysis on the two DCAs from different datasets
-ProC <- procrustes(DCASpecies, DCABugs)
-
-plot(ProC, kind=1, type="text")
-# Labels show the position of the samples in the second ordination, and arrows point to their positions in the target ordination
-# Function protest tests the non-randomness (`significance') between two configurations
-ProCsig <- protest(dune.dca, DCABugs)
+#
+insects <- readRDS("Bugs.RDS")
+insects.DCA <- decorana(insects)
+#
+# Have a look at the DCA based on insects
+#
+insects.DCA
+#
+# perform a Procrustes analysis on the two DCAs from different datasets
+#
+plants.and.insects.from.DCA <- procrustes(plants.DCA, insects.DCA)
+plot(plants.and.insects.from.DCA, kind=1, type="text")
+#
+# Labels show the position of the samples in the second ordination, and arrows point to their positions in the
+# target ordination Function protest tests the non-randomness (`significance') between two configurations
+#
+ProCsig <- protest(plants.DCA, insects.DCA)
 ProCsig
+#
 # Co-correspondence analysis
-CoCor <- coca(dune ~ ., data = Bugs, method = "symmetric")
+#
+CoCor <- coca(dune ~ ., data = insects, method = "symmetric")
 summary(CoCor)
 corAxis(CoCor)
+#
+# set up and perform the Mantel test
+#
+insects.distance<-vegdist(insects)
+plants.distance<-vegdist(dune)
+#
+# what does mantel() do?
+#
+help(mantel)
+#
+# perform the mantel test using parametric and non-parametric correlations
+mantel(insects.distance,plants.distance)
+mantel(insects.distance,plants.distance,method="spear")
 ```
 
 
@@ -940,45 +971,120 @@ corAxis(CoCor)
 
 
 
-### <span style="color:cornflowerblue">Question 25 : Classification </span>
+### <span style="color:cornflowerblue">Question 25 : Classification 1</span>
 
-#### <span style="color:forestgreen"> How do the different clustering techniques differ? </span>
+Start by testing the non-hierarchical K-means clustering, using Multivar / K-Means. Note that it is
+recommended that K-means need at least 100 observations (500 according to some sources) to be reliable!
+Let us ignore the sample size issue for the moment, and ask for 4 clusters (for later comparison with the
+four management types). Test different hierarchical agglomeration algorithms and similarity indices. Use
+at least the Euclidian and the Bray-Curtis similarity measures for the hierarchical clustering technique.
+Also try Ward's method 
+
+#### <span style="color:forestgreen"> # Questions:
+(i) 	How many clusters seem to exist in the Dune data set?
+(ii)	Is a 3- or 4-cluster solution a better match to the management type in the dune.env dataset?
+(iii) Do the two approaches to hierachical clustering reveal similar patterns in the Dune data set?
+(iv) Interpret the Hopkins statistic for the Dune data set </span>
 
 
-Start by testing the non-hierarchical K-means clustering, using Multivar / K-Means. Note that it is recommended that K-means need at least 100 observations (500 according to some sources) to be reliable! Let us ignore the sample size issue for the moment, and ask for 4 clusters (for later comparison with the four management types). Test different hierarchical agglomeration algorithms and similarity indices. Use at least the Euclidian and the Bray-Curtis similarity measures for the hierarchical clustering technique. Try also the Ward's method! 
+
 
 ```{r, warning=FALSE, message=FALSE}
-library(dendextend)
-#make a distance matrix using the Bray-Curtis method
+#
+library("clustertend")
+library("factoextra")
+library("NbClust")
+#
+# Have a look to see what NbClust does
+#
+help(NbClust)
+#
+# make a distance matrix using the Bray-Curtis method
+#
 dune.dist <- vegdist(dune, method = "bray")
-# K-Means Cluster Analysis
-fit <- kmeans(dune, 4, nstart = 50) # we specify a 4 cluster solution
-#As the final result of k-means clustering result is sensitive to the random starting assignments, we specify nstart = 50. This means #that R will try 50 different random starting assignments and then select the best results corresponding to the one with the lowest #within cluster variation.
-#Note that k-means clustering involves randomness so you won't neccessarily get exactly the same results if you repeat it.
-#There are also several different algorithms that can be used in k-means clustering, and different software 
-#have can use different defaults.Check out the help file for the kmeans function if you want to know more about these.
+#
+# see how many clusters there appear to be in the data
+#
+res<-NbClust(dune, diss=dune.dist, distance = NULL, 
+	min.nc=2, max.nc=12, method = "kmeans", index = "kl") 
+	
+library(dendextend)
+#
+# K-Means Cluster Analysis based on the previously identified number of clusters
+#
+dune.fit.3 <- kmeans(dune, 3, nstart = 50) 
+#
+# As the final result of k-means clustering result is sensitive to the random starting assignments, 
+# we specify nstart = 50. This means that R will try 50 different random starting assignments and then
+# select the best results corresponding to the one with the lowest within cluster variation.
+# Note that k-means clustering involves randomness so you won't neccessarily get exactly the same results 
+# if you repeat it.
+#
+# There are also several different algorithms that can be used in k-means clustering, and different software 
+# have can use different defaults.Check out the help file for the kmeans function if you want to know more
+# about these.
+#
 #cluster number for each data point
-fit$cluster
+#
+dune.fit.3$cluster
+#
 #cluster sizes
-fit$size
+#
+dune.fit.3$size
+#
 #compare clusters to management category
-table(fit$cluster, dune.env.original$Management)
+#
+table(dune.fit.3$cluster, dune.env.original$Management)
+#
+# there are four management categories, try k-means clustering with k=4
+#
+dune.fit.4 <- kmeans(dune, 4, nstart = 50) 
+#
+#cluster number for each data point
+#
+dune.fit.4$cluster
+#
+#cluster sizes
+#
+dune.fit.4$size
+#
+#compare clusters to management category
+#
+table(dune.fit.4$cluster, dune.env.original$Management)
+#
 #try some approaches to hierarchical clustering
+#
 dend2 <- dune %>% # data
         dist(method = "euclidean") %>% # calculate a distance matrix, choose method 
         hclust(method = "ward.D") %>% # Hierarchical clustering, choose method 
         as.dendrogram # Turn the object into a dendrogram.
 dend2 %>% set("labels_color") %>% set("branches_lwd") %>%  set("branches_k_color", k = 4) %>% plot
+#
 #the dist() function does not include Bray-Curtis but we have already made a distance matrix using 
 #the vegdist() function from vegan.
+#
 dend3 <- dune.dist %>% # data (Bray-Curtis)
         hclust(method = "aver") %>% # Hierarchical clustering, choose method 
         as.dendrogram # Turn the object into a dendrogram.
 dend3 %>% set("labels_color") %>% set("branches_lwd") %>%  set("branches_k_color", k = 4) %>% plot
+#
 #we can colour the labels based on their grouping in the kmeans analysis to compare clusters
-dend3 %>% set("labels_color", fit$cluster) %>% set("branches_lwd") %>%  set("branches_k_color", k = 4) %>% plot
+#
+dend3 %>% set("labels_color", dune.fit.3$cluster) %>% set("branches_lwd") %>%  set("branches_k_color", k = 4) %>% plot
+#
 #tanglegram is a nice function to compare dendrograms that you might want to try out as an extra
+#
 tanglegram(dend2, dend3)
+#
+# finally, should the Dune data be clustered at all?
+#
+library(clustertend)
+#
+# Compute Hopkins statistic for the Dune dataset
+#
+set.seed(123)
+#
+hopkins(dune, n = nrow(dune)-1)
 ```
 
 <br>
@@ -1037,11 +1143,69 @@ abline(h = 1.75)
 ***
 
 ### <span style="color:cornflowerblue">Question 27: Principal Response Curves</span>
-
-#### <span style="color:forestgreen">PRC </span>
+In the following exercise, we will attempt to identify temporal structure in a data set in two ways.
+First, we will perform an RDA against time, we will then perform a more appropriate analysis using 
+Principal Response Curves (PRC).
+#### <span style="color:forestgreen"> At the conclusion of this exercise, you should be able to state:
+(i) Was there an effect of dose over time on the invertebrate community?
+(ii) Which species changed most under the highest dose compared to the control ? </span>
 
 ```{r}
-#to follow
+# We will use the pyrifos data set, which we have not previously seen.
+#
+help(pyrifos)
+#
+# As you will have seen from the description of the pyrifos data set, we need to do some data manipulation
+# before it will be possible to perform any analysis.
+#
+data(pyrifos)
+ditch_ <- gl(12, 1, length=132)
+week_ <- gl(11, 12, labels=c(-4, -1, 0.1, 1, 2, 4, 8, 12, 15, 19, 24))
+dose_ <- factor(rep(c(0.1, 0, 0, 0.9, 0, 44, 6, 0.1, 44, 0.9, 0, 6), 11)) 
+#
+# first, let's see if there is temporal structure in the data by performing an RDA with time as the 
+# predictor variable
+#
+pyrifos.RDA.week<-rda(pyrifos ~ week_)
+summary(pyrifos.RDA.week)
+#
+# Display the ordination plot to see if there may be interpretable temporal structure
+#
+pyrifos.RDA.week.plot<-ordiplot(pyrifos.RDA.week)
+text(pyrifos.RDA.week.plot,"centroids", col="blue",pos=2,cex=2)
+#
+# now can we say anything about dose effects?
+#
+pyrifos.RDA.dose<-rda(pyrifos ~ dose_)
+summary(pyrifos.RDA.dose)
+#
+# Display the ordination plot to see if there is interpretable structure related to dose
+#
+pyrifos.RDA.dose.plot<-ordiplot(pyrifos.RDA.dose)
+text(pyrifos.RDA.dose.plot,"centroids", col="blue",pos=2,cex=2)
+#
+# Now perform the appropriate analysis for exploring temporal structure
+#
+pyrifos.PRC<-prc(pyrifos, treatment=dose_, time=week_)
+summary(pyrifos.PRC)   
+#
+# plot some results
+#
+plot(pyrifos.PRC)
+#
+# Plotting the total result set is a bit messy, plot only the common species based on sum of
+# abundances
+#
+pyrifos.SumOfAbundances<-colSums(pyrifos)
+plot(pyrifos.PRC,select=pyrifos.SumOfAbundances > 100)
+logabu <- colSums(pyrifos)
+plot(pyrifos.PRC, select = logabu > 100)
+#
+## Ditches are randomized, we have a time series, and are only
+## interested in the first axis
+pyrifos.PRC.ctrl<- how(plots = Plots(strata = ditch_,type = "free"),
+	within = Within(type = "series"), nperm = 99)
+anova(pyrifos.PRC, permutations = pyrifos.PRC.ctrl, first=TRUE)
 ```
 ***
 
