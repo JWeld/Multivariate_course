@@ -168,7 +168,7 @@ par(mfrow = c(1,1))
 # Second plot is the PCA on scaled data
 # Both plots with plot scaling focused on species
 par(mfrow = c(1,2))
-biplot(env.pca2, scaling = "species", correlation = TRUE, main = "PCA on un-sclaed data,\nplot scaling on correlations")
+biplot(env.pca2, scaling = "species", correlation = TRUE, main = "PCA on un-scaled data,\nplot scaling on correlations")
 biplot(env.pca, scaling = "species", correlation = FALSE, main = "PCA on scaled data")
 par(mfrow = c(1,1))
 
@@ -271,9 +271,9 @@ code for the question 5.
 
 <br>
 
-### <span style="color:cornflowerblue">Question 7:	Effects from increased variation. Add one new sample to the data, then add a cover of 9 for the existing species Chenopodium album "Chealbu" in the new sample. Make a new DCA-ordination. <br> Next, remove the Che alb = 9, and add instead a cover of 5 for the exisiting species Juncbufo and make a new DCA. </span>
+### <span style="color:cornflowerblue">Question 7:	Effects from increased variation. Add one new sample to the data, then add a cover of 9 for the existing species Chenopodium album "Chealbu" in the new sample. Make a new DCA-ordination. <br> Next, remove the Chealbu = 9, and add instead a cover of 5 for the exisiting species Juncbufo and make a new DCA. </span>
 
-#### <span style="color:forestgreen"> What happens with the eigenvalues and ordination after adding Che alb and after adding Leo aut? Why did we choose to add these two species in the new sample? </span>
+#### <span style="color:forestgreen"> What happens with the eigenvalues and ordination after adding Chealbu and after adding Juncbufo? Why did we choose to add these two species in the new sample? </span>
 
 ```{r ex7, inclue=TRUE, warning=FALSE, message=FALSE}
 # figure out the column number for Chenopodium album (abbreviated "Chenalbu")
