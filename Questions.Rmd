@@ -1300,14 +1300,14 @@ arrange(rownames_to_column(iva.df), desc(HF))
 
 PLS regression, like PCA, seeks to find components which maximize the variability of predictors but differs from PCA as PLS requires the components to have maximum correlation with the response. The predictor variables are mapped to a smaller set of variables, and within that smaller space we perform a regression against the outcome variable. PLS aims to choose new mapped variables that maximally explain the outcome variable.
 
-```{r PLS, echo=TRUE, message=FALSE, warning=FALSE}
+```{r PLS, message=FALSE, warning=FALSE}
 data.pls <- readRDS("Trend_Lakes_2015_PLS.RDS")
 #View(data.pls)
 library(pls)
 #This function takes the same form as a lot of regression models in R:
 #plsr(Response variable ~ Explanatory Variables, data = yourdata, scale = TRUE/FALSE)
 
-pls.fit <- plsr(Species_count ~ ., data = data.pls[c(9:34)], scale = TRUE,
+pls.fit <- plsr(Species_number ~ ., data = data.pls[c(9:34)], scale = TRUE,
                 na.action = na.omit, validation = "CV")
 
 #The next step is to remove unwanted variables and then build a model.  
@@ -1318,7 +1318,7 @@ cv <- RMSEP(pls.fit)
 best.dims <- which.min(cv$val[estimate = "adjCV", , ]) - 1
 best.dims 
 # Rerun the model
-pls.fit2 <-  plsr(Species_count ~ ., data = data.pls[c(6:34)], ncomp = best.dims)
+pls.fit2 <-  plsr(Species_number ~ ., data = data.pls[c(6:34)], ncomp = best.dims)
 #Finally, we extract the useful information and format the output.
 coefficients <-  coef(pls.fit2)
 sum.coef <-  sum(sapply(coefficients, abs))
