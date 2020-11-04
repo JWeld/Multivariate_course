@@ -543,7 +543,7 @@ plot(fit)
 #CCA 
 dune.cca <- cca(dune ~ . , dune.env)
 dune.cca
-ordiplot(dune.cca, type="text", main="CA")
+ordiplot(dune.cca, type="text", main="CCA")
 ```
 
 <br>
