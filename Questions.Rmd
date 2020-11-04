@@ -488,7 +488,7 @@ legend("topright",paste("SD =",round(sd(d1mean),1))) # Legend with standard devi
 
 #### <span style="color:forestgreen"> Compare the ordination diagrams and numerical results! What does the significance test tell you? When only looking at the results, which method explains the variation best? Taking the nature of the data into account, which method should be used?  </span>
 
-```{r ex11, inclue=TRUE, warning=FALSE, message=FALSE}
+```{r ex11, echo=FALSE, message=FALSE, warning=FALSE, inclue=TRUE}
 # RDA 
 dune.rda <- rda(dune ~ . , dune.env)
 summary(dune.rda)
@@ -500,8 +500,10 @@ summary(dune.cca)
 anova(dune.cca)
 
 #plots
+par(mfrow= c(1,2))
 ordiplot(dune.rda, type="text", main="RDA")
 ordiplot(dune.cca, type="text", main="CCA")
+par(mfrow= c(1,1))
 ```
 
 <br>
@@ -543,7 +545,13 @@ plot(fit)
 #CCA 
 dune.cca <- cca(dune ~ . , dune.env)
 dune.cca
+ordiplot(dune.cca, type="text", main="CA")
+
+par(mfrow = c(1,2))
+ordiplot(dune.ca,  type="text", main="CA with env. fitted after")
+plot(fit)
 ordiplot(dune.cca, type="text", main="CCA")
+par(mfrow = c(1,1))
 ```
 
 <br>
@@ -582,8 +590,8 @@ par(mfrow= c(1,1))
 
 # Same as above, but here with sites and species
 par(mfrow= c(1,2))
-plot(cca.dune, display = c("sp", "wa", "cn"), scaling = "species", main = "Weighted average")
-plot(cca.dune, display = c("sp", "lc", "cn"), scaling = "species", main = "Linear combination")
+plot(cca.dune, display = c("wa", "cn"), scaling = "species", main = "Weighted average")
+plot(cca.dune, display = c("lc", "cn"), scaling = "species", main = "Linear combination")
 par(mfrow= c(1,1))
 
 ```
@@ -607,6 +615,12 @@ MCperm
 # Plot the ordination with only Management
 ordiplot(dune.ccaMN, type = "points", main = "CCA only Management")
 ordihull(dune.ccaMN,groups = dune.env.original$Management,draw = "polygon",col = "grey70", label = T)
+
+par(mfrow =c(1,2))
+ordiplot(dune.cca, type="text", main="CCA w. all env.")
+ordiplot(dune.ccaMN, type = "points", main = "CCA only Management")
+ordihull(dune.ccaMN,groups = dune.env.original$Management,draw = "polygon",col = "grey70", label = T)
+par(mfrow =c(1,2))
 ```
 
 <br>
@@ -676,6 +690,13 @@ MN.cca2 <- cca(dune ~ Management + Condition(A1 + Moisture + Manure), data=dune.
 summary(MN.cca2)
 #permutation test
 permutest(MN.cca2, permutations=999)
+
+# Plot the ordination
+ordiplot(MN.cca2, type = "points")
+ordihull(MN.cca2,groups = dune.env.original$Management,draw = "polygon",col = "grey70", label = T)
+
+# Are Management and Manure correlated, check visually
+# Make a boxplot manure~Management!
 ```
 
 <br>
@@ -1300,7 +1321,7 @@ arrange(rownames_to_column(iva.df), desc(HF))
 
 PLS regression, like PCA, seeks to find components which maximize the variability of predictors but differs from PCA as PLS requires the components to have maximum correlation with the response. The predictor variables are mapped to a smaller set of variables, and within that smaller space we perform a regression against the outcome variable. PLS aims to choose new mapped variables that maximally explain the outcome variable.
 
-```{r PLS, message=FALSE, warning=FALSE}
+```{r PLS, echo=TRUE, message=FALSE, warning=FALSE}
 data.pls <- readRDS("Trend_Lakes_2015_PLS.RDS")
 #View(data.pls)
 library(pls)
