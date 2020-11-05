@@ -1,9 +1,8 @@
 ---
 title: "MVA Course"
 output:
-  html_document:
-    df_print: paged
   pdf_document: default
+  html_document: default
   html_notebook: default
 ---
 ```{r setup, include=FALSE, message=FALSE, warning=FALSE}
@@ -1307,66 +1306,50 @@ arrange(rownames_to_column(iva.df), desc(HF))
 PLS regression, like PCA, seeks to find components which maximize the variability of predictors but differs from PCA as PLS requires the components to have maximum correlation with the response. The predictor variables are mapped to a smaller set of variables, and within that smaller space we perform a regression against the outcome variable. PLS aims to choose new mapped variables that maximally explain the outcome variable.
 
 ```{r PLS, echo=TRUE, message=FALSE, warning=FALSE}
+
 data.pls <- readRDS("Trend_Lakes_2015_PLS.RDS")
 #View(data.pls)
 library(pls)
 #This function takes the same form as a lot of regression models in R:
 #plsr(Response variable ~ Explanatory Variables, data = yourdata, scale = TRUE/FALSE)
 
-pls.fit <- plsr(Biovolume_exGonyo ~ ., data = data.pls[c(9:34)], scale = TRUE,
-                na.action = na.omit, validation = "CV")
+pls.fit <- plsr(Biovolume_exGonyo ~ ., data = data.pls[c(7:35)], scale = TRUE,
+                na.action = na.omit, validation = "LOO")
 
-#The next step is to remove unwanted variables and then build a model.  
-#Cross validation is used to find the optimal number of retained dimensions.
+#Cross validation is used to help us find the optimal number of retained dimensions.
 #Then the model is rebuilt with this optimal number of dimensions. 
 #Find the number of dimensions with lowest cross validation error
 cv <- RMSEP(pls.fit)
 best.dims <- which.min(cv$val[estimate = "adjCV", , ]) - 1
 best.dims 
+#There is also a permutation method for finding the optimal number of dimensions
+ncomp.permut <- selectNcomp(pls.fit, method = "randomization", plot = TRUE, 
+                            ylim = c(0,2.0), xlim = c(0,10))
+summary(pls.fit)
 # Rerun the model
-pls.fit2 <-  plsr(Biovolume_exGonyo ~ ., data = data.pls[c(9:34)], ncomp = best.dims)
+pls.fit2 <-  plsr(Biovolume_exGonyo ~ ., data = data.pls[c(7:35)], ncomp = best.dims, na.action = na.omit)
 #Finally, we extract the useful information and format the output.
 coefficients <-  coef(pls.fit2)
 sum.coef <-  sum(sapply(coefficients, abs))
 coefficients <-  coefficients * 100 / sum.coef
 coefficients <-  sort(coefficients[, 1 , 1])
 barplot(tail(coefficients, 3))
-#The regression coefficients are normalized so their absolute sum is 100 and the result is #sorted.
-#The results below show that 'Total_N' and 'Mn' are the two most important positive #predictors of 'Species_count'.  You could run the following to see the other end of the scale for negative predictors.
+#The regression coefficients are normalized so their absolute sum is 100 and the result is sorted.
+#The results below show that 'Total_P' and 'Turbulance' are the two most important positive predictors of biovolume.
+#You can run the following to see the other end of the scale for negative predictors.
 barplot(head(coefficients, 3))
-#Here we see that "Fe", iron is the most important negative predictor.
+#Here we see that Secchi depth and pH ares the most important negative predictors.
 summary(pls.fit2)
-coefplot(pls.fit2)
-
-#The loading plot is often used for interpretation purposes, for instance to look for known #spectral peaks or profiles:
-plot(pls.fit2, "loadings", comps = 1:2, legendpos = "topleft", xlab = "nm")
-abline(h = 0)
-
+#We can plot the scores
+corrplot(pls.fit2, comps=1:3, labels = names(coefficients) )
+#The loading plot is often used for interpretation purposes, for instance to look for known spectral peaks or profiles:
+plot(pls.fit2, "loadings", comps = 1:8, legendpos = "topright", xlab = "nm")
 #This gives a pairwise plot of the score values for the three first components.
 #Score plots are often used to look for patterns, groups or outliers in the data. 
-plot(pls.fit2, plottype = "scores", comps = 1:3)
-plot(pls.fit2, ncomp = 2, asp = 1, line = TRUE)
+plot(pls.fit2, plottype = "scores", comps = 1:3,labels = names(coefficients))
+plot(pls.fit2, ncomp = best.dims, asp = 1, line = TRUE)
 
-```
 
-We can try a different reponse variable, Biovolume, and also look at the scores and loadings. 
-```{r}
-pls.fit.b <- plsr(Biovolume ~ ., data = data.pls[c(9:34)], scale = TRUE,
-                na.action = na.omit, validation = "CV")
-
-#Find the number of dimensions with lowest cross validation error
-cv <- RMSEP(pls.fit.b)
-best.dims <- which.min(cv$val[estimate = "adjCV", , ]) - 1
-best.dims 
-# Rerun the model
-pls.fit.b2 <-  plsr(Biovolume ~ ., data = data.pls[c(6:34)], ncomp = best.dims)
-#Finally, we extract the useful information and format the output.
-coefficients <-  coef(pls.fit.b2)
-sum.coef <-  sum(sapply(coefficients, abs))
-coefficients <-  coefficients * 100 / sum.coef
-coefficients <-  sort(coefficients[, 1 , 1])
-barplot(tail(coefficients, 3))
-barplot(head(coefficients, 3))
 
 
 ```
