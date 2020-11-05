@@ -846,7 +846,7 @@ with(EnvTS, anova(time.cca, by="term", perm=500, strata=Plot))
 time2.cca <- cca(SpeTS ~ Time, data=EnvTS)
 time2.cca
 #permutation test
-with(EnvTS, anova(time2.cca, by="term", perm=500))
+with(EnvTS, anova(time2.cca, by="term", perm=100))
 ```
 
 
@@ -967,7 +967,18 @@ help(mantel)
 mantel(insects.distance,plants.distance)
 mantel(insects.distance,plants.distance,method="spear")
 ```
+We can also take the output from one ordination and use it in another
 
+```{r}
+
+bugs.ca<-cca(insects) # Make a CA on the insect data set
+ca.site.scores<-vegan::scores(bugs.ca, c(1,2), display = "sites") # Extract the site scores from the CA (axis 1 and2)
+dune.env.bugs<-cbind(dune.env, ca.site.scores) # Add the site scores to the dune.env
+dune.bugs.cca<-cca(dune, dune.env.bugs) # Make a CCA on the plant data with CA axis 1 and 2 as additional environmental variables
+dune.bugs.cca
+anova(dune.bugs.cca)
+plot(dune.bugs.cca)
+```
 
 <br>
 
