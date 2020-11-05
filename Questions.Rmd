@@ -537,6 +537,7 @@ Function vif.cca gives the variance inflation factors for each constraint or con
 
 ```{r ex13, inclue=TRUE, warning=FALSE, message=FALSE}
 # CA with env. variables 
+dune.ca <- cca(dune)
 fit <- envfit(dune.ca, dune.env, perm=999)
 fit
 ordiplot(dune.ca,  type="text", main="CA with env. variables fitted after")
@@ -565,12 +566,11 @@ par(mfrow = c(1,1))
 ```{r}
 #### Illustration of difference between WA and LC scores
 
-data("dune")
-data("dune.env")
-dune.env$Moisture<-as.numeric(dune.env$Moisture) #Set Moisture to numeric for the illustration of WA and LC
+dune.env2 <- dune.env.original
+dune.env2$Moisture<-as.numeric(dune.env$Moisture) #Set Moisture to numeric for the illustration of WA and LC
 
 # Make a CCA with Management and Moisture as explanatory variables
-cca.dune<-cca(dune~Management + Moisture, dune.env)
+cca.dune<-cca(dune~Management + Moisture, dune.env2)
 # Look at the result
 anova(cca.dune)
 summary(eigenvals(cca.dune))
@@ -580,12 +580,12 @@ par(mfrow= c(1,2)) # To get two plots beside each other
 plot(cca.dune, type = "n", display = c("wa"), scaling = "sites", main = "WA", pch = 3)
 points(cca.dune, display = c("wa"), scaling = "sites", pch = 3)
 text(cca.dune, display = "wa", scaling = "sites", pos = 2)
-ordispider(cca.dune, dune.env$Management, col = "black", label= TRUE, scaling = "sites", display = "wa")
+ordispider(cca.dune, dune.env2$Management, col = "black", label= TRUE, scaling = "sites", display = "wa")
 
 plot(cca.dune, type = "n", display = c("lc"), scaling = "sites", main = "LC", pch = 3)
 points(cca.dune, display = c("lc"), scaling = "sites", col = "red", pch = 19)
 text(cca.dune, display = "lc", col = "red", scaling = "sites", pos = 3)
-ordispider(cca.dune, dune.env$Management, col = "red", label= TRUE, scaling = "sites", display = "lc")
+ordispider(cca.dune, dune.env2$Management, col = "red", label= TRUE, scaling = "sites", display = "lc")
 par(mfrow= c(1,1))
 
 # Same as above, but here with sites and species
@@ -723,7 +723,7 @@ cca.dune.0 <- cca(dune ~ 1, data = dune.env) # model containing only species mat
 sel.env.dune <- ordiR2step(cca.dune.0, scope = formula (cca.dune.all), R2scope = adjR2.cca.dune, direction = 'forward', permutations = 999)
 sel.env.dune
 sel.env.dune$anova
-
+ordiplot(sel.env.dune)
 ```
 Since there is (a potentially high) number of tests of significance during the forward selection procedure, 
 it is better to apply a correction for multiple testing issue. Here we apply the Holm correction.
@@ -800,19 +800,7 @@ The total variation in the dataset is the sum of all unconstrained eigenvalues.
 
 
 ```{r, warning=FALSE, message=FALSE}
-data("dune")
-data("dune.env")
-#as we did in Question 3:PCA, we need to reformulate the environmental data to make
-#new columns for each of the management methods.
-dummy_management <- as.data.frame(model.matrix( ~ Management - 1, data=dune.env )) 
-#add these to the dataset
-dune.env <- dune.env %>% select(A1, Moisture, Manure, Use) %>% cbind(.,dummy_management) 
-dune.env$Moisture <- as.numeric(as.character(dune.env$Moisture)) #make numeric
-dune.env$Manure <- as.numeric(as.character(dune.env$Manure))
-dune.env$Use <- as.numeric(dune.env$Use)
-#make column names shorter
-dune.env <- dune.env %>% rename(BF = ManagementBF, HF = ManagementHF,
-                                NM = ManagementNM, SF = ManagementSF)
+
 ## variance partitioning
 management <- dune.env[,c("BF", "HF", "NM", "SF")]
 soil <- dune.env[,c("A1", "Moisture")]
@@ -936,7 +924,6 @@ These are two ways of comparing ordinations or the structure in related multivar
 ```{r ex24, inclue=TRUE, warning=FALSE, message=FALSE}
 library(cocorresp)
 library(vegan)
-data(dune)
 #
 # DCA on the plant species data 
 #
@@ -1241,17 +1228,15 @@ ANOSIM gives you the P value and an R value. R value close to 1 indicates high s
 Try also the recommended alternative "adonis" - Analysis of variance using distance matrices - for partitioning distance matrices among sources of variation and fitting linear models (e.g., factors, polynomial regression) to distance matrices; uses a permutation test with pseudo-F ratios.
 ```{r}
 # Start with a CA with Management as environmental factor and hulls around the different management types
-data("dune")
-data("dune.env")
 dune.ca<-cca(dune)
-fit.mgm<-envfit(dune.ca~Management, dune.env, perm = 0)
+fit.mgm<-envfit(dune.ca~Management, dune.env.original, perm = 0)
 plot(dune.ca, type = "n", scaling = "symmetric")
-with(dune.env, points(dune.ca, display = "sites", scaling = "symmetric", col = as.numeric(Management), pch=16))
-with(dune.env, ordispider(dune.ca, Management, scaling = "symmetric", col="skyblue"))
-with(dune.env, ordihull(dune.ca, Management, scaling = "symmetric",label = TRUE))
+with(dune.env.original, points(dune.ca, display = "sites", scaling = "symmetric", col = as.numeric(Management), pch=16))
+with(dune.env.original, ordispider(dune.ca, Management, scaling = "symmetric", col="skyblue"))
+with(dune.env.original, ordihull(dune.ca, Management, scaling = "symmetric",label = TRUE))
 
 dune.dist <- vegdist(dune, method = "bray") #create distance matrix based on Bray-Curtis method
-dune.ano <- anosim(dune.dist, dune.env$Management) #Comparing groupings based on management
+dune.ano <- anosim(dune.dist, dune.env.original$Management) #Comparing groupings based on management
 summary(dune.ano)
 plot(dune.ano, xlab = "Anosim, Dune meadow management types")
 
@@ -1259,11 +1244,11 @@ plot(dune.ano, xlab = "Anosim, Dune meadow management types")
 
 # Try also the recommended alternative "adonis" - Analysis of variance using distance matrices - for partitioning distance matrices among sources of variation and fitting linear models (e.g., factors, polynomial regression) to distance matrices; uses a permutation test with pseudo-F ratios.
 
-dune.ado<-adonis(formula = dune~Management, data = dune.env, method = "bray")
+dune.ado<-adonis(formula = dune~Management, data = dune.env.original, method = "bray")
 dune.ado
 
 # You can also have more advanced models in adonis
-dune.ado2<-adonis(dune~Management*A1, data = dune.env)
+dune.ado2<-adonis(dune~Management*A1, data = dune.env.original)
 dune.ado2
 ```
 
@@ -1272,7 +1257,7 @@ After a significant ANOSIM, you may want to know which species are primarily res
 #### <span style="color:forestgreen"> Compare the different groups and check which species that contributes mostly to the difference between pairs of clusters.  </span>
 
 ```{r, warning=FALSE, message=FALSE}
-sim <- simper(dune, dune.env$Management) #try management groupings
+sim <- simper(dune, dune.env.original$Management) #try management groupings
 summary(sim)
 ```
 
@@ -1280,9 +1265,9 @@ Visually compare the result from simper with species positions in a biplot.
 
 ```{r}
 plot(dune.ca, type = "n", scaling = "species")
-with(dune.env, points(dune.ca, display = "sites", scaling = "species", col = as.numeric(Management), pch=16))
-with(dune.env, orditorp(dune.ca, display = "species", scaling = "species"))
-with(dune.env, ordihull(dune.ca, Management, scaling = "species",label = TRUE))
+with(dune.env.original, points(dune.ca, display = "sites", scaling = "species", col = as.numeric(Management), pch=16))
+with(dune.env.original, orditorp(dune.ca, display = "species", scaling = "species"))
+with(dune.env.original, ordihull(dune.ca, Management, scaling = "species",label = TRUE))
 ```
 
 <br>
@@ -1328,7 +1313,7 @@ library(pls)
 #This function takes the same form as a lot of regression models in R:
 #plsr(Response variable ~ Explanatory Variables, data = yourdata, scale = TRUE/FALSE)
 
-pls.fit <- plsr(Species_number ~ ., data = data.pls[c(9:34)], scale = TRUE,
+pls.fit <- plsr(Biovolume_exGonyo ~ ., data = data.pls[c(9:34)], scale = TRUE,
                 na.action = na.omit, validation = "CV")
 
 #The next step is to remove unwanted variables and then build a model.  
@@ -1339,7 +1324,7 @@ cv <- RMSEP(pls.fit)
 best.dims <- which.min(cv$val[estimate = "adjCV", , ]) - 1
 best.dims 
 # Rerun the model
-pls.fit2 <-  plsr(Species_number ~ ., data = data.pls[c(6:34)], ncomp = best.dims)
+pls.fit2 <-  plsr(Biovolume_exGonyo ~ ., data = data.pls[c(9:34)], ncomp = best.dims)
 #Finally, we extract the useful information and format the output.
 coefficients <-  coef(pls.fit2)
 sum.coef <-  sum(sapply(coefficients, abs))
@@ -1352,6 +1337,15 @@ barplot(head(coefficients, 3))
 #Here we see that "Fe", iron is the most important negative predictor.
 summary(pls.fit2)
 coefplot(pls.fit2)
+
+#The loading plot is often used for interpretation purposes, for instance to look for known #spectral peaks or profiles:
+plot(pls.fit2, "loadings", comps = 1:2, legendpos = "topleft", xlab = "nm")
+abline(h = 0)
+
+#This gives a pairwise plot of the score values for the three first components.
+#Score plots are often used to look for patterns, groups or outliers in the data. 
+plot(pls.fit2, plottype = "scores", comps = 1:3)
+plot(pls.fit2, ncomp = 2, asp = 1, line = TRUE)
 
 ```
 
@@ -1374,12 +1368,5 @@ coefficients <-  sort(coefficients[, 1 , 1])
 barplot(tail(coefficients, 3))
 barplot(head(coefficients, 3))
 
-#The loading plot is often used for interpretation purposes, for instance to look for known #spectral peaks or profiles:
-plot(pls.fit.b2, "loadings", comps = 1:2, legendpos = "topleft", xlab = "nm")
-abline(h = 0)
 
-#This gives a pairwise plot of the score values for the three first components.
-#Score plots are often used to look for patterns, groups or outliers in the data. 
-plot(pls.fit.b2, plottype = "scores", comps = 1:3)
-plot(pls.fit.b2, ncomp = 2, asp = 1, line = TRUE)
 ```
