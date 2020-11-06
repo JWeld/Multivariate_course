@@ -1315,8 +1315,7 @@ arrange(rownames_to_column(iva.df), desc(HF))
 #### <span style="color:forestgreen"> Examine the p-values to explore which explanatory variables actually give a significant result.
 (i) Which explanatory variables are most important to explain the response variable (Biovolume)?
 (ii) Are there any obvious outliers in the dataset?
-(iii) Can you find which explanatory variables that are most important for the responsevariable, looking at the loading plot?
-(iv) Does the data seemed to be in need of a transformation? </span>
+(iii) Does the data seemed to be in need of a transformation? </span>
 PLS regression, like PCA, seeks to find components which maximize the variability of predictors but differs from PCA as PLS requires the components to have maximum correlation with the response. The predictor variables are mapped to a smaller set of variables, and within that smaller space we perform a regression against the outcome variable. PLS aims to choose new mapped variables that maximally explain the outcome variable.
 
 ```{r PLS, echo=TRUE, message=FALSE, warning=FALSE}
