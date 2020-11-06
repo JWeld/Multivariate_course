@@ -1,8 +1,8 @@
 ---
 title: "MVA Course"
 output:
-  pdf_document: default
   html_document: default
+  pdf_document: default
   html_notebook: default
 ---
 ```{r setup, include=FALSE, message=FALSE, warning=FALSE}
@@ -1354,14 +1354,9 @@ barplot(tail(coefficients, 3))
 barplot(head(coefficients, 3))
 
 summary(pls.fit2)
-pls.fit2$loadings
+#pls.fit2$loadings
 #We can plot the scores
 corrplot(pls.fit2, comps=1:3, labels = names(coefficients) )
-#The loading plot is often used for interpretation purposes, for instance to look for known spectral peaks or profiles:  #S: I think this is mainly true when you use PLS on other type of data, in this case it doesn´t make any sense (on this type of data). 
-#What we would want is to have the loading.weight plot as a scatter plot (like the scoreplots below),
-#with the labels of each variable on top of the loadings, that's what you use to look for patterns.
-#I think PLS was originally created to look at spectral data and then this below makes sense, but not here
-plot(pls.fit2, "loadings", comps = 1:8, legendpos = "topright", xlab = "nm")
 
 #This gives a pairwise plot of the score values for the three first components.
 #Score plots are often used to look for patterns, groups or outliers in the data. 
@@ -1369,8 +1364,6 @@ plot(pls.fit2, "loadings", comps = 1:8, legendpos = "topright", xlab = "nm")
 plot(pls.fit2, plottype = "scores", comps = 1:3,labels = data.pls$Stationsnamn)
 #study the predicted vs. measured plot to see if the data needs to be transformed
 plot(pls.fit2, ncomp = best.dims, asp = 1, line = TRUE)
-
-
 
 
 ```
