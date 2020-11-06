@@ -1001,7 +1001,7 @@ Also try Ward's method
 #### <span style="color:forestgreen"> # Questions:
 (i) 	How many clusters seem to exist in the Dune data set?
 (ii)	Is a 3- or 4-cluster solution a better match to the management type in the dune.env dataset?
-(iii) Do the two approaches to hierachical clustering reveal similar patterns in the Dune data set?
+(iii) Do the two approaches to hierarchical clustering reveal similar patterns in the Dune data set?
 (iv) Interpret the Hopkins statistic for the Dune data set </span>
 
 
@@ -1039,7 +1039,7 @@ dune.fit.3 <- kmeans(dune, 3, nstart = 50)
 # if you repeat it.
 #
 # There are also several different algorithms that can be used in k-means clustering, and different software 
-# have can use different defaults.Check out the help file for the kmeans function if you want to know more
+#can use different defaults.Check out the help file for the kmeans function if you want to know more
 # about these.
 #
 #cluster number for each data point
@@ -1312,8 +1312,11 @@ arrange(rownames_to_column(iva.df), desc(HF))
 
 ### <span style="color:cornflowerblue">Question 30: PLS </span>
 
-#### <span style="color:forestgreen"> Examine the p-values to explore which response variables actually give a significant result. </span>
-
+#### <span style="color:forestgreen"> Examine the p-values to explore which explanatory variables actually give a significant result.
+(i) Which explanatory variables are most important to explain the response variable (Biovolume)?
+(ii) Are there any obvious outliers in the dataset?
+(iii) Can you find which explanatory variables that are most important for the responsevariable, looking at the loading plot?
+(iv) Does the data seemed to be in need of a transformation? </span>
 PLS regression, like PCA, seeks to find components which maximize the variability of predictors but differs from PCA as PLS requires the components to have maximum correlation with the response. The predictor variables are mapped to a smaller set of variables, and within that smaller space we perform a regression against the outcome variable. PLS aims to choose new mapped variables that maximally explain the outcome variable.
 
 ```{r PLS, echo=TRUE, message=FALSE, warning=FALSE}
@@ -1346,18 +1349,25 @@ coefficients <-  coefficients * 100 / sum.coef
 coefficients <-  sort(coefficients[, 1 , 1])
 barplot(tail(coefficients, 3))
 #The regression coefficients are normalized so their absolute sum is 100 and the result is sorted.
-#The results below show that 'Total_P' and 'Turbulance' are the two most important positive predictors of biovolume.
+
 #You can run the following to see the other end of the scale for negative predictors.
 barplot(head(coefficients, 3))
-#Here we see that Secchi depth and pH ares the most important negative predictors.
+
 summary(pls.fit2)
+pls.fit2$loadings
 #We can plot the scores
 corrplot(pls.fit2, comps=1:3, labels = names(coefficients) )
-#The loading plot is often used for interpretation purposes, for instance to look for known spectral peaks or profiles:
+#The loading plot is often used for interpretation purposes, for instance to look for known spectral peaks or profiles:  #S: I think this is mainly true when you use PLS on other type of data, in this case it doesn´t make any sense (on this type of data). 
+#What we would want is to have the loading.weight plot as a scatter plot (like the scoreplots below),
+#with the labels of each variable on top of the loadings, that's what you use to look for patterns.
+#I think PLS was originally created to look at spectral data and then this below makes sense, but not here
 plot(pls.fit2, "loadings", comps = 1:8, legendpos = "topright", xlab = "nm")
+
 #This gives a pairwise plot of the score values for the three first components.
 #Score plots are often used to look for patterns, groups or outliers in the data. 
+#The scores represents the different lakes, so it doesn't make sense to label them with the varibale names
 plot(pls.fit2, plottype = "scores", comps = 1:3,labels = names(coefficients))
+#study the predicted vs. measured plot to see if the data needs to be transformed
 plot(pls.fit2, ncomp = best.dims, asp = 1, line = TRUE)
 
 
