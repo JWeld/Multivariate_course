@@ -416,7 +416,7 @@ These are only a few examples on how to assess data quality.
 
 
 ```{r ex10, inclue=TRUE, message=FALSE, warning=FALSE}
-library("vegan") 
+#library("vegan") 
 library("reshape2")
 library("outliers") # For Grubbs test
 library("gdata") # for unmatrix
@@ -432,7 +432,7 @@ mvo.dune[sample(1:length(mvo.dune),n_outl, replace = FALSE)]<-v_outl # Replace s
 mvo.dune[sample(1:length(mvo.dune),n_outl, replace = FALSE)]<-NA # Replace some data with NAs, at random positions
 
 # Cleveland plot to inspect data
-dotchart(as.matrix(mvo.dune), lcolor=col(mvo.dune), main="Cleveland plot", xlab="Observerd value")
+dotchart(as.matrix(mvo.dune), main="Cleveland plot", xlab="Observerd value")
 
 # Find data > 9, as no value should be higher than 9 in the dune meadow data set
 (GT9 <- which(mvo.dune > 9, arr.ind=TRUE))
@@ -740,7 +740,7 @@ sel.env.dune_adj$anova
 
 ### <span style="color:cornflowerblue">Question 20: Interpreting ordination results using species traits </span>
 
-#### <span style="color:forestgreen"> Experienced plant ecologists may already have looked at the species in the Dune Meadow ordination graphs and concluded that species with similar traits occur together. This is possible if you have good knowledge about plant species ecological preferences, and if there are relatively few species in your dataset. In this exercise we will use tabulated data on species ecological preferences (the Ellenberg indicator values) to interpret the results of the ordinations. Which Ellenberg values are most important for the distribution of the species? What do the different axes represent in terms of environmental gradients? </span>
+#### <span style="color:forestgreen"> Experienced plant ecologists may already have looked at the species in the Dune Meadow ordination graphs and concluded that species with similar traits occur together. This is possible if you have good knowledge about plant species' ecological preferences, and if there are relatively few species in your dataset. In this exercise we will use tabulated data on species ecological preferences (the Ellenberg indicator values) to interpret the results of the ordinations. Which Ellenberg values are most important for the distribution of the species? What do the different axes represent in terms of environmental gradients? </span>
 
 ```{r message=FALSE, warning=FALSE}
 #load Ellenberg data
@@ -819,7 +819,7 @@ plot (varp, digits = 2, Xnames = c('Management', 'Soil'), bg = c('red', 'blue'))
 
 #### <span style="color:forestgreen"> Is there a significant change in species composition over time?  What is the effect of defining Plots as cofactors? </span>
 
-Quite often vegetation ecologists have data from repeated inventories in permanent plots. The overall question to answer is if there has been a significant and directional change in the species composition. In this exercise we have rearranged the Dune Meadow data so that it consists of only 10 plots, each analysed 2 times (same species as in all other exercises, just grouping and rearrangement of plots). We want to analyse if there has been a consistent change in species composition between the two inventories. We are thus not interested in differences between the ten plots. 
+Quite often vegetation ecologists have data from repeated inventories in permanent plots. The overall question to answer is if there has been a significant and directional change in the species composition. In this exercise we have rearranged the Dune Meadow data so that it consists of only 10 plots, each analysed 2 times (same Dune Meadow data as in all other exercises, just grouping and rearrangement of plots). We want to analyse if there has been a consistent change in species composition between the two inventories. We are thus not interested in differences between the ten plots. 
 
 ```{r, warning=FALSE, message=FALSE}
 #This partials out the effect of Plot before analysing the effects of Time
@@ -914,15 +914,15 @@ ordihull(baci.cca,groups=treat,draw="polygon",col="grey70",label=T)#draw hulls a
 ### <span style="color:cornflowerblue">Question 24:	Comparing ordinations </span>
 
 #### <span style="color:forestgreen"> Questions:
-(i)  How similar is the arrangemont of sites in ordination space based on plant and insect data?
-(ii) Do the three analyses (Procrustes, Co-Correspondence and Mantel) indicate similar odinations of sites based on plant vs. insect data?
+(i)  How similar is the arrangement of sites in ordination space based on plant and insect data?
+(ii) Do the three analyses (Procrustes, Co-Correspondence and Mantel) indicate similar ordinations of sites based on plant vs. insect data?
  </span>
 
 These are two ways of comparing ordinations or the structure in related multivariate datasets. They are used to compare how objects differ when they are described by different sets of descriptors, or if there are repeated samplings of the same objects using the same descriptors.
 
 ```{r ex24, inclue=TRUE, warning=FALSE, message=FALSE}
 library(cocorresp)
-library(vegan)
+#library(vegan)
 #
 # DCA on the plant species data 
 #
@@ -1076,7 +1076,7 @@ dend2 <- dune %>% # data
         dist(method = "euclidean") %>% # calculate a distance matrix, choose method 
         hclust(method = "ward.D") %>% # Hierarchical clustering, choose method 
         as.dendrogram # Turn the object into a dendrogram.
-dend2 %>% set("labels_color") %>% set("branches_lwd") %>%  set("branches_k_color", k = 4) %>% plot
+dend2 %>% set("labels_color") %>% set("branches_lwd") %>%  set("branches_k_color", k = 4) %>% plot(main = "Euclidean")
 #
 #the dist() function does not include Bray-Curtis but we have already made a distance matrix using 
 #the vegdist() function from vegan.
@@ -1084,11 +1084,11 @@ dend2 %>% set("labels_color") %>% set("branches_lwd") %>%  set("branches_k_color
 dend3 <- dune.dist %>% # data (Bray-Curtis)
         hclust(method = "aver") %>% # Hierarchical clustering, choose method 
         as.dendrogram # Turn the object into a dendrogram.
-dend3 %>% set("labels_color") %>% set("branches_lwd") %>%  set("branches_k_color", k = 4) %>% plot
+dend3 %>% set("labels_color") %>% set("branches_lwd") %>%  set("branches_k_color", k = 4) %>% plot(main = "Average")
 #
 #we can colour the labels based on their grouping in the kmeans analysis to compare clusters
 #
-dend3 %>% set("labels_color", dune.fit.3$cluster) %>% set("branches_lwd") %>%  set("branches_k_color", k = 4) %>% plot
+dend3 %>% set("labels_color", dune.fit.3$cluster) %>% set("branches_lwd") %>%  set("branches_k_color", k = 4) %>% plot(main = "Average")
 #
 #tanglegram is a nice function to compare dendrograms that you might want to try out as an extra
 #
@@ -1254,11 +1254,11 @@ plot(dune.ano, xlab = "Anosim, Dune meadow management types")
 
 # Try also the recommended alternative "adonis" - Analysis of variance using distance matrices - for partitioning distance matrices among sources of variation and fitting linear models (e.g., factors, polynomial regression) to distance matrices; uses a permutation test with pseudo-F ratios.
 
-dune.ado<-adonis(formula = dune~Management, data = dune.env.original, method = "bray")
+dune.ado<-adonis2(formula = dune~Management, data = dune.env.original, method = "bray")
 dune.ado
 
 # You can also have more advanced models in adonis
-dune.ado2<-adonis(dune~Management*A1, data = dune.env.original)
+dune.ado2<-adonis2(dune~Management*A1, data = dune.env.original)
 dune.ado2
 ```
 
