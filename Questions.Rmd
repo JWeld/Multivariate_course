@@ -76,7 +76,7 @@ The "dune" dataset we will use is included in the vegan package (an extensive co
 
 #### <span style="color:forestgreen">Here, we will create a simple data set consisting of 2 columns of measurement made at 3 sites we will then calculate a series of distance metrics using the vegdist() function. Questions: 1. How do the metrics differ? 2. Which metric corresponds to a "standard" distance? 3. Where would one find the formula for the Mahalanobis distance?</span>
 
-```{r, warning=FALSE, message=FALSE}
+```{r message=FALSE, warning=FALSE}
 library(vegan)
 # create a triangular data set with 2 columns (x and y) and 3 rows
 #
@@ -103,10 +103,7 @@ help(vegdist)
 
 ### <span style="color:cornflowerblue">Question 3: In this	exercise we will use Principal Components Analysis on the dune meadow explanatory data. We will also explore the effects of different kinds of scaling on the ordination plot. NOTE that the scaling issues applies to all ordination techniques! </span>
 
-#### <span style="color:forestgreen"> Compare the plots on the PCA with and without scaling (PCA plot 4) and discuss the differences. 
-Is there any way to see that one is on scaled data and one is not? 
-What is the difference between PCA plot 4 and PCA plot 5? 
-Which one is best to use? Discuss the difference between the plots in plot PCA plot 6 and 7!
+#### <span style="color:forestgreen"> Compare the plots on the PCA with and without scaling (PCA plot 4) and discuss the differences.Is there any way to see that one is on scaled data and one is not? What is the difference between PCA plot 4 and PCA plot 5? Which one is best to use? Discuss the difference between the plots in plot PCA plot 6 and 7!
 </span>
 
 ```{r, warning=FALSE, message=FALSE}
@@ -313,11 +310,7 @@ Here, we will explore PCoA on four different distance matrices:
 
 The R base statistics library offers the routine cmdscale() for performing MDS. There are numerous other libraries offering PCoA analysis
 
-#### <span style="color:forestgreen"> After performing the four PCoA analyses, please answer the following questions:
-(i) 	How similar are the ordination plots from the four distance matrices?
-(ii)	Why are some plots more similar than others?
-(iii)	Which PCoA plot is most similar to the output from a PCA?
-(iv)	Which PCoA plot is most similar to the output from a CA? </span>
+#### <span style="color:forestgreen"> After performing the four PCoA analyses, please answer the following questions:How similar are the ordination plots from the four distance matrices? Why are some plots more similar than others? Which PCoA plot is most similar to the output from a PCA? Which PCoA plot is most similar to the output from a CA? </span>
 <br>
 ```{r}
 # generate the four distance matrices
@@ -361,11 +354,7 @@ text(dune.mahalanobis.location,labels=row.names(dune.mahalanobis.location),pos=2
 
 ### <span style="color:cornflowerblue">Question 9:	Non Metric Multidimensional Scaling </span>
 
-#### <span style="color:forestgreen"> At the conclusion of this exercise, you should be able to:
-(i)	State which metrics are supported in the vegan implementation of NMDS
-(ii)	Evaluate the appropriate number of dimensions for the ordination
-(iii)	Evaluate the consequences of using different distance metrics
-(iv)  Compare the vegan default NMDS to the results of a CA and a DCA </span>
+#### <span style="color:forestgreen"> At the conclusion of this exercise, you should be able to: State which metrics are supported in the vegan implementation of NMDS. Evaluate the appropriate number of dimensions for the ordination. Evaluate the consequences of using different distance metrics. Compare the vegan default NMDS to the results of a CA and a DCA. </span>
 
 ```{r ex8, inclue=TRUE, warning=FALSE, message=FALSE}
 # run NMDS with the defaults and 2 dimensions, what is the stress?
@@ -411,14 +400,14 @@ ordiplot(dune.DCA, type="text", main="DCA on Dune Meadow data")
 ### <span style="color:cornflowerblue">Question 10: Data Quality Assessment</span>
 These are only a few examples on how to assess data quality. 
 
-#### <span style="color:forestgreen">Is there a pattern in the distribution of missing values that may lead to the omission of a species or a sample? Is Grubbs test a good method for finding outliers in a multivariate data set? Would you say that the original Dune Meadow data set is OK for further analyses? Motivate your answer!</span>
+#### <span style="color:forestgreen">Is there a pattern in the distribution of missing values that may lead to the omission of a species or a sample? Would you say that the original Dune Meadow data set is OK for further analyses? Motivate your answer!</span>
 
 
 
 ```{r ex10, inclue=TRUE, message=FALSE, warning=FALSE}
 #library("vegan") 
 library("reshape2")
-library("outliers") # For Grubbs test
+library("outliers") 
 library("gdata") # for unmatrix
 library("VIM") # For matrixplot
 
@@ -448,12 +437,6 @@ matrixplot(mvo.dune)
 We can also try testing for outliers in the data. Be aware that this is only indicative, and you still need to exercise your judgement about what should be excluded as an outlier!
 
 ```{r}
-# To scan all variables with Grubbs test for outliers
-# Note: Only indicative!
-mvo.dune_melt<-melt(mvo.dune) # Restructure data
-a<-as.data.frame(do.call("rbind", with(mvo.dune_melt, tapply(value, Var1, function(x) 
-  unlist(grubbs.test(x)[c("statistic", "p.value", "alternative")])))))
-(a[which(a$p.value < 0.05),])
 
 # Indicative search for outliers in a multivariate data set. 
 # Multiple peaks and high SD indicate outliers may occur
@@ -913,9 +896,7 @@ ordihull(baci.cca,groups=treat,draw="polygon",col="grey70",label=T)#draw hulls a
 
 ### <span style="color:cornflowerblue">Question 24:	Comparing ordinations </span>
 
-#### <span style="color:forestgreen"> Questions:
-(i)  How similar is the arrangement of sites in ordination space based on plant and insect data?
-(ii) Do the three analyses (Procrustes, Co-Correspondence and Mantel) indicate similar ordinations of sites based on plant vs. insect data?
+#### <span style="color:forestgreen"> Questions:How similar is the arrangement of sites in ordination space based on plant and insect data? Do the three analyses (Procrustes, Co-Correspondence and Mantel) indicate similar ordinations of sites based on plant vs. insect data?
  </span>
 
 These are two ways of comparing ordinations or the structure in related multivariate datasets. They are used to compare how objects differ when they are described by different sets of descriptors, or if there are repeated samplings of the same objects using the same descriptors.
@@ -998,11 +979,7 @@ four management types). Test different hierarchical agglomeration algorithms and
 at least the Euclidian and the Bray-Curtis similarity measures for the hierarchical clustering technique.
 Also try Ward's method 
 
-#### <span style="color:forestgreen"> # Questions:
-(i) 	How many clusters seem to exist in the Dune data set?
-(ii)	Is a 3- or 4-cluster solution a better match to the management type in the dune.env dataset?
-(iii) Do the two approaches to hierarchical clustering reveal similar patterns in the Dune data set?
-(iv) Interpret the Hopkins statistic for the Dune data set </span>
+#### <span style="color:forestgreen"> Questions:How many clusters seem to exist in the Dune data set? Is a 3- or 4-cluster solution a better match to the management type in the dune.env dataset? Do the two approaches to hierarchical clustering reveal similar patterns in the Dune data set? Interpret the Hopkins statistic for the Dune data set. </span>
 
 
 
@@ -1116,10 +1093,7 @@ https://jonlefcheck.net/2015/02/06/a-practical-guide-to-machine-learning-in-ecol
 Here, we will use the iris data. This is a "classic" data set used for exploring multivariate 
 methods for discrimination.https://en.wikipedia.org/wiki/Iris_flower_data_set
 
-#### <span style="color:forestgreen">When you have completed the exercise, you should be able to answer the following questions:
-(i)	Based on a visual analysis, which dimensions provide the best separation between iris species?
-(ii)	Are your insights from the visual analysis confirmed by the partition tree analysis?
-(iii)	Does the partition tree provide a perfect species identification or are there misclassifications? </span>
+#### <span style="color:forestgreen">When you have completed the exercise, you should be able to answer the following questions: Based on a visual analysis, which dimensions provide the best separation between iris species? Are your insights from the visual analysis confirmed by the partition tree analysis? Does the partition tree provide a perfect species identification or are there misclassifications? </span>
 
 ```{r}
 # Before starting the analysis, we will generate pairwise scatterplots of the data
@@ -1164,9 +1138,8 @@ abline(h = 1.75)
 In the following exercise, we will attempt to identify temporal structure in a data set in two ways.
 First, we will perform an RDA against time, we will then perform a more appropriate analysis using 
 Principal Response Curves (PRC).
-#### <span style="color:forestgreen"> At the conclusion of this exercise, you should be able to state:
-(i) Was there an effect of dose over time on the invertebrate community?
-(ii) Which species changed most under the highest dose compared to the control ? </span>
+
+#### <span style="color:forestgreen">At the conclusion of this exercise, you should be able to state: Was there an effect of dose over time on the invertebrate community? Which species changed most under the highest dose compared to the control ? </span>
 
 ```{r}
 # We will use the pyrifos data set, which we have not previously seen.
@@ -1229,7 +1202,7 @@ anova(pyrifos.PRC, permutations = pyrifos.PRC.ctrl, first=TRUE)
 
 ### <span style="color:cornflowerblue">Question 28: Differences between groups. ANOSIM, adonis and SIMPER</span>
 
-#### <span style="color:forestgreen"> What does the results from anosim and adonis tell you? Give one other example of predefined groups that could be uses as the grouping variable(s)! </span>
+#### <span style="color:forestgreen"> What do the results from anosim and adonis tell you? Give one other example of predefined groups that could be uses as the grouping variable(s)! </span>
 
 ANOSIM (Analysis Of Similarities) is a non-parametric test of significant difference between two or more groups, based on any distance measure. In this case, use the clusters from the K-means exercise. Change to Bray-Curtis similarity index.
 
@@ -1304,11 +1277,11 @@ arrange(rownames_to_column(iva.df), desc(HF))
 ### <span style="color:cornflowerblue">Question 29: DFA</span>
 
 #### <span style="color:forestgreen">Discriminant Function Analysis </span>
-
+#### <span style="color:forestgreen">How well does the algorithm distinguish between the species? Here our groups are pre-defined (species). Would it be OK to use one of the clustering methods to find groups before running the DFA?
 The algorithm starts by finding directions that maximize the separation between classes, then use these directions to predict the class of individuals. These directions, called linear discriminants, are linear combinations of predictor variables. The Dune dataset is too small to really make use of this method (since we need to split the data into test and training parts) so we will here use the classic "Iris" dataset of different Iris plant species and the dimensions of different parts of their flowers
 
 ```{r DFA}
-# Prepare the data ####
+library(tidyverse)
 library(caret) 
 library(MASS)
 # Load the data
@@ -1340,6 +1313,7 @@ model
 plot(model)
 
 ```
+<br>
 LDA determines group means and computes, for each individual, the probability of belonging to the different groups. Each observation/individual is then assigned to the group with the highest probability score.
  
 The lda() outputs contain the following elements:
@@ -1386,15 +1360,13 @@ mean(predictions$class==test.transformed$Species)
 #Calculates a cross-tabulation of observed and predicted classes with associated statistics.
 confusionMatrix(test.data$Species, predictions$class)
 ```
+
 ***
 <br>
 
 ### <span style="color:cornflowerblue">Question 30: PLS </span>
 
-#### <span style="color:forestgreen"> Examine the p-values to explore which explanatory variables actually give a significant result.
-(i) Which explanatory variables are most important to explain the response variable (Biovolume)?
-(ii) Are there any obvious outliers in the dataset?
-(iii) Does the data seemed to be in need of a transformation? </span>
+#### <span style="color:forestgreen"> Examine the p-values to explore which explanatory variables actually give a significant result.Questions: Which explanatory variables are most important to explain the response variable (Biovolume)? Are there any obvious outliers in the dataset? Does the data seemed to be in need of a transformation? </span>
 PLS regression, like PCA, seeks to find components which maximize the variability of predictors but differs from PCA as PLS requires the components to have maximum correlation with the response. The predictor variables are mapped to a smaller set of variables, and within that smaller space we perform a regression against the outcome variable. PLS aims to choose new mapped variables that maximally explain the outcome variable.
 
 ```{r PLS, echo=TRUE, message=FALSE, warning=FALSE}
