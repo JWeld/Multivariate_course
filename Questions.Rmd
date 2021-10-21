@@ -1,9 +1,9 @@
 ---
 title: "MVA Course"
 output:
-  html_notebook: default
-  pdf_document: default
   html_document: default
+  pdf_document: default
+  html_notebook: default
 ---
 ```{r setup, include=FALSE, message=FALSE, warning=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -363,7 +363,7 @@ dune.NMDS.bray.2<-metaMDS(dune,k=2)
 #
 # run NMDS with the defaults and 3 dimensions, what is the stress ?
 #
-dune.NMDS.bray.2<-metaMDS(dune,k=3)
+dune.NMDS.bray.3<-metaMDS(dune,k=3)
 #
 # what happens when Euclidean distances are used?
 #
