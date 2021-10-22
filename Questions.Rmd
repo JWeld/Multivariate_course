@@ -494,9 +494,9 @@ par(mfrow= c(1,1))
 
 <br>
 
-### <span style="color:cornflowerblue">Question 12:	Use the results from the CCA ordination in exercise 11 to look at and interpret the variance inflation factor, and to look for warnings about outliers in the explanatory data!   </span>
+### <span style="color:cornflowerblue">Question 12:	Use the results from the CCA ordination in exercise 11 to look at and interpret the variance inflation factor, and to look for warnings about outliers in the explanatory data   </span>
 
-#### <span style="color:forestgreen"> Look at and interpret the inflation factors for each environmental variable! Are there any extreme values? </span>
+#### <span style="color:forestgreen"> Look at and interpret the inflation factors for each environmental variable. </span>
 
 ```{r ex12, inclue=TRUE, warning=FALSE, message=FALSE}
 # VIF for CCA 
