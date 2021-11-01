@@ -275,23 +275,23 @@ code for the question 5.
 # figure out the column number for Chenopodium album (abbreviated "Chenalbu")
 which(colnames(dune)=="Chenalbu")
 # create a new data frame with a new sample containing Chenopodium album with a cover of 9
-NewSample <- c(rep(0,7), 9, rep(0,22))
-SpeciesNewSample <- data.frame(rbind(dune, NewSample))
+NewSampleChen <- c(rep(0,7), 9, rep(0,22))
+SpeciesNewSampleChen <- data.frame(rbind(dune, NewSampleChen))
 # run a new DCA with the extra sample
-DCANewSample <- decorana(SpeciesNewSample)
-DCANewSample
+DCANewSampleChen <- decorana(SpeciesNewSampleChen)
+DCANewSampleChen
 # plot the DCA
-ordiplot(DCANewSample, type="text", main="DCA with new sample Chenopodium album")
+ordiplot(DCANewSampleChen, type="text", main="DCA with new sample Chenopodium album")
 # figure out the column number for Juncbufo
 which(colnames(dune)=="Juncbufo")
 # create a new data frame with a new sample containing Juncbufo with a cover of 5
-NewSample <- c(rep(0,15), 5, rep(0,10))
-SpeciesNewSample <- data.frame(rbind(dune, NewSample))
+NewSampleJunc <- c(rep(0,15), 5, rep(0,10))
+SpeciesNewSampleJunc <- data.frame(rbind(dune, NewSampleJunc))
 # run a new DCA with the extra sample
-DCANewSample <- decorana(SpeciesNewSample)
-DCANewSample
+DCANewSampleJunc <- decorana(SpeciesNewSampleJunc)
+DCANewSampleJunc
 # plot the DCA
-ordiplot(DCANewSample, type="text", main="DCA with new sample of Juncbufo")
+ordiplot(DCANewSampleJunc, type="text", main="DCA with new sample of Juncbufo")
 ```
 
 
@@ -310,7 +310,7 @@ Here, we will explore PCoA on four different distance matrices:
 
 The R base statistics library offers the routine cmdscale() for performing MDS. There are numerous other libraries offering PCoA analysis
 
-#### <span style="color:forestgreen"> After performing the four PCoA analyses, please answer the following questions:How similar are the ordination plots from the four distance matrices? Why are some plots more similar than others? Which PCoA plot is most similar to the output from a PCA? Which PCoA plot is most similar to the output from a CA? </span>
+#### <span style="color:forestgreen"> After performing the four PCoA analyses, please answer the following questions:How similar are the ordination plots based on the four distance matrices? Why are some plots more similar than others? Which PCoA plot is most similar to the output from a PCA? Which PCoA plot is most similar to the output from a CA? </span>
 <br>
 ```{r}
 # generate the four distance matrices
@@ -367,7 +367,7 @@ dune.NMDS.bray.3<-metaMDS(dune,k=3)
 #
 # what happens when Euclidean distances are used?
 #
-dune.NMDS.euclidean.2<-metaMDS(dune,k=2)
+dune.NMDS.euclidean.2<-metaMDS(dune, distance = "euclidean", k=2)
 #
 # plot some results
 #
@@ -528,7 +528,7 @@ plot(fit)
 #CCA 
 dune.cca <- cca(dune ~ . , dune.env)
 dune.cca
-ordiplot(dune.cca, type="text", main="CA")
+ordiplot(dune.cca, type="text", main="CCA")
 
 par(mfrow = c(1,2))
 ordiplot(dune.ca,  type="text", main="CA with env. fitted after")
@@ -854,7 +854,7 @@ ordihull(time2.cca,groups=treat,draw="polygon",col="grey70",label=T)#draw hulls 
 #### <span style="color:forestgreen"> Did the treatment have an effect? What was permuted? </span>
 
 
-In this exercise we will continue to use the rearranged Dune Meadow data from exercise 24. A difference is that the plots are now divided into four groups:
+In this exercise we will continue to use the rearranged Dune Meadow data from exercise 22. A difference is that the plots are now divided into four groups:
     1. Control plots before a treatment (i.e. not treated)
     2. Control plots after a treatment (i.e. not treated)
     3. Impact plots before treatment (i.e. not treated)
@@ -1163,7 +1163,7 @@ summary(pyrifos.RDA.week)
 # Display the ordination plot to see if there may be interpretable temporal structure
 #
 pyrifos.RDA.week.plot<-ordiplot(pyrifos.RDA.week)
-text(pyrifos.RDA.week.plot,"centroids", col="blue",pos=2,cex=2)
+text(pyrifos.RDA.week.plot,"centroids", col="blue",pos=2,cex=1)
 #
 # now can we say anything about dose effects?
 #
@@ -1173,7 +1173,7 @@ summary(pyrifos.RDA.dose)
 # Display the ordination plot to see if there is interpretable structure related to dose
 #
 pyrifos.RDA.dose.plot<-ordiplot(pyrifos.RDA.dose)
-text(pyrifos.RDA.dose.plot,"centroids", col="blue",pos=2,cex=2)
+text(pyrifos.RDA.dose.plot,"centroids", col="blue",pos=2,cex=1)
 #
 # Now perform the appropriate analysis for exploring temporal structure
 #
@@ -1189,8 +1189,6 @@ plot(pyrifos.PRC)
 #
 pyrifos.SumOfAbundances<-colSums(pyrifos)
 plot(pyrifos.PRC,select=pyrifos.SumOfAbundances > 100)
-logabu <- colSums(pyrifos)
-plot(pyrifos.PRC, select = logabu > 100)
 #
 ## Ditches are randomized, we have a time series, and are only
 ## interested in the first axis
@@ -1310,8 +1308,7 @@ library(MASS)
 model <- lda(Species~., data = train.transformed)
 
 model
-plot(model)
-
+plot(model, dimen=1)#, type="both")
 ```
 <br>
 LDA determines group means and computes, for each individual, the probability of belonging to the different groups. Each observation/individual is then assigned to the group with the highest probability score.
@@ -1350,6 +1347,7 @@ head(predictions$posterior, 6)
 head(predictions$x, 3) 
 
 lda.data <- cbind(train.transformed, predict(model)$x)
+#lda.data <- cbind(test.transformed, predictions$x)
 ggplot(lda.data, aes(LD1, LD2)) +
   geom_point(aes(color = Species),size=3)
 
@@ -1359,6 +1357,7 @@ mean(predictions$class==test.transformed$Species)
 #More detailed assessment (probably more information than we need!)
 #Calculates a cross-tabulation of observed and predicted classes with associated statistics.
 confusionMatrix(test.data$Species, predictions$class)
+
 ```
 
 ***
@@ -1366,12 +1365,13 @@ confusionMatrix(test.data$Species, predictions$class)
 
 ### <span style="color:cornflowerblue">Question 30: PLS </span>
 
-#### <span style="color:forestgreen"> Examine the p-values to explore which explanatory variables actually give a significant result.Questions: Which explanatory variables are most important to explain the response variable (Biovolume)? Are there any obvious outliers in the dataset? Does the data seemed to be in need of a transformation? </span>
+#### <span style="color:forestgreen"> Questions: Which explanatory variables are most important to explain the response variable (Biovolume)? Are there any obvious outliers in the dataset? Does the data seemed to be in need of a transformation? </span>
 PLS regression, like PCA, seeks to find components which maximize the variability of predictors but differs from PCA as PLS requires the components to have maximum correlation with the response. The predictor variables are mapped to a smaller set of variables, and within that smaller space we perform a regression against the outcome variable. PLS aims to choose new mapped variables that maximally explain the outcome variable.
 
 ```{r PLS, echo=TRUE, message=FALSE, warning=FALSE}
 
 data.pls <- readRDS("Trend_Lakes_2015_PLS.RDS")
+data.pls <- data.pls %>% rename(Turbidity = Turbulance)
 #View(data.pls)
 library(pls)
 #This function takes the same form as a lot of regression models in R:
