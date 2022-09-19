@@ -1158,8 +1158,7 @@ dose_ <- factor(rep(c(0.1, 0, 0, 0.9, 0, 44, 6, 0.1, 44, 0.9, 0, 6), 11))
 # predictor variable
 #
 pyrifos.RDA.week<-rda(pyrifos ~ week_)
-summary(pyrifos.RDA.week)
-#
+pyrifos.RDA.week
 # Display the ordination plot to see if there may be interpretable temporal structure
 #
 pyrifos.RDA.week.plot<-ordiplot(pyrifos.RDA.week)
@@ -1168,7 +1167,7 @@ text(pyrifos.RDA.week.plot,"centroids", col="blue",pos=2,cex=1)
 # now can we say anything about dose effects?
 #
 pyrifos.RDA.dose<-rda(pyrifos ~ dose_)
-summary(pyrifos.RDA.dose)
+pyrifos.RDA.dose
 #
 # Display the ordination plot to see if there is interpretable structure related to dose
 #
@@ -1178,7 +1177,7 @@ text(pyrifos.RDA.dose.plot,"centroids", col="blue",pos=2,cex=1)
 # Now perform the appropriate analysis for exploring temporal structure
 #
 pyrifos.PRC<-prc(pyrifos, treatment=dose_, time=week_)
-summary(pyrifos.PRC)   
+pyrifos.PRC  
 #
 # plot some results
 #
@@ -1363,7 +1362,96 @@ confusionMatrix(test.data$Species, predictions$class)
 ***
 <br>
 
-### <span style="color:cornflowerblue">Question 30: PLS </span>
+### <span style="color:cornflowerblue">Question 30: Model based ordination </span>
+
+#### <span style="color:forestgreen"> Questions: How do the ordinations produced compare to a distance based ordination (for example an NMDS) of the same species data? </span>
+Dissimilarity-based ordination methods begin by calculating a dissimilarity or distance matrix between sites (or more generally, observational units). Afterwards, these are collapsed to a small number of dimensions for plotting using an algorithm that attempts to preserve and display information about these relative distances. The model-based approach explicitly specifies a statistical model of the process that generated the observed data. Model-based ordination methods (mostly) use an extension of generalised linear mixed models known as latent variable models. 
+As the name suggests, these models account for the correlation between taxa via the inclusion of a small number of latent variables. Latent variables act as natural ordination axes reflecting unobserved covariates. 
+
+
+
+```{r}
+library(gllvm) #Generalised linear latent variable models
+library(readxl)
+#load species abundance data
+spe<-as.data.frame(read_xlsx("dune.xlsx", na = ".",sheet = 1, col_names = TRUE)); spe[1]<-NULL
+#we need to provide the model with an appropriate probability distribution for the data.
+#Given our abundance data is on a scale of 1 - 9 we could classify it as ordinal data,
+#but we can try another distribution as well to compare results.
+
+fitnb <- gllvm(y = spe, family = "negative.binomial") #This takes a minute or so to run!
+fitord <- gllvm(y = spe, family = "ordinal", zeta.struc = "common")
+#ignore the warning messages generated for now!
+
+#As with "normal" linear regressions we can check model fit with widely used tools like
+#Akaike Information Criterion (AIC). AIC aims to select the model which best explains 
+#the variance in the dependent variable with the fewest number of independent variables
+#So it helps select a simpler model over a complex model, if the complexity is not helpful.
+#A lower AIC is better!
+
+AIC(fitnb)
+AIC(fitord)
+
+#It seems the ordinal model is the best.
+```
+
+We can also use graphical checks of model fit, as with any regression. If you are familiar with these try running plot(fitord) and plot(fitnb).
+
+Now we can look at the ordination plot for the best model.
+
+```{r}
+ordiplot.gllvm(fitord, biplot = TRUE, s.colors = "blue", spp.colors = "grey50", alpha = 0.4, cex.spp = 0.9, jitter = T)
+
+abline(h = 0, v = 0, lty=2)
+
+```
+
+We can do a lot more with model based ordinations, including incorporating environmental variables. We can also include information on traits and perform a fourth corner analysis. 
+
+***
+
+<br>
+
+### <span style="color:cornflowerblue">Question 31: Fourth Corner </span>
+
+#### <span style="color:forestgreen"> Questions: Do the correlations in the plot make sense ecologically? </span>
+Here we will use another model based method (the "mvabund" package for analysing multivariate abundance data) to perform a fourth corner analysis. That is to say we will include trait information and environmental variables, and investigate the relationship between plant traits and environmental variables.
+
+```{r}
+# Read and treat data
+library(readxl)
+library(mvabund)
+
+env<-as.data.frame(read_xlsx("dune_env.xlsx", na = "NA",sheet = 1, col_names = TRUE)); env[1]<-NULL
+env$Management<-as.factor(env$Management)
+env$Use<-as.factor(env$Use)
+#This is from a database of plant traits
+traits<-as.data.frame(read_xlsx("TylerTraits.xlsx", na = "NA",sheet = 1, col_names = TRUE, skip = 1))
+rownames(traits)<-traits$Spe; traits$Spe<-NULL 
+names(traits)
+traits<-traits[,-c(1:6,22, 27,29,30:32)] # Remove trait not feasible for this analysis
+
+#Fourth corner
+library(mvabund)
+#Given that there are many traits and even environmental factors that are not strong predictors of 
+#abundance, we can reduce the number of predictor terms in our models.LASSO is an optimization algorithm (Least #Absolute Shrinkage and Selection Operator) that is used in this case.
+
+fitfourth=traitglm(spe, env, traits, method="glm1path")
+fitfourth$fourth #examine fourth corner terms
+#and plot the results
+library(lattice)
+a        = max( abs(fitfourth$fourth.corner) )
+colort   = colorRampPalette(c("blue","white","red")) 
+plot.4th = levelplot(t(as.matrix(fitfourth$fourth.corner)), xlab="Environmental Variables",
+                     ylab="Species traits", col.regions=colort(100), at=seq(-a, a, length=100),
+                     scales = list( x= list(rot = 45)))
+print(plot.4th)
+
+```
+
+***
+<br>
+### <span style="color:cornflowerblue">Question 32: PLS </span>
 
 #### <span style="color:forestgreen"> Questions: Which explanatory variables are most important to explain the response variable (Biovolume)? Are there any obvious outliers in the dataset? Does the data seemed to be in need of a transformation? </span>
 PLS regression, like PCA, seeks to find components which maximize the variability of predictors but differs from PCA as PLS requires the components to have maximum correlation with the response. The predictor variables are mapped to a smaller set of variables, and within that smaller space we perform a regression against the outcome variable. PLS aims to choose new mapped variables that maximally explain the outcome variable.
