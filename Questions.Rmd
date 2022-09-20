@@ -477,6 +477,7 @@ legend("topright",paste("SD =",round(sd(d1mean),1))) # Legend with standard devi
 
 ```
 
+
 ------------------------------------------------------------------------
 
 ### [Question 11: Do an RDA and a CCA on the Dune Meadow data set, using the full set of environmental variables.]{style="color:cornflowerblue"}
@@ -1257,6 +1258,14 @@ come with significance testing. In the output tables, taxa are sorted in
 descending order of contribution to group difference.
 
 #### [28.3 Compare the different groups and check which species contribute mostly to the difference between pairs of clusters.]{style="color:forestgreen"}
+
+
+```{r}
+#VIM package loaded earlier conflicts with SIMPER
+detach("package:VIM", unload=TRUE, force = TRUE)
+.rs.restartR()
+```
+
 
 ```{r message=FALSE, warning=FALSE}
 sim <- simper(dune, dune.env.original$Management) #try management groupings
