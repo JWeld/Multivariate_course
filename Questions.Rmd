@@ -96,11 +96,7 @@ also be using some slightly modified and extended versions of it, which
 we will load as needed. We will also load some other packages to extend
 the range of analyses available to us.
 
-<br>
-
 ------------------------------------------------------------------------
-
-<br>
 
 ### [Question 2: Simple exercise for illustrating effects of different distance metrics.]{style="color:cornflowerblue"}
 
@@ -130,11 +126,7 @@ help(vegdist)
 
 ```
 
-<br>
-
 ------------------------------------------------------------------------
-
-<br>
 
 ### [Question 3: In this exercise we will use Principal Components Analysis on the dune meadow explanatory data. We will also explore the effects of different kinds of scaling on the ordination plot. NOTE that the scaling issues applies to all ordination techniques!]{style="color:cornflowerblue"}
 
@@ -217,11 +209,7 @@ par(mfrow = c(1,1))
 
 ```
 
-<br>
-
 ------------------------------------------------------------------------
-
-<br>
 
 ### [Question 4: Do a CA-ordination on the Dune Meadow species dataset.What are the results telling you?]{style="color:cornflowerblue"}
 
@@ -234,11 +222,7 @@ dune.ca
 summary(eigenvals(dune.ca)) #proportion variance explained
 ```
 
-<br>
-
 ------------------------------------------------------------------------
-
-<br>
 
 ### [Question 5: Repeat exercise 4, but with DCA ordination instead.]{style="color:cornflowerblue"}
 
@@ -256,11 +240,7 @@ dune.dca
 plot(dune.dca)
 ```
 
-<br>
-
 ------------------------------------------------------------------------
-
-<br>
 
 ### [Question 6: Add one new species with cover degree 9 at the site with the lowest number of species. Do a new DCA-ordination.]{style="color:cornflowerblue"}
 
@@ -291,18 +271,14 @@ particular axes. The reason for this is that DCA does not support the
 concept of total inertia values (also, it produces only four axes, i.e.
 four eigenvalues). See the comment in the code for the question 5.
 
-<br>
-
 ------------------------------------------------------------------------
-
-<br>
 
 ### [Question 7: Effects from increased variation.]{style="color:cornflowerblue"}
 
 Add one new sample to the data, then add a cover of 9 for the existing
 species Chenopodium album "Chealbu" in the new sample. Make a new
-DCA-ordination. <br> Next, remove the Chealbu = 9, and add instead a
-cover of 5 for the exisiting species Juncbufo and make a new DCA.
+DCA-ordination. Next, remove the Chealbu = 9, and add instead a cover of
+5 for the exisiting species Juncbufo and make a new DCA.
 
 #### [Questions: 7.1 What happens with the eigenvalues and ordination after adding Chealbu and after adding Juncbufo? 7.2 Why did we choose to add these two species in the new sample?]{style="color:forestgreen"}
 
@@ -329,8 +305,6 @@ DCANewSampleJunc
 ordiplot(DCANewSampleJunc, type="text", main="DCA with new sample of Juncbufo")
 ```
 
-<br>
-
 ------------------------------------------------------------------------
 
 ### [Question 8: Principal Coordinates Analysis (PCoA)]{style="color:cornflowerblue"}
@@ -348,8 +322,6 @@ performing MDS. There are numerous other libraries offering PCoA
 analysis
 
 #### [Questions: 8.1 How similar are the ordination plots based on the four distance matrices?(remember question 2!) 8.2 Why are some plots more similar than others? 8.3 Which PCoA plot is most similar to the output from a PCA? 8.4 Which PCoA plot is most similar to the output from a CA?]{style="color:forestgreen"}
-
-<br>
 
 ```{r}
 # generate the four distance matrices
@@ -389,8 +361,6 @@ text(dune.mahalanobis.location,labels=row.names(dune.mahalanobis.location),pos=2
 ```
 
 ------------------------------------------------------------------------
-
-<br>
 
 ### [Question 9: Non Metric Multidimensional Scaling]{style="color:cornflowerblue"}
 
@@ -440,8 +410,6 @@ ordiplot(dune.DCA, type="text", main="DCA on Dune Meadow data")
 
 ```
 
-<br>
-
 ------------------------------------------------------------------------
 
 ### [Question 10: Data Quality Assessment]{style="color:cornflowerblue"}
@@ -480,9 +448,9 @@ aggr(as.matrix(mvo.dune))
 matrixplot(mvo.dune) 
 ```
 
-<br> We can also try testing for outliers in the data. Be aware that
-this is only indicative, and you still need to exercise your judgement
-about what should be excluded as an outlier!
+We can also try testing for outliers in the data. Be aware that this is
+only indicative, and you still need to exercise your judgement about
+what should be excluded as an outlier!
 
 ```{r}
 
@@ -511,8 +479,6 @@ legend("topright",paste("SD =",round(sd(d1mean),1))) # Legend with standard devi
 
 ------------------------------------------------------------------------
 
-<br>
-
 ### [Question 11: Do an RDA and a CCA on the Dune Meadow data set, using the full set of environmental variables.]{style="color:cornflowerblue"}
 
 #### [Questions: 11.1 Compare the ordination diagrams and numerical results! What does the significance test tell you? 11.2 When only looking at the results, which method explains the variation best? 11.3 Taking the nature of the data into account, which method should be used?]{style="color:forestgreen"}
@@ -535,11 +501,7 @@ ordiplot(dune.cca, type="text", main="CCA")
 par(mfrow= c(1,1))
 ```
 
-<br>
-
 ------------------------------------------------------------------------
-
-<br>
 
 ### [Question 12: Use the results from the CCA ordination in exercise 11 to look at and interpret the variance inflation factor, and to look for warnings about outliers in the explanatory data]{style="color:cornflowerblue"}
 
@@ -558,11 +520,7 @@ conditioning variables are analysed together with constraints. Variance
 inflation is a diagnostic tool to identify useless constraints. A common
 rule is that values over 10 indicate redundant constraints.
 
-<br>
-
 ------------------------------------------------------------------------
-
-<br>
 
 ### [Question 13: Do a CA on the Dune Meadow data set, with the full set of environmental variables included in the analysis, and compare with a CCA on the same data sets.]{style="color:cornflowerblue"}
 
@@ -587,8 +545,6 @@ plot(fit)
 ordiplot(dune.cca, type="text", main="CCA")
 par(mfrow = c(1,1))
 ```
-
-<br>
 
 ------------------------------------------------------------------------
 
@@ -629,8 +585,6 @@ par(mfrow= c(1,1))
 
 ```
 
-<br>
-
 ### [Question 15: Investigate management regimes.]{style="color:cornflowerblue"}
 
 Next, you should investigate whether the four different management
@@ -662,11 +616,7 @@ ordihull(dune.ccaMN,groups = dune.env.original$Management,draw = "polygon",col =
 par(mfrow =c(1,2))
 ```
 
-<br>
-
 ------------------------------------------------------------------------
-
-<br>
 
 ### [Question 16: Next, investigate whether initial soil characteristics (A1 and moisture) also are important for differences in species composition between fields.]{style="color:cornflowerblue"}
 
@@ -687,11 +637,7 @@ ordiplot(dune.ccaA1ms, type="text", main="CCA A1 and moisture")
 
 ```
 
-<br>
-
 ------------------------------------------------------------------------
-
-<br>
 
 ## Direct methods with testing of environmental variables
 
@@ -722,11 +668,7 @@ ordiplot(MN.cca, type = "points")
 ordihull(MN.cca,groups = dune.env.original$Management,draw = "polygon",col = "grey70", label = T)
 ```
 
-<br>
-
 ------------------------------------------------------------------------
-
-<br>
 
 ### [Question 18: Partial ordination II]{style="color:cornflowerblue"}
 
@@ -751,11 +693,7 @@ ordihull(MN.cca2,groups = dune.env.original$Management,draw = "polygon",col = "g
 # Make a boxplot manure~Management!
 ```
 
-<br>
-
 ------------------------------------------------------------------------
-
-<br>
 
 ### [Question 19: Forward selection]{style="color:cornflowerblue"}
 
@@ -793,11 +731,7 @@ sel.env.dune_adj$anova$`Pr(>F)` <- p.adjust(sel.env.dune$anova$`Pr(>F)`, method 
 sel.env.dune_adj$anova
 ```
 
-<br>
-
 ------------------------------------------------------------------------
-
-<br>
 
 ### [Question 20: Interpreting ordination results using species traits]{style="color:cornflowerblue"}
 
@@ -843,11 +777,7 @@ step2$anova # which three are most significant in the final selection?
 
 #### 
 
-<br>
-
 ------------------------------------------------------------------------
-
-<br>
 
 ### [Question 21: Decomposition of variance]{style="color:cornflowerblue"}
 
@@ -882,11 +812,7 @@ varp
 plot (varp, digits = 2, Xnames = c('Management', 'Soil'), bg = c('red', 'blue'))
 ```
 
-<br>
-
 ------------------------------------------------------------------------
-
-<br>
 
 ### [Question 22: Analysing a time series with vegetation data]{style="color:cornflowerblue"}
 
@@ -938,11 +864,7 @@ with(time2.cca, points(time2.cca, col = colvec[treat],#plots the points
 ordihull(time2.cca,groups=treat,draw="polygon",col="grey70",label=T)#draw hulls around area of each level of factor "Time"
 ```
 
-<br>
-
 ------------------------------------------------------------------------
-
-<br>
 
 ### [Question 23: A multivariate Before-After-Control- Impact (BACI) study]{style="color:cornflowerblue"}
 
@@ -979,11 +901,7 @@ ordiplot(baci.cca,type="points")
 ordihull(baci.cca,groups=treat,draw="polygon",col="grey70",label=T)#draw hulls around area of each level of factor "Time"
 ```
 
-<br>
-
 ------------------------------------------------------------------------
-
-<br>
 
 ### [Question 24: Comparing ordinations]{style="color:cornflowerblue"}
 
@@ -1055,11 +973,7 @@ anova(dune.bugs.cca)
 plot(dune.bugs.cca)
 ```
 
-<br>
-
 ------------------------------------------------------------------------
-
-<br>
 
 ### [Question 25 : Classification 1]{style="color:cornflowerblue"}
 
@@ -1171,8 +1085,6 @@ set.seed(123)
 #
 hopkins(dune, n = nrow(dune)-1)
 ```
-
-<br>
 
 ------------------------------------------------------------------------
 
@@ -1346,7 +1258,7 @@ descending order of contribution to group difference.
 
 #### [28.3 Compare the different groups and check which species contribute mostly to the difference between pairs of clusters.]{style="color:forestgreen"}
 
-```{r, warning=FALSE, message=FALSE}
+```{r message=FALSE, warning=FALSE}
 sim <- simper(dune, dune.env.original$Management) #try management groupings
 summary(sim)
 ```
@@ -1360,8 +1272,6 @@ with(dune.env.original, points(dune.ca, display = "sites", scaling = "species", 
 with(dune.env.original, orditorp(dune.ca, display = "species", scaling = "species"))
 with(dune.env.original, ordihull(dune.ca, Management, scaling = "species",label = TRUE))
 ```
-
-<br>
 
 A complementary/alternative approach to identifying which species are
 most reposnisble for the differences between the groups is that of
@@ -1383,8 +1293,6 @@ arrange(rownames_to_column(iva.df), desc(HF))
 ```
 
 ------------------------------------------------------------------------
-
-<br>
 
 ------------------------------------------------------------------------
 
@@ -1434,7 +1342,7 @@ model
 plot(model, dimen=1)#, type="both")
 ```
 
-<br> LDA determines group means and computes, for each individual, the
+LDA determines group means and computes, for each individual, the
 probability of belonging to the different groups. Each
 observation/individual is then assigned to the group with the highest
 probability score.
@@ -1493,8 +1401,6 @@ confusionMatrix(test.data$Species, predictions$class)
 ```
 
 ------------------------------------------------------------------------
-
-<br>
 
 ### [Question 30: Model based ordination]{style="color:cornflowerblue"}
 
@@ -1559,8 +1465,6 @@ incorporating environmental variables. We can also include information
 on traits and perform a fourth corner analysis.
 
 ------------------------------------------------------------------------
-
-<br>
 
 ### [Question 31: Fourth Corner]{style="color:cornflowerblue"}
 
