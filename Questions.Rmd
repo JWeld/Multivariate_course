@@ -104,7 +104,13 @@ Here, we will create a simple data set consisting of 2 columns of
 measurement made at 3 sites we will then calculate a series of distance
 metrics using the vegdist() function.
 
-#### [Questions: 2.1 How do the metrics differ? 2.2 Which metric corresponds to a geographic distance? 2.3 Where would one find the formula for the Mahalanobis distance?]{style="color:forestgreen"}
+#### [Questions:]{style="color:forestgreen"}
+
+#### [2.1 How do the metrics differ?]{style="color:forestgreen"}
+
+#### [2.2 Which metric corresponds to a geographic distance?]{style="color:forestgreen"}
+
+#### [2.3 Where would one find the formula for the Mahalanobis distance?]{style="color:forestgreen"}
 
 ```{r message=FALSE, warning=FALSE}
 library(vegan)
@@ -133,7 +139,13 @@ help(vegdist)
 Compare the plots on the PCA with and without scaling (PCA plot 4) and
 discuss the differences.
 
-#### [Questions:  3.1 Is there any way to see that one is on scaled data and one is not? 3.2 What is the difference between PCA plot 4 and PCA plot 5? Which one is best to use? 3.3 Discuss the difference between the plots in plot PCA plot 6 and 7!]{style="color:forestgreen"}
+#### [Questions: ]{style="color:forestgreen"}
+
+#### [3.1 Is there any way to see that one is on scaled data and one is not? ]{style="color:forestgreen"}
+
+#### [3.2 What is the difference between PCA plot 4 and PCA plot 5? Which one is best to use? ]{style="color:forestgreen"}
+
+#### [3.3 Discuss the difference between the plots in plot PCA plot 6 and 7!]{style="color:forestgreen"}
 
 ```{r, warning=FALSE, message=FALSE}
 library(tidyverse)
@@ -237,7 +249,9 @@ par(mfrow = c(1, 1))
 
 ### [Question 4: Do a CA-ordination on the Dune Meadow species dataset.What are the results telling you?]{style="color:cornflowerblue"}
 
-#### [Question:  4.1 Give a conceptual description on why objects/samples and descriptors/species to the left differ from objects and descriptors to the right, and those at the bottom from those at the top! (Plant ecologists may give a more detailed description, using their knowledge about the species in the dataset).]{style="color:forestgreen"}
+#### [Question: ]{style="color:forestgreen"}
+
+#### [4.1 Give a conceptual description on why objects/samples and descriptors/species to the left differ from objects and descriptors to the right, and those at the bottom from those at the top! (Plant ecologists may give a more detailed description, using their knowledge about the species in the dataset).]{style="color:forestgreen"}
 
 ```{r, warning=FALSE, message=FALSE}
 dune.ca <- cca(dune)
@@ -250,7 +264,9 @@ summary(eigenvals(dune.ca)) #proportion variance explained
 
 ### [Question 5: Repeat exercise 4, but with DCA ordination instead.]{style="color:cornflowerblue"}
 
-#### [Question:  5.1 Look at the eigenvalues, the length of gradient, the total variation and the ordination diagram. Explain the differences between results from CA and DCA.]{style="color:forestgreen"}
+#### [Question: ]{style="color:forestgreen"}
+
+#### [5.1 Look at the eigenvalues, the length of gradient, the total variation and the ordination diagram. Explain the differences between results from CA and DCA.]{style="color:forestgreen"}
 
 ```{r, warning=FALSE, message=FALSE}
 dune.dca <- decorana(dune)
@@ -268,7 +284,9 @@ plot(dune.dca)
 
 ### [Question 6: Add one new species with cover degree 9 at the site with the lowest number of species. Do a new DCA-ordination.]{style="color:cornflowerblue"}
 
-#### [Question: 6.1: What happens with the eigenvalues and ordination diagram?]{style="color:forestgreen"}
+#### [Question: ]{style="color:forestgreen"}
+
+#### [6.1: What happens with the eigenvalues and ordination diagram?]{style="color:forestgreen"}
 
 ```{r ex6, inclue=TRUE, warning=FALSE, message=FALSE}
 # calculate the number of species present in each plot
@@ -304,7 +322,11 @@ species Chenopodium album "Chealbu" in the new sample. Make a new
 DCA-ordination. Next, remove the Chealbu = 9, and add instead a cover of
 5 for the exisiting species Juncbufo and make a new DCA.
 
-#### [Questions:  7.1 What happens with the eigenvalues and ordination after adding Chealbu and after adding Juncbufo? 7.2 Why did we choose to add these two species in the new sample?]{style="color:forestgreen"}
+#### [Questions: ]{style="color:forestgreen"}
+
+#### [7.1 What happens with the eigenvalues and ordination after adding Chealbu and after adding Juncbufo? ]{style="color:forestgreen"}
+
+#### [7.2 Why did we choose to add these two species in the new sample?]{style="color:forestgreen"}
 
 ```{r ex7, inclue=TRUE, warning=FALSE, message=FALSE}
 # figure out the column number for Chenopodium album (abbreviated "Chenalbu")
@@ -345,7 +367,15 @@ The R base statistics library offers the routine cmdscale() for
 performing MDS. There are numerous other libraries offering PCoA
 analysis
 
-#### [Questions:  8.1 How similar are the ordination plots based on the four distance matrices?(remember question 2!) 8.2 Why are some plots more similar than others? 8.3 Which PCoA plot is most similar to the output from a PCA? 8.4 Which PCoA plot is most similar to the output from a CA?]{style="color:forestgreen"}
+#### [Questions: ]{style="color:forestgreen"}
+
+#### [8.1 How similar are the ordination plots based on the four distance matrices?(remember question 2!) ]{style="color:forestgreen"}
+
+#### [8.2 Why are some plots more similar than others? ]{style="color:forestgreen"}
+
+#### [8.3 Which PCoA plot is most similar to the output from a PCA? ]{style="color:forestgreen"}
+
+#### [8.4 Which PCoA plot is most similar to the output from a CA?]{style="color:forestgreen"}
 
 ```{r}
 # generate the four distance matrices
@@ -409,7 +439,9 @@ to: State which metrics are supported in the vegan implementation of
 NMDS. Evaluate the appropriate number of dimensions for the ordination.
 Evaluate the consequences of using different distance metrics.
 
-#### [Question:  9.1 Compare the vegan default NMDS to the results of a CA and a DCA.]{style="color:forestgreen"}
+#### [Question: ]{style="color:forestgreen"}
+
+#### [9.1 Compare the vegan default NMDS to the results of a CA and a DCA.]{style="color:forestgreen"}
 
 ```{r ex8, inclue=TRUE, warning=FALSE, message=FALSE}
 # run NMDS with the defaults and 2 dimensions, what is the stress?
@@ -453,7 +485,11 @@ ordiplot(dune.DCA, type = "text", main = "DCA on Dune Meadow data")
 
 These are only a few examples on how to assess data quality.
 
-#### [Questions:  10.1 Is there a pattern in the distribution of missing values that may lead to the omission of a species or a sample? 10.2 Would you say that the original Dune Meadow data set is OK for further analyses? Motivate your answer!]{style="color:forestgreen"}
+#### [Questions: ]{style="color:forestgreen"}
+
+#### [10.1 Is there a pattern in the distribution of missing values that may lead to the omission of a species or a sample? ]{style="color:forestgreen"}
+
+#### [10.2 Would you say that the original Dune Meadow data set is OK for further analyses? Motivate your answer!]{style="color:forestgreen"}
 
 ```{r ex10, inclue=TRUE, message=FALSE, warning=FALSE}
 #library("vegan")
@@ -546,7 +582,13 @@ legend("topright", paste("SD =", round(sd(d1mean), 1))) # Legend with standard d
 
 ### [Question 11: Do an RDA and a CCA on the Dune Meadow data set, using the full set of environmental variables.]{style="color:cornflowerblue"}
 
-#### [Questions:  11.1 Compare the ordination diagrams and numerical results! What does the significance test tell you? 11.2 When only looking at the results, which method explains the variation best? 11.3 Taking the nature of the data into account, which method should be used?]{style="color:forestgreen"}
+#### [Questions: ]{style="color:forestgreen"}
+
+#### [11.1 Compare the ordination diagrams and numerical results! What does the significance test tell you? ]{style="color:forestgreen"}
+
+#### [11.2 When only looking at the results, which method explains the variation best? ]{style="color:forestgreen"}
+
+#### [11.3 Taking the nature of the data into account, which method should be used?]{style="color:forestgreen"}
 
 ```{r ex11, echo=FALSE, message=FALSE, warning=FALSE, inclue=TRUE}
 # RDA
@@ -570,7 +612,9 @@ par(mfrow = c(1, 1))
 
 ### [Question 12: Use the results from the CCA ordination in exercise 11 to look at and interpret the variance inflation factor, and to look for warnings about outliers in the explanatory data]{style="color:cornflowerblue"}
 
-#### [Question:  12.1 Look at and interpret the inflation factors for each environmental variable.]{style="color:forestgreen"}
+#### [Question: ]{style="color:forestgreen"}
+
+#### [12.1 Look at and interpret the inflation factors for each environmental variable.]{style="color:forestgreen"}
 
 ```{r ex12, inclue=TRUE, warning=FALSE, message=FALSE}
 # VIF for CCA 
@@ -589,7 +633,11 @@ rule is that values over 10 indicate redundant constraints.
 
 ### [Question 13: Do a CA on the Dune Meadow data set, with the full set of environmental variables included in the analysis, and compare with a CCA on the same data sets.]{style="color:cornflowerblue"}
 
-#### [Questions:  13.1 Compare the constrained and unconstrained ordinations. What is the difference between the methods? 13.2 When could an unconstrained ordination with explanatory variables be a good option?]{style="color:forestgreen"}
+#### [Questions: ]{style="color:forestgreen"}
+
+#### [13.1 Compare the constrained and unconstrained ordinations. What is the difference between the methods? ]{style="color:forestgreen"}
+
+#### [13.2 When could an unconstrained ordination with explanatory variables be a good option?]{style="color:forestgreen"}
 
 ```{r ex13, inclue=TRUE, warning=FALSE, message=FALSE}
 # CA with env. variables
@@ -615,7 +663,11 @@ par(mfrow = c(1, 1))
 
 ### [Question 14: Site scores can be calculated in two ways; Weighted Average and Linear Combination. Here you will do both and compare the results. Both options are available in most software, but the default varies.]{style="color:cornflowerblue"}
 
-#### [Questions:  14.1 What is the main difference between the two ways. How to know which method to select? 14.2 What does the display = "cn" in the last plots mean?]{style="color:forestgreen"}
+#### [Questions: ]{style="color:forestgreen"}
+
+#### [14.1 What is the main difference between the two ways. How to know which method to select? ]{style="color:forestgreen"}
+
+#### [14.2 What does the display = "cn" in the last plots mean?]{style="color:forestgreen"}
 
 ```{r}
 #### Illustration of difference between WA and LC scores
@@ -658,7 +710,9 @@ and NM nature management) have any effect on the species distribution.
 This is done by using these four management types as environmental
 variables in a constrained ordination.
 
-#### [Question:  15.1 Inspect and interpret the results of the permutations and graph! Compare with the CCA on the full set of explanatory data in exercise 13.]{style="color:forestgreen"}
+#### [Question: ]{style="color:forestgreen"}
+
+#### [15.1 Inspect and interpret the results of the permutations and graph! Compare with the CCA on the full set of explanatory data in exercise 13.]{style="color:forestgreen"}
 
 To investigate if the vegetational pattern is an effect of management,
 or if the pattern is random, Monte Carlo permutations will be used.
@@ -688,7 +742,9 @@ par(mfrow =c(1,2))
 To do this, do another CCA with A1 and Moisture as environmental
 variables and perform a significance test.
 
-#### [Question:  16.1 Explain the results of the permutations! Compare the results in exercises 16 and 17!]{style="color:forestgreen"}
+#### [Question: ]{style="color:forestgreen"}
+
+#### [16.1 Explain the results of the permutations! Compare the results in exercises 16 and 17!]{style="color:forestgreen"}
 
 ```{r ex16, inclue=TRUE, warning=FALSE, message=FALSE}
 # CCA using A1 and moisture as the environmental variable
@@ -720,7 +776,11 @@ selected variables by specifying them as covariates. In this case, use
 the two soil characterising variables (A1 and Moisture) as covariates,
 and the four management types as environmental variables.
 
-#### [Questions:  17.1 What does the permutation test tell you? 17.2 Compare the results with the results from the permutation test on only management types]{style="color:forestgreen"}
+#### [Questions: ]{style="color:forestgreen"}
+
+#### [17.1 What does the permutation test tell you? ]{style="color:forestgreen"}
+
+#### [17.2 Compare the results with the results from the permutation test on only management types]{style="color:forestgreen"}
 
 ```{r ex17, inclue=TRUE, warning=FALSE, message=FALSE}
 #This partials out the effect of A1 and Moisture before analysing the effects of management
@@ -748,7 +808,11 @@ The amount of applied manure is a third important variable given in the
 environmental data set associated with the dune meadow data set. Repeat
 exercise 17, but with manure added to the set of covariates.
 
-#### [Questions:  18.1 What was the effect of adding manure to the set of covariates? 18.2 We may expect that Management and Manure are correlated, check visually by making a boxplot of Manure vs Management type using the R code: boxplot(Manure\~Management, data = dune.env.original). What does the result tell you?]{style="color:forestgreen"}
+#### [Questions: ]{style="color:forestgreen"}
+
+#### [18.1 What was the effect of adding manure to the set of covariates? ]{style="color:forestgreen"}
+
+#### [18.2 We may expect that Management and Manure are correlated, check visually by making a boxplot of Manure vs Management type using the R code: boxplot(Manure\~Management, data = dune.env.original). What does the result tell you?]{style="color:forestgreen"}
 
 ```{r ex18, inclue=TRUE, warning=FALSE, message=FALSE}
 #This partials out the effect of A1, Moisture, and Manure before analysing the effects of management
@@ -780,7 +844,15 @@ We have now concluded that management type is of subordinate importance.
 Now, you want to test the importance or significance of individual
 environmental variables. This is done by Forward selection.
 
-#### [Questions:  19.1 What is the effect of Forward selection? 19.2 In what way do these results differ from the results obtained when the whole Environmental data table was used as explanatory variables? 19.3 Were the set of explanatory variables selected by the Forward selection the best set? 19.4 Why would one perform a p-value correction?]{style="color:forestgreen"}
+#### [Questions: ]{style="color:forestgreen"}
+
+#### [19.1 What is the effect of Forward selection? ]{style="color:forestgreen"}
+
+#### [19.2 In what way do these results differ from the results obtained when the whole Environmental data table was used as explanatory variables? ]{style="color:forestgreen"}
+
+#### [19.3 Were the set of explanatory variables selected by the Forward selection the best set? ]{style="color:forestgreen"}
+
+#### [19.4 Why would one perform a p-value correction?]{style="color:forestgreen"}
 
 ```{r ex19, echo=TRUE, message=FALSE, warning=FALSE, inclue=TRUE}
 # A first CCA with all environmental variables
@@ -832,7 +904,11 @@ relatively few species in your dataset. In this exercise we will use
 tabulated data on species ecological preferences (the Ellenberg
 indicator values) to interpret the results of the ordinations.
 
-#### [Questions:  20.1 Which Ellenberg values are most important for the distribution of the species? 20.2 What do the different axes represent in terms of environmental gradients?]{style="color:forestgreen"}
+#### [Questions: ]{style="color:forestgreen"}
+
+#### [20.1 Which Ellenberg values are most important for the distribution of the species? ]{style="color:forestgreen"}
+
+#### [20.2 What do the different axes represent in terms of environmental gradients?]{style="color:forestgreen"}
 
 ```{r message=FALSE, warning=FALSE}
 #load Ellenberg data
@@ -890,7 +966,9 @@ The total explained variation is the sum of a), b) and c).
 The total variation in the dataset is the sum of all unconstrained
 eigenvalues.
 
-#### [Questions:  21.1 Perform the analyses and interpret the results - how much of the total variation (% of All) is explained by: - uniquely by Management (effect of Soil removed), - uniquely by Soil (effect of Management removed), - jointly by Soil and Management (the interaction) - Not by Soil or Management?]{style="color:forestgreen"}
+#### [Questions: ]{style="color:forestgreen"}
+
+#### [21.1 Perform the analyses and interpret the results - how much of the total variation (% of All) is explained by: - uniquely by Management (effect of Soil removed), - uniquely by Soil (effect of Management removed), - jointly by Soil and Management (the interaction) - Not by Soil or Management?]{style="color:forestgreen"}
 
 ```{r, warning=FALSE, message=FALSE}
 
@@ -922,7 +1000,11 @@ analyse if there has been a consistent change in species composition
 between the two inventories. We are thus not interested in differences
 between the ten plots.
 
-#### [Questions:  22.1 Is there a significant change in species composition over time? 22.2 What is the effect of defining Plots as co-factors?]{style="color:forestgreen"}
+#### [Questions: ]{style="color:forestgreen"}
+
+#### [22.1 Is there a significant change in species composition over time? ]{style="color:forestgreen"}
+
+#### [22.2 What is the effect of defining Plots as co-factors?]{style="color:forestgreen"}
 
 ```{r, warning=FALSE, message=FALSE}
 #This partials out the effect of Plot before analysing the effects of Time
@@ -996,7 +1078,11 @@ data set (EnvTS). The question you want to answer is if the treatment
 caused a change in species composition that is significantly different
 from the change in the control plots.
 
-#### [Questions:  23.1 Did the treatment have an effect? 23.2 What was permuted?]{style="color:forestgreen"}
+#### [Questions: ]{style="color:forestgreen"}
+
+#### [23.1 Did the treatment have an effect? ]{style="color:forestgreen"}
+
+#### [23.2 What was permuted?]{style="color:forestgreen"}
 
 ```{r, warning=FALSE, message=FALSE}
 baci.cca <- cca(SpeTS ~ Treat + Condition(Plot + Time), data=EnvTS)
@@ -1032,7 +1118,11 @@ multivariate datasets. They are used to compare how objects differ when
 they are described by different sets of descriptors, or if there are
 repeated samplings of the same objects using the same descriptors.
 
-#### [Questions:  24.1 How similar is the arrangement of sites in ordination space based on plant and insect data? 24.2 Do the three analyses (Procrustes, Co-Correspondence and Mantel) indicate similar ordinations of sites based on plant vs. insect data?]{style="color:forestgreen"}
+#### [Questions: ]{style="color:forestgreen"}
+
+#### [24.1 How similar is the arrangement of sites in ordination space based on plant and insect data? ]{style="color:forestgreen"}
+
+#### [24.2 Do the three analyses (Procrustes, Co-Correspondence and Mantel) indicate similar ordinations of sites based on plant vs. insect data?]{style="color:forestgreen"}
 
 ```{r ex24, inclue=TRUE, warning=FALSE, message=FALSE}
 library(cocorresp)
@@ -1113,7 +1203,15 @@ hierarchical agglomeration algorithms and similarity indices. Use at
 least the Euclidian and the Bray-Curtis similarity measures for the
 hierarchical clustering technique. Also try Ward's method
 
-#### [Questions:  25.1 How many clusters seem to exist in the Dune data set?  25.2 Is a 3- or 4-cluster solution a better match to the management type in the dune.env dataset?  25.3 Do the two approaches to hierarchical clustering reveal similar patterns in the Dune data set?  25.4 Interpret the Hopkins statistic for the Dune data set.]{style="color:forestgreen"}
+#### [Questions: ]{style="color:forestgreen"}
+
+#### [25.1 How many clusters seem to exist in the Dune data set? ]{style="color:forestgreen"}
+
+#### [25.2 Is a 3- or 4-cluster solution a better match to the management type in the dune.env dataset? ]{style="color:forestgreen"}
+
+#### [25.3 Do the two approaches to hierarchical clustering reveal similar patterns in the Dune data set? ]{style="color:forestgreen"}
+
+#### [25.4 Interpret the Hopkins statistic for the Dune data set.]{style="color:forestgreen"}
 
 ```{r, warning=FALSE, message=FALSE}
 #
@@ -1223,7 +1321,13 @@ Here, we will use the iris data. This is a "classic" data set used for
 exploring multivariate methods for
 discrimination.https://en.wikipedia.org/wiki/Iris_flower_data_set
 
-#### [Questions:  26.1 Based on a visual analysis, which dimensions provide the best separation between iris species? 26.2 Are your insights from the visual analysis confirmed by the partition tree analysis? 26.3 Does the partition tree provide a perfect species identification or are there misclassifications?]{style="color:forestgreen"}
+#### [Questions: ]{style="color:forestgreen"}
+
+#### [26.1 Based on a visual analysis, which dimensions provide the best separation between iris species? ]{style="color:forestgreen"}
+
+#### [26.2 Are your insights from the visual analysis confirmed by the partition tree analysis? ]{style="color:forestgreen"}
+
+#### [26.3 Does the partition tree provide a perfect species identification or are there misclassifications?]{style="color:forestgreen"}
 
 ```{r}
 # Before starting the analysis, we will generate pairwise scatterplots of the data
@@ -1272,7 +1376,11 @@ structure in a data set in two ways. First, we will perform an RDA
 against time, we will then perform a more appropriate analysis using
 Principal Response Curves (PRC).
 
-#### [Questions:  27.1 Was there an effect of dose over time on the invertebrate community? 27.2 Which species were most affected, i.e changed most under the highest dose compared to the control ?]{style="color:forestgreen"}
+#### [Questions: ]{style="color:forestgreen"}
+
+#### [27.1 Was there an effect of dose over time on the invertebrate community? ]{style="color:forestgreen"}
+
+#### [27.2 Which species were most affected, i.e changed most under the highest dose compared to the control ?]{style="color:forestgreen"}
 
 ```{r}
 # We will use the pyrifos data set, which we have not previously seen.
@@ -1351,7 +1459,11 @@ sources of variation and fitting linear models (e.g., factors,
 polynomial regression) to distance matrices; uses a permutation test
 with pseudo-F ratios.
 
-#### [Questions:  28.1 What do the results from anosim and adonis tell you? 28.2 Give one other example of predefined groups that could be uses as the grouping variable(s)!]{style="color:forestgreen"}
+#### [Questions: ]{style="color:forestgreen"}
+
+#### [28.1 What do the results from anosim and adonis tell you? ]{style="color:forestgreen"}
+
+#### [28.2 Give one other example of predefined groups that could be uses as the grouping variable(s)!]{style="color:forestgreen"}
 
 ```{r}
 # Start with a CA with Management as environmental factor and hulls around the different management types
@@ -1460,7 +1572,11 @@ test and training parts) so we will here use the classic "Iris" dataset
 of different Iris plant species and the dimensions of different parts of
 their flowers
 
-#### [Questions:  29.1 How well does the algorithm distinguish between the species? 29.2 Here our groups are pre-defined (species). Would it be OK to use one of the clustering methods to find groups before running the DFA?]{style="color:forestgreen"}
+#### [Questions: ]{style="color:forestgreen"}
+
+#### [29.1 How well does the algorithm distinguish between the species? ]{style="color:forestgreen"}
+
+#### [29.2 Here our groups are pre-defined (species). Would it be OK to use one of the clustering methods to find groups before running the DFA?]{style="color:forestgreen"}
 
 ```{r DFA}
 library(tidyverse)
@@ -1570,7 +1686,9 @@ between taxa via the inclusion of a small number of latent variables.
 Latent variables act as natural ordination axes reflecting unobserved
 covariates.
 
-#### [Question:  30.1 How do the ordinations produced compare to a distance based ordination (for example an NMDS) of the same species data?]{style="color:forestgreen"}
+#### [Question: ]{style="color:forestgreen"}
+
+#### [30.1 How do the ordinations produced compare to a distance based ordination (for example an NMDS) of the same species data?]{style="color:forestgreen"}
 
 ```{r}
 library(gllvm) #Generalised linear latent variable models
@@ -1635,7 +1753,9 @@ analysis. That is to say we will include trait information and
 environmental variables, and investigate the relationship between plant
 traits and environmental variables.
 
-#### [Question:  31.1 Do the correlations in the plot make sense ecologically?]{style="color:forestgreen"}
+#### [Question: ]{style="color:forestgreen"}
+
+#### [31.1 Do the correlations in the plot make sense ecologically?]{style="color:forestgreen"}
 
 ```{r}
 # Read and treat data
@@ -1686,7 +1806,13 @@ smaller space we perform a regression against the outcome variable. PLS
 aims to choose new mapped variables that maximally explain the outcome
 variable.
 
-#### [Questions:  32.1 Which explanatory variables are most important to explain the response variable (Biovolume)? 32.2 Are there any obvious outliers in the dataset? 32.3 Does the data seemed to be in need of a transformation?]{style="color:forestgreen"}
+#### [Questions: ]{style="color:forestgreen"}
+
+#### [32.1 Which explanatory variables are most important to explain the response variable (Biovolume)? ]{style="color:forestgreen"}
+
+#### [32.2 Are there any obvious outliers in the dataset? ]{style="color:forestgreen"}
+
+#### [32.3 Does the data seemed to be in need of a transformation?]{style="color:forestgreen"}
 
 ```{r PLS, echo=TRUE, message=FALSE, warning=FALSE}
 
