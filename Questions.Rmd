@@ -1084,7 +1084,7 @@ mantel(insects.distance, plants.distance)
 mantel(insects.distance, plants.distance, method = "spear")
 ```
 
-We can also take the output from one ordination and use it in another
+We can also take the output from one ordination and use it in another...
 
 ```{r}
 
