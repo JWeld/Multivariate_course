@@ -110,19 +110,19 @@ metrics using the vegdist() function.
 library(vegan)
 # create a triangular data set with 2 columns (x and y) and 3 rows
 #
-dt<-data.frame(x=c(5, 5, 10), y=c(5, 10, 10))
+dt <- data.frame(x = c(5, 5, 10), y = c(5, 10, 10))
 #plot dt
-plot(dt,xlim=c(0,15),ylim=c(0,15))
+plot(dt, xlim = c(0, 15), ylim = c(0, 15))
 # what does vegdist() do?
 #
 help(vegdist)
 #
 # create some distance matrices with using different metrics
 #
-(dt.bray<-vegdist(dt,method="bray"))
-(dt.manhattan<-vegdist(dt,method="manhattan"))
-(dt.euclidean<-vegdist(dt,method="euclidean"))
-(dt.mahalanobis<-vegdist(dt,method="mahalanobis"))
+(dt.bray <- vegdist(dt, method = "bray"))
+(dt.manhattan <- vegdist(dt, method = "manhattan"))
+(dt.euclidean <- vegdist(dt, method = "euclidean"))
+(dt.mahalanobis <- vegdist(dt, method = "mahalanobis"))
 
 ```
 
@@ -142,32 +142,47 @@ library(corrplot)
 
 data("dune")
 data("dune.env")
-dummy_management <- as.data.frame(model.matrix( ~ Management - 1, data=dune.env )) 
+dummy_management <-
+  as.data.frame(model.matrix(~ Management - 1, data = dune.env))
 #add these to the dataset
-dune.env.original <- dune.env #we keep a copy of the original version
-dune.env <- dune.env %>% select(A1, Moisture, Manure, Use) %>% cbind(.,dummy_management) 
-dune.env$Moisture <- as.numeric(as.character(dune.env$Moisture)) #make numeric
+dune.env.original <-
+  dune.env #we keep a copy of the original version
+dune.env <-
+  dune.env %>% select(A1, Moisture, Manure, Use) %>% cbind(., dummy_management)
+dune.env$Moisture <-
+  as.numeric(as.character(dune.env$Moisture)) #make numeric
 dune.env$Manure <- as.numeric(as.character(dune.env$Manure))
 dune.env$Use <- as.numeric(dune.env$Use)
 #make column names shorter
-dune.env <- dune.env %>% rename(BF = ManagementBF, HF = ManagementHF,
-                                NM = ManagementNM, SF = ManagementSF)
+dune.env <-
+  dune.env %>% rename(BF = ManagementBF,
+                      HF = ManagementHF,
+                      NM = ManagementNM,
+                      SF = ManagementSF)
 
 ## PCA plot 1:
 # Start by looking at pairwise correlations among the variables.
-dune.env_cor<-cor(dune.env, method = "kendall")
-corrplot(dune.env_cor, type = "upper", order = "hclust", tl.col = "black", tl.srt = 45)
+dune.env_cor <- cor(dune.env, method = "kendall")
+corrplot(
+  dune.env_cor,
+  type = "upper",
+  order = "hclust",
+  tl.col = "black",
+  tl.srt = 45
+)
 
 ## PCA plot 2:
 # Then make a PCA, with scaling of the data
-env.pca <- rda(dune.env, scale = TRUE) #vegan uses the same function for PCA and RDA, just depends on if it is constrained or not.
+env.pca <-
+  rda(dune.env, scale = TRUE) #vegan uses the same function for PCA and RDA, just depends on if it is constrained or #not.
 biplot(env.pca) #plot the results using the default plot scaling which is "species"
 env.pca #summarise results
 summary(eigenvals(env.pca)) #see variance explained
 
 ## PCA plot 3:
 # Continue with a PCA on the same data, but without scaling of the data
-env.pca2 <- rda(dune.env, scale = FALSE) #vegan uses the same function for PCA and RDA, just depends on if it is constrained or not.
+env.pca2 <-
+  rda(dune.env, scale = FALSE) #vegan uses the same function for PCA and RDA, just depends on if it is constrained or #not.
 biplot(env.pca2)#plot the results
 env.pca2 #summarise results
 summary(eigenvals(env.pca2)) #see variance explained
@@ -175,37 +190,46 @@ summary(eigenvals(env.pca2)) #see variance explained
 ## PCA plot 4:
 # Compare the PCAs with and without scaling of data
 # Default scaling of the plots, which is "species"
-par(mfrow = c(1,2))
+par(mfrow = c(1, 2))
 biplot(env.pca, main = "PCA with scaling of data")
 biplot(env.pca2, main = "PCA without scaling of data")
-par(mfrow = c(1,1))
+par(mfrow = c(1, 1))
 
 ## PCA plot 5:
 # Plots from the same PCA, but with plot scaling focused on sites and on species
-par(mfrow = c(1,2))
+par(mfrow = c(1, 2))
 biplot(env.pca, scaling = "sites", main = "Plot scaling on sites")
 biplot(env.pca, scaling = "species", main = "Plot scaling on species")
-par(mfrow = c(1,1))
+par(mfrow = c(1, 1))
 
 ## PCA plot 6:
-# Then, a plot from the PCA on un-scaled data, 
+# Then, a plot from the PCA on un-scaled data,
 # but with plot scaling to mimic a PCA on scaled data (correlation = TRUE)
 # Second plot is the PCA on scaled data
 # Both plots with plot scaling focused on species
-par(mfrow = c(1,2))
-biplot(env.pca2, scaling = "species", correlation = TRUE, main = "PCA on un-scaled data,\nplot scaling on correlations")
-biplot(env.pca, scaling = "species", correlation = FALSE, main = "PCA on scaled data")
-par(mfrow = c(1,1))
+par(mfrow = c(1, 2))
+biplot(env.pca2,
+       scaling = "species",
+       correlation = TRUE,
+       main = "PCA on un-scaled data,\nplot scaling on correlations")
+biplot(env.pca,
+       scaling = "species",
+       correlation = FALSE,
+       main = "PCA on scaled data")
+par(mfrow = c(1, 1))
 
 ## PCA plot 7:
 # Finally a plot from the PCA on un-scaled data,
 # but with plot scaling to mimic a PCA on scaled data
 # Second plot is the PCA on scaled data
 # Both plots with plot scaling focused on sites
-par(mfrow = c(1,2))
-biplot(env.pca2, scaling = "sites", correlation = TRUE, main = "PCA on un-scaled data,\nplot scaling on correlations")
+par(mfrow = c(1, 2))
+biplot(env.pca2,
+       scaling = "sites",
+       correlation = TRUE,
+       main = "PCA on un-scaled data,\nplot scaling on correlations")
 biplot(env.pca, scaling = "sites", main = "PCA on scaled data")
-par(mfrow = c(1,1))
+par(mfrow = c(1, 1))
 
 ```
 
@@ -252,7 +276,7 @@ rowSums(dune != 0)
 # find the plot with the lowest number of species
 which.min(rowSums(dune != 0))
 # create a new data frame with a new species with cover degree 9 at site 1
-NewSp <- c(9, rep(0,19))
+NewSp <- c(9, rep(0, 19))
 SpeciesNewSp <- data.frame(dune, NewSp)
 # run a new DCA with the extra species
 DCANewSp <- decorana(SpeciesNewSp)
@@ -284,25 +308,25 @@ DCA-ordination. Next, remove the Chealbu = 9, and add instead a cover of
 
 ```{r ex7, inclue=TRUE, warning=FALSE, message=FALSE}
 # figure out the column number for Chenopodium album (abbreviated "Chenalbu")
-which(colnames(dune)=="Chenalbu")
+which(colnames(dune) == "Chenalbu")
 # create a new data frame with a new sample containing Chenopodium album with a cover of 9
-NewSampleChen <- c(rep(0,7), 9, rep(0,22))
+NewSampleChen <- c(rep(0, 7), 9, rep(0, 22))
 SpeciesNewSampleChen <- data.frame(rbind(dune, NewSampleChen))
 # run a new DCA with the extra sample
 DCANewSampleChen <- decorana(SpeciesNewSampleChen)
 DCANewSampleChen
 # plot the DCA
-ordiplot(DCANewSampleChen, type="text", main="DCA with new sample Chenopodium album")
+ordiplot(DCANewSampleChen, type = "text", main = "DCA with new sample Chenopodium album")
 # figure out the column number for Juncbufo
-which(colnames(dune)=="Juncbufo")
+which(colnames(dune) == "Juncbufo")
 # create a new data frame with a new sample containing Juncbufo with a cover of 5
-NewSampleJunc <- c(rep(0,15), 5, rep(0,10))
+NewSampleJunc <- c(rep(0, 15), 5, rep(0, 10))
 SpeciesNewSampleJunc <- data.frame(rbind(dune, NewSampleJunc))
 # run a new DCA with the extra sample
 DCANewSampleJunc <- decorana(SpeciesNewSampleJunc)
 DCANewSampleJunc
 # plot the DCA
-ordiplot(DCANewSampleJunc, type="text", main="DCA with new sample of Juncbufo")
+ordiplot(DCANewSampleJunc, type = "text", main = "DCA with new sample of Juncbufo")
 ```
 
 ------------------------------------------------------------------------
@@ -325,10 +349,10 @@ analysis
 
 ```{r}
 # generate the four distance matrices
-dune.bray.distance.matrix<-vegdist(dune,method="bray")
-dune.jaccard.distance.matrix<-vegdist(dune,method="jaccard")
-dune.euclidean.distance.matrix<-vegdist(dune,method="euclidean")
-dune.mahalanobis.distance.matrix<-vegdist(dune,method="mahalanobis")
+dune.bray.distance.matrix <- vegdist(dune, method = "bray")
+dune.jaccard.distance.matrix <- vegdist(dune, method = "jaccard")
+dune.euclidean.distance.matrix <- vegdist(dune, method = "euclidean")
+dune.mahalanobis.distance.matrix <- vegdist(dune, method = "mahalanobis")
 #
 # what can be accomplished with the MDS routine?
 #
@@ -336,28 +360,41 @@ help(cmdscale)
 #
 # run an MDS using cmdscale() for each of the four distance matrices
 #
-dune.bray.location<-cmdscale(dune.bray.distance.matrix)
-dune.jaccard.location<-cmdscale(dune.jaccard.distance.matrix)
-dune.euclidean.location<-cmdscale(dune.euclidean.distance.matrix)
-dune.mahalanobis.location<-cmdscale(dune.mahalanobis.distance.matrix)
+dune.bray.location <- cmdscale(dune.bray.distance.matrix)
+dune.jaccard.location <- cmdscale(dune.jaccard.distance.matrix)
+dune.euclidean.location <- cmdscale(dune.euclidean.distance.matrix)
+dune.mahalanobis.location <-
+  cmdscale(dune.mahalanobis.distance.matrix)
 #
 # now take a look at some plots
 #
-plot(dune.bray.location, xlab="PCoA 1", ylab="PCoA 2")
-title(main="PCoA on Bray Curtis distances of dune sites")
-text(dune.bray.location,labels=row.names(dune.bray.location),pos=2)
+plot(dune.bray.location, xlab = "PCoA 1", ylab = "PCoA 2")
+title(main = "PCoA on Bray Curtis distances of dune sites")
+text(dune.bray.location,
+     labels = row.names(dune.bray.location),
+     pos = 2)
 #
-plot(dune.jaccard.location, xlab="PCoA 1", ylab="PCoA 2")
-title(main="PCoA on Jaccard distances of dune sites")
-text(dune.jaccard.location,labels=row.names(dune.jaccard.location),pos=2)
+plot(dune.jaccard.location, xlab = "PCoA 1", ylab = "PCoA 2")
+title(main = "PCoA on Jaccard distances of dune sites")
+text(dune.jaccard.location,
+     labels = row.names(dune.jaccard.location),
+     pos = 2)
 #
-plot(dune.euclidean.location, xlab="PCoA 1", ylab="PCoA 2")
-title(main="PCoA on Euclidean distances of dune sites")
-text(dune.euclidean.location,labels=row.names(dune.euclidean.location),pos=2)
+plot(dune.euclidean.location, xlab = "PCoA 1", ylab = "PCoA 2")
+title(main = "PCoA on Euclidean distances of dune sites")
+text(
+  dune.euclidean.location,
+  labels = row.names(dune.euclidean.location),
+  pos = 2
+)
 #
-plot(dune.mahalanobis.location, xlab="PCoA 1", ylab="PCoA 2")
-title(main="PCoA on Mahalanobis distances of dune sites")
-text(dune.mahalanobis.location,labels=row.names(dune.mahalanobis.location),pos=2)
+plot(dune.mahalanobis.location, xlab = "PCoA 1", ylab = "PCoA 2")
+title(main = "PCoA on Mahalanobis distances of dune sites")
+text(
+  dune.mahalanobis.location,
+  labels = row.names(dune.mahalanobis.location),
+  pos = 2
+)
 ```
 
 ------------------------------------------------------------------------
@@ -377,20 +414,20 @@ Evaluate the consequences of using different distance metrics.
 ```{r ex8, inclue=TRUE, warning=FALSE, message=FALSE}
 # run NMDS with the defaults and 2 dimensions, what is the stress?
 #
-dune.NMDS.bray.2<-metaMDS(dune,k=2)
+dune.NMDS.bray.2 <- metaMDS(dune, k = 2)
 #
 # run NMDS with the defaults and 3 dimensions, what is the stress ?
 #
-dune.NMDS.bray.3<-metaMDS(dune,k=3)
+dune.NMDS.bray.3 <- metaMDS(dune, k = 3)
 #
 # what happens when Euclidean distances are used?
 #
-dune.NMDS.euclidean.2<-metaMDS(dune, distance = "euclidean", k=2)
+dune.NMDS.euclidean.2 <- metaMDS(dune, distance = "euclidean", k = 2)
 #
 # plot some results
 #
-ordiplot(dune.NMDS.bray.2, type="text", main="NMDS from Bray Curtis distance, 2 Dimensions")
-ordiplot(dune.NMDS.euclidean.2, type="text", main="NMDS from Euclidean distance, 2 Dimensions")
+ordiplot(dune.NMDS.bray.2, type = "text", main = "NMDS from Bray Curtis distance, 2 Dimensions")
+ordiplot(dune.NMDS.euclidean.2, type = "text", main = "NMDS from Euclidean distance, 2 Dimensions")
 #
 # create Shepard plots to show how the stress evolves
 #
@@ -399,13 +436,13 @@ stressplot(dune.NMDS.euclidean.2)
 #
 # generate the CA and DCA results
 #
-dune.CA<-cca(dune)
-dune.DCA<-decorana(dune)
+dune.CA <- cca(dune)
+dune.DCA <- decorana(dune)
 #
 # plot the CA and DCA results
 #
-ordiplot(dune.CA, type="text", main="CA on Dune Meadow data")
-ordiplot(dune.DCA, type="text", main="DCA on Dune Meadow data")
+ordiplot(dune.CA, type = "text", main = "CA on Dune Meadow data")
+ordiplot(dune.DCA, type = "text", main = "DCA on Dune Meadow data")
 
 
 ```
@@ -419,32 +456,34 @@ These are only a few examples on how to assess data quality.
 #### [Questions: 10.1 Is there a pattern in the distribution of missing values that may lead to the omission of a species or a sample? 10.2 Would you say that the original Dune Meadow data set is OK for further analyses? Motivate your answer!]{style="color:forestgreen"}
 
 ```{r ex10, inclue=TRUE, message=FALSE, warning=FALSE}
-#library("vegan") 
+#library("vegan")
 library("reshape2")
-library("outliers") 
+library("outliers")
 library("gdata") # for unmatrix
 library("VIM") # For matrixplot
 
 data(dune)
 
 # Create some outliers and missing values in a temporary dataset called mvo.dune (acronym for MultiVariate Outlier)
-mvo.dune<-as.matrix(dune)
-n_outl<- 5 # Give number of outliers to be created, here 5
-v_outl<-30 # Give value of the outlier(s), here 30
-mvo.dune[sample(1:length(mvo.dune),n_outl, replace = FALSE)]<-v_outl # Replace some data with outliers, at random positions
-mvo.dune[sample(1:length(mvo.dune),n_outl, replace = FALSE)]<-NA # Replace some data with NAs, at random positions
+mvo.dune <- as.matrix(dune)
+n_outl <- 5 # Give number of outliers to be created, here 5
+v_outl <- 30 # Give value of the outlier(s), here 30
+mvo.dune[sample(1:length(mvo.dune), n_outl, replace = FALSE)] <-
+  v_outl # Replace some data with outliers, at random positions
+mvo.dune[sample(1:length(mvo.dune), n_outl, replace = FALSE)] <-
+  NA # Replace some data with NAs, at random positions
 
 # Cleveland plot to inspect data
-dotchart(as.matrix(mvo.dune), main="Cleveland plot", xlab="Observerd value")
+dotchart(as.matrix(mvo.dune), main = "Cleveland plot", xlab = "Observerd value")
 
 # Find data > 9, as no value should be higher than 9 in the dune meadow data set
-(GT9 <- which(mvo.dune > 9, arr.ind=TRUE))
+(GT9 <- which(mvo.dune > 9, arr.ind = TRUE))
 
 # Find missing values
-(mvo_miss<-which(is.na(mvo.dune), arr.ind=TRUE))
+(mvo_miss <- which(is.na(mvo.dune), arr.ind = TRUE))
 
 # Two ways of visualising missing data, using the package "VIM"
-aggr(as.matrix(mvo.dune)) 
+aggr(as.matrix(mvo.dune))
 matrixplot(mvo.dune) 
 ```
 
@@ -454,26 +493,52 @@ what should be excluded as an outlier!
 
 ```{r}
 
-# Indicative search for outliers in a multivariate data set. 
+# Indicative search for outliers in a multivariate data set.
 # Multiple peaks and high SD indicate outliers may occur
-dist1<-vegdist(mvo.dune, method="euclidean", binary=FALSE, diag=FALSE, upper=FALSE, na.rm = TRUE) 
-d1<-data.frame(unmatrix(as.matrix(dist1), byrow = TRUE))
-d1r<-t(data.frame(strsplit(row.names(d1), ":")))
-d1rr<-data.frame(d1,d1r)
-d1mean<-tapply(d1rr$unmatrix.as.matrix.dist1.., d1rr$X1, mean)
+dist1 <-
+  vegdist(
+    mvo.dune,
+    method = "euclidean",
+    binary = FALSE,
+    diag = FALSE,
+    upper = FALSE,
+    na.rm = TRUE
+  )
+d1 <- data.frame(unmatrix(as.matrix(dist1), byrow = TRUE))
+d1r <- t(data.frame(strsplit(row.names(d1), ":")))
+d1rr <- data.frame(d1, d1r)
+d1mean <- tapply(d1rr$unmatrix.as.matrix.dist1.., d1rr$X1, mean)
 sd(d1mean) # Standard deviation of the mean distances. If > 3: strong outlier(s)
-plot(stats::density(d1mean), col = "red", xlab="Distance between observations", main = "Indicative test of multivariate outliers\nData with noise")
-legend("topright",paste("SD =",round(sd(d1mean),1))) # Legend with standard deviation
+plot(
+  stats::density(d1mean),
+  col = "red",
+  xlab = "Distance between observations",
+  main = "Indicative test of multivariate outliers\nData with noise"
+)
+legend("topright", paste("SD =", round(sd(d1mean), 1))) # Legend with standard deviation
 
 # Same as above but on the original dune meadow dataset (i.e. without outliers)
-dist1<-vegdist(dune, method="euclidean", binary=FALSE, diag=FALSE, upper=FALSE, na.rm = TRUE) 
-d1<-data.frame(unmatrix(as.matrix(dist1), byrow = TRUE))
-d1r<-t(data.frame(strsplit(row.names(d1), ":")))
-d1rr<-data.frame(d1,d1r)
-d1mean<-tapply(d1rr$unmatrix.as.matrix.dist1.., d1rr$X1, mean)
+dist1 <-
+  vegdist(
+    dune,
+    method = "euclidean",
+    binary = FALSE,
+    diag = FALSE,
+    upper = FALSE,
+    na.rm = TRUE
+  )
+d1 <- data.frame(unmatrix(as.matrix(dist1), byrow = TRUE))
+d1r <- t(data.frame(strsplit(row.names(d1), ":")))
+d1rr <- data.frame(d1, d1r)
+d1mean <- tapply(d1rr$unmatrix.as.matrix.dist1.., d1rr$X1, mean)
 sd(d1mean) # Standard deviation of the mean distances. If > 3: strong outlier(s)
-plot(stats::density(d1mean), col = "red", xlab="Distance between observations",main = "Indictive test of multivariate outliers\nOriginal Dune Meadow data")
-legend("topright",paste("SD =",round(sd(d1mean),1))) # Legend with standard deviation
+plot(
+  stats::density(d1mean),
+  col = "red",
+  xlab = "Distance between observations",
+  main = "Indictive test of multivariate outliers\nOriginal Dune Meadow data"
+)
+legend("topright", paste("SD =", round(sd(d1mean), 1))) # Legend with standard deviation
 
 ```
 
@@ -485,21 +550,21 @@ legend("topright",paste("SD =",round(sd(d1mean),1))) # Legend with standard devi
 #### [Questions: 11.1 Compare the ordination diagrams and numerical results! What does the significance test tell you? 11.2 When only looking at the results, which method explains the variation best? 11.3 Taking the nature of the data into account, which method should be used?]{style="color:forestgreen"}
 
 ```{r ex11, echo=FALSE, message=FALSE, warning=FALSE, inclue=TRUE}
-# RDA 
+# RDA
 dune.rda <- rda(dune ~ . , dune.env)
 summary(dune.rda)
 anova(dune.rda)
 
-# CCA 
+# CCA
 dune.cca <- cca(dune ~ . , dune.env)
 summary(dune.cca)
 anova(dune.cca)
 
 #plots
-par(mfrow= c(1,2))
-ordiplot(dune.rda, type="text", main="RDA")
-ordiplot(dune.cca, type="text", main="CCA")
-par(mfrow= c(1,1))
+par(mfrow = c(1, 2))
+ordiplot(dune.rda, type = "text", main = "RDA")
+ordiplot(dune.cca, type = "text", main = "CCA")
+par(mfrow = c(1, 1))
 ```
 
 ------------------------------------------------------------------------
@@ -528,23 +593,23 @@ rule is that values over 10 indicate redundant constraints.
 #### [Questions: 13.1 Compare the constrained and unconstrained ordinations! What is the difference between the methods? 13.2 When could an unconstrained ordination with explanatory variables be a good option?]{style="color:forestgreen"}
 
 ```{r ex13, inclue=TRUE, warning=FALSE, message=FALSE}
-# CA with env. variables 
+# CA with env. variables
 dune.ca <- cca(dune)
-fit <- envfit(dune.ca, dune.env, perm=999)
+fit <- envfit(dune.ca, dune.env, perm = 999)
 fit
-ordiplot(dune.ca,  type="text", main="CA with env. variables fitted after")
+ordiplot(dune.ca,  type = "text", main = "CA with env. variables fitted after")
 plot(fit)
 
-#CCA 
+#CCA
 dune.cca <- cca(dune ~ . , dune.env)
 dune.cca
-ordiplot(dune.cca, type="text", main="CCA")
+ordiplot(dune.cca, type = "text", main = "CCA")
 
-par(mfrow = c(1,2))
-ordiplot(dune.ca,  type="text", main="CA with env. fitted after")
+par(mfrow = c(1, 2))
+ordiplot(dune.ca,  type = "text", main = "CA with env. fitted after")
 plot(fit)
-ordiplot(dune.cca, type="text", main="CCA")
-par(mfrow = c(1,1))
+ordiplot(dune.cca, type = "text", main = "CCA")
+par(mfrow = c(1, 1))
 ```
 
 ------------------------------------------------------------------------
@@ -660,13 +725,20 @@ and the four management types as environmental variables.
 
 ```{r ex17, inclue=TRUE, warning=FALSE, message=FALSE}
 #This partials out the effect of A1 and Moisture before analysing the effects of management
-MN.cca <- cca(dune ~ Management + Condition(A1 + Moisture), data=dune.env.original)
+MN.cca <-
+  cca(dune ~ Management + Condition(A1 + Moisture), data = dune.env.original)
 summary(MN.cca)
 #permutation test
-permutest(MN.cca, permutations=999)
+permutest(MN.cca, permutations = 999)
 # Plot the ordination
 ordiplot(MN.cca, type = "points")
-ordihull(MN.cca,groups = dune.env.original$Management,draw = "polygon",col = "grey70", label = T)
+ordihull(
+  MN.cca,
+  groups = dune.env.original$Management,
+  draw = "polygon",
+  col = "grey70",
+  label = T
+)
 ```
 
 ------------------------------------------------------------------------
@@ -681,14 +753,21 @@ exercise 17, but with manure added to the set of covariates.
 
 ```{r ex18, inclue=TRUE, warning=FALSE, message=FALSE}
 #This partials out the effect of A1, Moisture, and Manure before analysing the effects of management
-MN.cca2 <- cca(dune ~ Management + Condition(A1 + Moisture + Manure), data=dune.env.original)
+MN.cca2 <-
+  cca(dune ~ Management + Condition(A1 + Moisture + Manure), data = dune.env.original)
 summary(MN.cca2)
 #permutation test
-permutest(MN.cca2, permutations=999)
+permutest(MN.cca2, permutations = 999)
 
 # Plot the ordination
 ordiplot(MN.cca2, type = "points")
-ordihull(MN.cca2,groups = dune.env.original$Management,draw = "polygon",col = "grey70", label = T)
+ordihull(
+  MN.cca2,
+  groups = dune.env.original$Management,
+  draw = "polygon",
+  col = "grey70",
+  label = T
+)
 
 # Are Management and Manure correlated, check visually
 # Make a boxplot manure~Management!
@@ -706,16 +785,26 @@ environmental variables. This is done by Forward selection.
 
 ```{r ex19, echo=TRUE, message=FALSE, warning=FALSE, inclue=TRUE}
 # A first CCA with all environmental variables
-cca.dune.all <- cca(dune ~ ., data = dune.env) # the dot after the tilde (~) means "include all from data"
+cca.dune.all <-
+  cca(dune ~ ., data = dune.env) # the dot after the tilde (~) means "include all from data"
 anova(cca.dune.all) # Test overall significance of the explanatory variables. If not significant no need to proceed with step wise selection
-adjR2.cca.dune <- RsquareAdj(cca.dune.all)$adj.r.squared # How much the adjusted R2 explains when all variables in dune.env are included
+adjR2.cca.dune <-
+  RsquareAdj(cca.dune.all)$adj.r.squared # How much the adjusted R2 explains when all variables in dune.env are included
 adjR2.cca.dune
 
 # A null model with only intercept, needed for the step wise selection
-cca.dune.0 <- cca(dune ~ 1, data = dune.env) # model containing only species matrix and intercept
+cca.dune.0 <-
+  cca(dune ~ 1, data = dune.env) # model containing only species matrix and intercept
 
 # The step wise selection, based on R2
-sel.env.dune <- ordiR2step(cca.dune.0, scope = formula (cca.dune.all), R2scope = adjR2.cca.dune, direction = 'forward', permutations = 999)
+sel.env.dune <-
+  ordiR2step(
+    cca.dune.0,
+    scope = formula (cca.dune.all),
+    R2scope = adjR2.cca.dune,
+    direction = 'forward',
+    permutations = 999
+  )
 sel.env.dune
 sel.env.dune$anova
 ordiplot(sel.env.dune)
@@ -755,24 +844,26 @@ dune.mean.ell <- readRDS("Mean_Ellenberg.RDS")
 #Do not do this in a real analysis without seriously thinking about how it affects your results!
 ## Code to replace missing values with the column mean, and save the results as a new dataframe
 ## called dune.mean.ell.impute (since we are imputing the missing values).
-dune.mean.ell.impute <- data.frame(
-    sapply(
-        dune.mean.ell,
-        function(x) ifelse(is.na(x),
-            mean(x, na.rm = TRUE),
-            x)))
+dune.mean.ell.impute <- data.frame(sapply(dune.mean.ell,
+                                          function(x)
+                                            ifelse(is.na(x),
+                                                   mean(x, na.rm = TRUE),
+                                                   x)))
 #CCA analysis
 #create global model with CCA (including all variables) and test it's significance, and if it is significant,
 #we use the ordistep function with appropriate arguments to do forward selection of variables.
-cca1 <- cca(dune ~ ., data = dune.mean.ell.impute) # full model (with all explanatory variables)
+cca1 <-
+  cca(dune ~ ., data = dune.mean.ell.impute) # full model (with all explanatory variables)
 anova(cca1) #overall model is significant
 # Start by making ordinations
-cca0 <- cca (dune~ 1, data = dune.mean.ell.impute) # empty model only with intercept
-cca1 <- cca(dune ~ ., data = dune.mean.ell.impute, na.action = na.omit) # full model (with all explanatory variables)
+cca0 <-
+  cca (dune ~ 1, data = dune.mean.ell.impute) # empty model only with intercept
+cca1 <-
+  cca(dune ~ ., data = dune.mean.ell.impute, na.action = na.omit) # full model (with all explanatory variables)
 cca1
-plot(cca1, main="CCA, all data")
+plot(cca1, main = "CCA, all data")
 #Stepwise approach, using "ordistep"
-step2<-ordistep(cca0, scope = formula(cca1), direction="forward")
+step2 <- ordistep(cca0, scope = formula(cca1), direction = "forward")
 step2$anova # which three are most significant in the final selection?
 ```
 
@@ -805,12 +896,17 @@ eigenvalues.
 ```{r, warning=FALSE, message=FALSE}
 
 ## variance partitioning
-management <- dune.env[,c("BF", "HF", "NM", "SF")]
-soil <- dune.env[,c("A1", "Moisture")]
+management <- dune.env[, c("BF", "HF", "NM", "SF")]
+soil <- dune.env[, c("A1", "Moisture")]
 # examine the explanatory variable of each class of variables.
 varp <- varpart(dune, management, soil)
 varp
-plot (varp, digits = 2, Xnames = c('Management', 'Soil'), bg = c('red', 'blue'))
+plot (
+  varp,
+  digits = 2,
+  Xnames = c('Management', 'Soil'),
+  bg = c('red', 'blue')
+)
 ```
 
 ------------------------------------------------------------------------
@@ -834,13 +930,22 @@ between the ten plots.
 #First load the time series versions of the data
 SpeTS <- readRDS("SpeTS.RDS")
 EnvTS <- readRDS("EnvTS.RDS")
-time.cca <- cca(SpeTS ~ Time + Condition(Plot), data=EnvTS)
+time.cca <- cca(SpeTS ~ Time + Condition(Plot), data = EnvTS)
 time.cca
-treat <- EnvTS$Time #
-colvec <- c("red2", "blue") #set colours to be applied to different levels of factor "Time"
+treat <- EnvTS$Time 
+colvec <-
+  c("red2", "blue") #set colours to be applied to different levels of factor "Time"
 plot(time.cca, type = "n", display = c("lc"))#plots the axes
-with(time.cca, points(time.cca, display = c("lc"), col = colvec[treat],#plots the points
-                      pch = 21, xlim = c(-2,2), bg = colvec[treat]))
+with(time.cca,
+     points(
+       time.cca,
+       display = c("lc"),
+       col = colvec[treat],
+       #plots the points
+       pch = 21,
+       xlim = c(-2, 2),
+       bg = colvec[treat]
+     ))
 ```
 
 ```{r}
@@ -860,9 +965,20 @@ with(EnvTS, anova(time2.cca, by="term", perm=100))
 ## plot ellipsoid hulls
 treat <- EnvTS$Time
 plot(time2.cca, type = "n")#plots the axes
-with(time2.cca, points(time2.cca, col = colvec[treat],#plots the points
-                      pch = 21, bg = colvec[treat]))
-ordihull(time2.cca,groups=treat,draw="polygon",col="grey70",label=T)#draw hulls around area of each level of factor "Time"
+with(time2.cca, points(
+  time2.cca,
+  col = colvec[treat],
+  #plots the points
+  pch = 21,
+  bg = colvec[treat]
+))
+ordihull(
+  time2.cca,
+  groups = treat,
+  draw = "polygon",
+  col = "grey70",
+  label = T
+)#draw hulls around area of each level of factor "Time"
 ```
 
 ------------------------------------------------------------------------
@@ -898,8 +1014,14 @@ with(EnvTS, anova(baci.cca, by="term", perm=500, strata=Treat))
 ```{r, warning=FALSE, message=FALSE}
 ## plot results
 treat <- EnvTS$Treat
-ordiplot(baci.cca,type="points")
-ordihull(baci.cca,groups=treat,draw="polygon",col="grey70",label=T)#draw hulls around area of each level of factor "Time"
+ordiplot(baci.cca, type = "points")
+ordihull(
+  baci.cca,
+  groups = treat,
+  draw = "polygon",
+  col = "grey70",
+  label = T
+)#draw hulls around area of each level of factor "Time"
 ```
 
 ------------------------------------------------------------------------
@@ -917,7 +1039,7 @@ repeated samplings of the same objects using the same descriptors.
 library(cocorresp)
 #library(vegan)
 #
-# DCA on the plant species data 
+# DCA on the plant species data
 #
 plants.DCA <- decorana(dune)
 #
@@ -933,7 +1055,9 @@ insects.DCA
 # perform a Procrustes analysis on the two DCAs from different datasets
 #
 plants.and.insects.from.DCA <- procrustes(plants.DCA, insects.DCA)
-plot(plants.and.insects.from.DCA, kind=1, type="text")
+plot(plants.and.insects.from.DCA,
+     kind = 1,
+     type = "text")
 #
 # Labels show the position of the samples in the second ordination, and arrows point to their positions in the
 # target ordination Function protest tests the non-randomness (`significance') between two configurations
@@ -949,26 +1073,29 @@ corAxis(CoCor)
 #
 # set up and perform the Mantel test
 #
-insects.distance<-vegdist(insects)
-plants.distance<-vegdist(dune)
+insects.distance <- vegdist(insects)
+plants.distance <- vegdist(dune)
 #
 # what does mantel() do?
 #
 help(mantel)
 #
 # perform the mantel test using parametric and non-parametric correlations
-mantel(insects.distance,plants.distance)
-mantel(insects.distance,plants.distance,method="spear")
+mantel(insects.distance, plants.distance)
+mantel(insects.distance, plants.distance, method = "spear")
 ```
 
 We can also take the output from one ordination and use it in another
 
 ```{r}
 
-bugs.ca<-cca(insects) # Make a CA on the insect data set
-ca.site.scores<-vegan::scores(bugs.ca, c(1,2), display = "sites") # Extract the site scores from the CA (axis 1 and2)
-dune.env.bugs<-cbind(dune.env, ca.site.scores) # Add the site scores to the dune.env
-dune.bugs.cca<-cca(dune, dune.env.bugs) # Make a CCA on the plant data with CA axis 1 and 2 as additional environmental variables
+bugs.ca <- cca(insects) # Make a CA on the insect data set
+ca.site.scores <-
+  vegan::scores(bugs.ca, c(1, 2), display = "sites") # Extract the site scores from the CA (axis 1 and2)
+dune.env.bugs <-
+  cbind(dune.env, ca.site.scores) # Add the site scores to the dune.env
+dune.bugs.cca <-
+  cca(dune, dune.env.bugs) # Make a CCA on the plant data with CA axis 1 and 2 as additional environmental variables
 dune.bugs.cca
 anova(dune.bugs.cca)
 plot(dune.bugs.cca)
@@ -1055,17 +1182,17 @@ table(dune.fit.4$cluster, dune.env.original$Management)
 #try some approaches to hierarchical clustering
 #
 dend2 <- dune %>% # data
-        dist(method = "euclidean") %>% # calculate a distance matrix, choose method 
-        hclust(method = "ward.D") %>% # Hierarchical clustering, choose method 
-        as.dendrogram # Turn the object into a dendrogram.
+  dist(method = "euclidean") %>% # calculate a distance matrix, choose method
+  hclust(method = "ward.D") %>% # Hierarchical clustering, choose method
+  as.dendrogram # Turn the object into a dendrogram.
 dend2 %>% set("labels_color") %>% set("branches_lwd") %>%  set("branches_k_color", k = 4) %>% plot(main = "Euclidean")
 #
 #the dist() function does not include Bray-Curtis but we have already made a distance matrix using 
 #the vegdist() function from vegan.
 #
 dend3 <- dune.dist %>% # data (Bray-Curtis)
-        hclust(method = "aver") %>% # Hierarchical clustering, choose method 
-        as.dendrogram # Turn the object into a dendrogram.
+  hclust(method = "aver") %>% # Hierarchical clustering, choose method
+  as.dendrogram # Turn the object into a dendrogram.
 dend3 %>% set("labels_color") %>% set("branches_lwd") %>%  set("branches_k_color", k = 4) %>% plot(main = "Average")
 #
 #we can colour the labels based on their grouping in the kmeans analysis to compare clusters
@@ -1198,9 +1325,12 @@ plot(pyrifos.PRC,select=pyrifos.SumOfAbundances > 100)
 #
 ## Ditches are randomized, we have a time series, and are only
 ## interested in the first axis
-pyrifos.PRC.ctrl<- how(plots = Plots(strata = ditch_,type = "free"),
-	within = Within(type = "series"), nperm = 99)
-anova(pyrifos.PRC, permutations = pyrifos.PRC.ctrl, first=TRUE)
+pyrifos.PRC.ctrl <- how(
+  plots = Plots(strata = ditch_, type = "free"),
+  within = Within(type = "series"),
+  nperm = 99
+)
+anova(pyrifos.PRC, permutations = pyrifos.PRC.ctrl, first = TRUE)
 ```
 
 ------------------------------------------------------------------------
@@ -1226,15 +1356,30 @@ with pseudo-F ratios.
 
 ```{r}
 # Start with a CA with Management as environmental factor and hulls around the different management types
-dune.ca<-cca(dune)
-fit.mgm<-envfit(dune.ca~Management, dune.env.original, perm = 0)
+dune.ca <- cca(dune)
+fit.mgm <- envfit(dune.ca ~ Management, dune.env.original, perm = 0)
 plot(dune.ca, type = "n", scaling = "symmetric")
-with(dune.env.original, points(dune.ca, display = "sites", scaling = "symmetric", col = as.numeric(Management), pch=16))
-with(dune.env.original, ordispider(dune.ca, Management, scaling = "symmetric", col="skyblue"))
-with(dune.env.original, ordihull(dune.ca, Management, scaling = "symmetric",label = TRUE))
+with(
+  dune.env.original,
+  points(
+    dune.ca,
+    display = "sites",
+    scaling = "symmetric",
+    col = as.numeric(Management),
+    pch = 16
+  )
+)
+with(
+  dune.env.original,
+  ordispider(dune.ca, Management, scaling = "symmetric", col = "skyblue")
+)
+with(dune.env.original,
+     ordihull(dune.ca, Management, scaling = "symmetric", label = TRUE))
 
-dune.dist <- vegdist(dune, method = "bray") #create distance matrix based on Bray-Curtis method
-dune.ano <- anosim(dune.dist, dune.env.original$Management) #Comparing groupings based on management
+dune.dist <-
+  vegdist(dune, method = "bray") #create distance matrix based on Bray-Curtis method
+dune.ano <-
+  anosim(dune.dist, dune.env.original$Management) #Comparing groupings based on management
 summary(dune.ano)
 plot(dune.ano, xlab = "Anosim, Dune meadow management types") #note the error message here:
 #notches are used in box plots to help visually assess whether the medians of distributions #differ. If the notches do not overlap, this is evidence that the medians are different.Here #the confidence region (the notch) went past the bounds (or hinges) of one of the boxes. 
@@ -1322,7 +1467,7 @@ their flowers
 
 ```{r DFA}
 library(tidyverse)
-library(caret) 
+library(caret)
 library(MASS)
 # Load the data
 data("iris")
@@ -1331,26 +1476,26 @@ data("iris")
 set.seed(123)
 training.samples <- iris$Species %>%
   createDataPartition(p = 0.8, list = FALSE)
-train.data <- iris[training.samples, ]
-test.data <- iris[-training.samples, ]
+train.data <- iris[training.samples,]
+test.data <- iris[-training.samples,]
 
 # Discriminant analysis can be affected by the scale/unit in which predictor variables are measured. 
 # It’s generally recommended to standardize/normalize continuous predictor before the analysis.
 # Normalize the data. Categorical variables are automatically ignored.
 # Estimate preprocessing parameters
-preproc.param <- train.data %>% 
+preproc.param <- train.data %>%
   preProcess(method = c("center", "scale"))
 # Transform the data using the estimated parameters
 train.transformed <- preproc.param %>% predict(train.data)
-test.transformed <- preproc.param %>% predict(test.data)         
+test.transformed <- preproc.param %>% predict(test.data)
 
 # Linear discriminant analysis - LDA ####
 library(MASS)
 # Fit the model
-model <- lda(Species~., data = train.transformed)
+model <- lda(Species ~ ., data = train.transformed)
 
 model
-plot(model, dimen=1)#, type="both")
+plot(model, dimen = 1)#, type="both")
 ```
 
 LDA determines group means and computes, for each individual, the
@@ -1461,14 +1606,22 @@ If you are familiar with these try running plot(fitord) and plot(fitnb).
 Now we can look at the ordination plot for the best model.
 
 ```{r}
-par(mfrow = c(1,2))
-ordiplot.gllvm(fitord, biplot = TRUE, s.colors = "blue", spp.colors = "grey50", alpha = 0.4, cex.spp = 0.9, jitter = T)
+par(mfrow = c(1, 2))
+ordiplot.gllvm(
+  fitord,
+  biplot = TRUE,
+  s.colors = "blue",
+  spp.colors = "grey50",
+  alpha = 0.4,
+  cex.spp = 0.9,
+  jitter = T
+)
 
-abline(h = 0, v = 0, lty=2)
+abline(h = 0, v = 0, lty = 2)
 #compare with an NMDS
 distord <- metaMDS(spe)
 vegan::ordiplot(distord, type = "t")
-par(mfrow = c(1,1))
+par(mfrow = c(1, 1))
 ```
 
 We can do a lot more with model based ordinations, including
@@ -1506,15 +1659,20 @@ library(mvabund)
 #Given that there are many traits and even environmental factors that are not strong predictors of 
 #abundance, we can reduce the number of predictor terms in our models.LASSO is an optimization algorithm (Least #Absolute Shrinkage and Selection Operator) that is used in this case.
 
-fitfourth=traitglm(spe, env, traits, method="glm1path")
+fitfourth = traitglm(spe, env, traits, method = "glm1path")
 fitfourth$fourth #examine fourth corner terms
 #and plot the results
 library(lattice)
-a        = max( abs(fitfourth$fourth.corner) )
-colort   = colorRampPalette(c("blue","white","red")) 
-plot.4th = levelplot(t(as.matrix(fitfourth$fourth.corner)), xlab="Environmental Variables",
-                     ylab="Species traits", col.regions=colort(100), at=seq(-a, a, length=100),
-                     scales = list( x= list(rot = 45)))
+a        = max(abs(fitfourth$fourth.corner))
+colort   = colorRampPalette(c("blue", "white", "red"))
+plot.4th = levelplot(
+  t(as.matrix(fitfourth$fourth.corner)),
+  xlab = "Environmental Variables",
+  ylab = "Species traits",
+  col.regions = colort(100),
+  at = seq(-a, a, length = 100),
+  scales = list(x = list(rot = 45))
+)
 print(plot.4th)
 
 ```
@@ -1545,19 +1703,21 @@ library(pls)
 pls.response <- dplyr::select(dune.env, A1, Moisture) %>% as.matrix()
 pls.exp <- as.matrix(dune)
 pls.fit <- plsr(pls.response ~ pls.exp,
-                na.action = na.omit, validation = "LOO")
+                na.action = na.omit,
+                validation = "LOO")
 
 #Cross validation is used to help us find the optimal number of retained dimensions.
-#Then the model is rebuilt with this optimal number of dimensions. 
+#Then the model is rebuilt with this optimal number of dimensions.
 #Find the number of dimensions with lowest cross validation error
 cv <- RMSEP(pls.fit)
-best.dims <- which.min(cv$val[estimate = "adjCV", , ]) - 1
+best.dims <- which.min(cv$val[estimate = "adjCV", ,]) - 1
 best.dims #3 seems optimal
 
 summary(pls.fit)
 
 # Rerun the model with optimal dimensions
-pls.fit2 <-  plsr(pls.response ~ pls.exp, ncomp = best.dims, na.action = na.omit)
+pls.fit2 <-
+  plsr(pls.response ~ pls.exp, ncomp = best.dims, na.action = na.omit)
 #Finally, we extract the useful information and format the output.
 coefficients <-  coef(pls.fit2)
 sum.coef <-  sum(sapply(coefficients, abs))
@@ -1572,14 +1732,18 @@ barplot(head(coefficients, 3))
 summary(pls.fit2)
 #pls.fit2$loadings
 #We can plot the scores
-corrplot(pls.fit2, comps=1:3, labels = names(coefficients) )
+corrplot(pls.fit2,
+         comps = 1:3,
+         labels = names(coefficients))
 
 #This gives a pairwise plot of the score values for the three first components.
-#Score plots are often used to look for patterns, groups or outliers in the data. 
+#Score plots are often used to look for patterns, groups or outliers in the data.
 #The scores represents the different locations
 plot(pls.fit2, plottype = "scores", comps = 1:3)
 #study the predicted vs. measured plot to see if the data needs to be transformed
-plot(pls.fit2, ncomp = best.dims, asp = 1, line = TRUE)
-
+plot(pls.fit2,
+     ncomp = best.dims,
+     asp = 1,
+     line = TRUE)
 
 ```
