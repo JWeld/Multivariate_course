@@ -1268,6 +1268,7 @@ detach("package:VIM", unload=TRUE, force = TRUE)
 
 
 ```{r message=FALSE, warning=FALSE}
+library(vegan)
 sim <- simper(dune, dune.env.original$Management) #try management groupings
 summary(sim)
 ```
@@ -1295,10 +1296,11 @@ Management types!
 ```{r, warning=FALSE, message=FALSE}
 library(labdsv)
 library(tibble)
+library(dplyr)
 iva <- indval(dune, dune.env.original$Management) #this time we don't need dummy variables for management
 iva.df <- as.data.frame(iva$indval)
 #arrange in descending order to find best indicator species, change BF to other management types as needed
-arrange(rownames_to_column(iva.df), desc(HF))
+dplyr::arrange(rownames_to_column(iva.df), desc(HF))
 ```
 
 ------------------------------------------------------------------------
@@ -1465,7 +1467,7 @@ ordiplot.gllvm(fitord, biplot = TRUE, s.colors = "blue", spp.colors = "grey50", 
 abline(h = 0, v = 0, lty=2)
 #compare with an NMDS
 distord <- metaMDS(spe)
-ordiplot(distord, type = "t")
+vegan::ordiplot(distord, type = "t")
 par(mfrow = c(1,1))
 ```
 
