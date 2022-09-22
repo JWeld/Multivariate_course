@@ -603,6 +603,7 @@ detach("package:VIM", unload=TRUE, force = TRUE)
 
 ```{r ex11, echo=FALSE, message=FALSE, warning=FALSE, inclue=TRUE}
 library(vegan)
+library(tidyverse)
 data("dune")
 data("dune.env")
 dummy_management <-
@@ -611,7 +612,7 @@ dummy_management <-
 dune.env.original <-
   dune.env #we keep a copy of the original version
 dune.env <-
-  dune.env %>% select(A1, Moisture, Manure, Use) %>% cbind(., dummy_management)
+  dune.env %>% dplyr::select(A1, Moisture, Manure, Use) %>% cbind(., dummy_management)
 dune.env$Moisture <-
   as.numeric(as.character(dune.env$Moisture)) #make numeric
 dune.env$Manure <- as.numeric(as.character(dune.env$Manure))
