@@ -578,10 +578,10 @@ legend("topright", paste("SD =", round(sd(d1mean), 1))) # Legend with standard d
 
 ```
 
-Sometimes loaded packages in R can conflict with one another, sometimes
-after an update of one of other package. Here the current version of VIM
+Sometimes loaded packages in R can conflict with another package. This can happen 
+after an update of one or more packages. Here the current version of VIM
 conflicts with some functions in Vegan that we use later, so we need to
-unload VIM now we have finished with it.
+unload VIM now that we have finished using it.
 
 ```{r}
 #VIM package loaded earlier conflicts with SIMPER
@@ -602,6 +602,7 @@ detach("package:VIM", unload=TRUE, force = TRUE)
 #### [11.3 Taking the nature of the data into account, which method should be used?]{style="color:forestgreen"}
 
 ```{r ex11, echo=FALSE, message=FALSE, warning=FALSE, inclue=TRUE}
+library(vegan)
 # RDA
 dune.rda <- rda(dune ~ . , dune.env)
 summary(dune.rda)
