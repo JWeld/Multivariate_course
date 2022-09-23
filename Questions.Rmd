@@ -1149,6 +1149,9 @@ These are two ways of comparing ordinations or the structure in related
 multivariate datasets. They are used to compare how objects differ when
 they are described by different sets of descriptors, or if there are
 repeated samplings of the same objects using the same descriptors.
+In this exercise you will use a third data set from the dune meadow. 
+The new data is insect abundance at the different plots.
+
 
 #### [Questions:]{style="color:forestgreen"}
 
@@ -1351,7 +1354,7 @@ Most of the code is taken from
 <https://jonlefcheck.net/2015/02/06/a-practical-guide-to-machine-learning-in-ecology/>
 Here, we will use the iris data. This is a "classic" data set used for
 exploring multivariate methods for
-discrimination.https://en.wikipedia.org/wiki/Iris_flower_data_set
+discrimination.<https://en.wikipedia.org/wiki/Iris_flower_data_set>
 
 #### [Questions:]{style="color:forestgreen"}
 
@@ -1495,7 +1498,7 @@ with pseudo-F ratios.
 
 #### [28.1 What do the results from anosim and adonis tell you?]{style="color:forestgreen"}
 
-#### [28.2 Give one other example of predefined groups that could be uses as the grouping variable(s)!]{style="color:forestgreen"}
+#### [28.2 Give one other example of predefined groups that could be used as the grouping variable(s)!]{style="color:forestgreen"}
 
 ```{r}
 # Start with a CA with Management as environmental factor and hulls around the different management types
@@ -1838,18 +1841,21 @@ variable.
 
 #### [32.2 Are there any obvious outliers in the dataset?]{style="color:forestgreen"}
 
-#### [32.3 Does the data seemed to be in need of a transformation?]{style="color:forestgreen"}
+#### [32.3 Does the data seem to be in need of a transformation?]{style="color:forestgreen"}
 
 ```{r PLS, echo=TRUE, message=FALSE, warning=FALSE}
 
 library(pls)
+
 #This function takes the same form as a lot of regression models in R:
 #plsr(Response variable ~ Explanatory Variables, data = yourdata, scale = TRUE/FALSE)
 #However the response variable can be a matrix of variables.
 
 #Here we will use the dune species to predict environmental variables A1 and moisture.
 #We have mostly done this in the other direction, but correlations go both ways! 
-pls.response <- dplyr::select(dune.env, A1, Moisture) %>% as.matrix()
+pls.response <- dplyr::select(dune.env.original, A1, Moisture)
+pls.response$Moisture <-  as.numeric(pls.response$Moisture)
+pls.response <- as.matrix(pls.response)
 pls.exp <- as.matrix(dune)
 pls.fit <- plsr(pls.response ~ pls.exp,
                 na.action = na.omit,
