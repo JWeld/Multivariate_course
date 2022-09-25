@@ -1920,3 +1920,5 @@ plot(pls.fit2,
 #                na.action = na.omit,
 #                validation = "LOO")
  
+
+```
