@@ -578,10 +578,10 @@ legend("topright", paste("SD =", round(sd(d1mean), 1))) # Legend with standard d
 
 ```
 
-Sometimes loaded packages in R can conflict with another package. This can happen 
-after an update of one or more packages. Here the current version of VIM
-conflicts with some functions in Vegan that we use later, so we need to
-unload VIM now that we have finished using it.
+Sometimes loaded packages in R can conflict with another package. This
+can happen after an update of one or more packages. Here the current
+version of VIM conflicts with some functions in Vegan that we use later,
+so we need to unload VIM now that we have finished using it.
 
 ```{r}
 #VIM package loaded earlier conflicts with SIMPER
@@ -776,7 +776,7 @@ variables and perform a significance test.
 
 #### [Question:]{style="color:forestgreen"}
 
-#### [16.1 Explain the results of the permutations! Compare the results in exercises 16 and 17!]{style="color:forestgreen"}
+#### [16.1 Explain the results of the permutations! Compare the results in exercises 15 and 16]{style="color:forestgreen"}
 
 ```{r ex16, inclue=TRUE, warning=FALSE, message=FALSE}
 # CCA using A1 and moisture as the environmental variable
@@ -844,7 +844,11 @@ exercise 17, but with manure added to the set of covariates.
 
 #### [18.1 What was the effect of adding manure to the set of covariates?]{style="color:forestgreen"}
 
-#### [18.2 We may expect that Management and Manure are correlated, check visually by making a boxplot of Manure vs Management type using the R code: boxplot(Manure\~Management, data = dune.env.original). What does the result tell you?]{style="color:forestgreen"}
+We may expect that Management and Manure are correlated, check visually
+by making a boxplot of Manure vs Management type using the R code:
+boxplot(Manure\~Management, data = dune.env.original).
+
+#### [18.2 What does the result tell you?]{style="color:forestgreen"}
 
 ```{r ex18, inclue=TRUE, warning=FALSE, message=FALSE}
 #This partials out the effect of A1, Moisture, and Manure before analysing the effects of management
@@ -1148,10 +1152,9 @@ ordihull(
 These are two ways of comparing ordinations or the structure in related
 multivariate datasets. They are used to compare how objects differ when
 they are described by different sets of descriptors, or if there are
-repeated samplings of the same objects using the same descriptors.
-In this exercise you will use a third data set from the dune meadow. 
-The new data is insect abundance at the different plots.
-
+repeated samplings of the same objects using the same descriptors. In
+this exercise you will use a third data set from the dune meadow. The
+new data is insect abundance at the different plots.
 
 #### [Questions:]{style="color:forestgreen"}
 
@@ -1463,7 +1466,7 @@ plot(pyrifos.PRC)
 # abundances
 #
 pyrifos.SumOfAbundances<-colSums(pyrifos)
-plot(pyrifos.PRC,select=pyrifos.SumOfAbundances > 100)
+plot(pyrifos.PRC,select=pyrifos.SumOfAbundances > 500)
 #
 ## Ditches are randomized, we have a time series, and are only
 ## interested in the first axis
@@ -1572,9 +1575,9 @@ indicator species - which species best characterise the groups or
 clusters that we have identified?
 
 In this exercise we will investigate if any particular species are
-indicative for the four different management types. Use the resulting
-data table to find the two top indicator species for each of the four
-Management types!
+indicative for the four different management types.
+
+#### [28.4 Use the resulting data table to find the two top indicator species for each of the four Management types!]{style="color:forestgreen"}
 
 ```{r, warning=FALSE, message=FALSE}
 library(labdsv)
@@ -1901,4 +1904,19 @@ plot(pls.fit2,
      asp = 1,
      line = TRUE)
 
-```
+#IGNORE THIS CODE # included for backup purposes
+#.rs.restartR()
+#library(pls)
+#library(dplyr)
+#library(vegan)
+#data("dune.env")
+#data("dune")
+
+#pls.response <- dplyr::select(dune.env, A1, Moisture)
+#pls.response$Moisture <-  as.numeric(pls.response$Moisture)
+#pls.response <- as.matrix(pls.response)
+#pls.exp <- as.matrix(dune)
+#pls.fit <- plsr(pls.response ~ pls.exp,
+#                na.action = na.omit,
+#                validation = "LOO")
+ 
