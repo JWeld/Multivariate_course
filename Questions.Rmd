@@ -699,7 +699,7 @@ par(mfrow = c(1, 1))
 
 #### [14.1 What is the main difference between the two ways. How to know which method to select?]{style="color:forestgreen"}
 
-#### [14.2 What does the display = "cn" in the last plots mean?]{style="color:forestgreen"}
+#### [14.2 What does the display = "cn" in the last plots mean? How is the location of the point/text drawn by this option determined?]{style="color:forestgreen"}
 
 ```{r}
 #### Illustration of difference between WA and LC scores
@@ -844,7 +844,7 @@ exercise 17, but with manure added to the set of covariates.
 
 #### [18.1 What was the effect of adding manure to the set of covariates?]{style="color:forestgreen"}
 
-We may expect that Management and Manure are correlated, check visually
+We may expect that Management and Manure are related, check visually
 by making a boxplot of Manure vs Management type using the R code:
 boxplot(Manure\~Management, data = dune.env.original).
 
