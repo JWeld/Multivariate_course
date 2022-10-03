@@ -844,8 +844,8 @@ exercise 17, but with manure added to the set of covariates.
 
 #### [18.1 What was the effect of adding manure to the set of covariates?]{style="color:forestgreen"}
 
-We may expect that Management and Manure are related, check visually
-by making a boxplot of Manure vs Management type using the R code:
+We may expect that Management and Manure are related, check visually by
+making a boxplot of Manure vs Management type using the R code:
 boxplot(Manure\~Management, data = dune.env.original).
 
 #### [18.2 What does the result tell you?]{style="color:forestgreen"}
@@ -1840,7 +1840,7 @@ variable.
 
 #### [Questions:]{style="color:forestgreen"}
 
-#### [32.1 Which explanatory variables are most important to explain the response variable (Biovolume)?]{style="color:forestgreen"}
+#### [32.1 Which explanatory variables are most important to explain the response variables (A1 and Moisture)?]{style="color:forestgreen"}
 
 #### [32.2 Are there any obvious outliers in the dataset?]{style="color:forestgreen"}
 
