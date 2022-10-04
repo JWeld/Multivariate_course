@@ -1805,8 +1805,7 @@ traits<-traits[,-c(1:6,22, 27,29,30:32)] # Remove trait not feasible for this an
 
 #Fourth corner
 library(mvabund)
-#Given that there are many traits and even environmental factors that are not strong predictors of 
-#abundance, we can reduce the number of predictor terms in our models.LASSO is an optimization algorithm (Least #Absolute Shrinkage and Selection Operator) that is used in this case.
+#Given that there are many traits and even environmental factors that are not strong predictors #of abundance, we can reduce the number of predictor terms in our models.LASSO is an #optimization algorithm (Least Absolute Shrinkage and Selection Operator) that is used in this #case.
 
 fitfourth = traitglm(spe, env, traits, method = "glm1path")
 fitfourth$fourth #examine fourth corner terms
@@ -1823,6 +1822,22 @@ plot.4th = levelplot(
   scales = list(x = list(rot = 45))
 )
 print(plot.4th)
+
+plot(fitfourth) # for a Dunn-smyth residual plot
+qqnorm(residuals(fitfourth)); abline(c(0,1),col="red") # for a normal quantile plot.
+
+#We can test for overall significance using an anova (only on default manyglm model, 
+#not available for Lasso model)
+fitfourth2 = traitglm(spe, env, traits)
+pvalues <- anova.traitglm(fitfourth2,nBoot=10) #overall significant
+#We can also explore the effects of individual trait by environment interactions using the #summary function ** Warning this is very very slow, even with limited n** Don't run this 
+#last line of code unless you want to take a long coffee break!
+#We will limit the number of bootstrap reps to 5 (nBoot=5) but 1000 should be using for final analyses
+#summary(fitfourth2, nboot=5)
+#Example of output if you don't want to wait for the code to run...
+#UsePasture.N_fix1           0.467     0.115    
+#Manure.BioDivRel            0.782     0.014 *  
+#Manure.Nectar               0.591     0.015 *  
 
 ```
 
