@@ -1,0 +1,317 @@
+---
+title: "Tuesday"
+output: html_notebook
+---
+
+
+```{r setup, include=FALSE, message=FALSE, warning=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library("vegan")
+library("reshape2")
+library("outliers")
+library("gdata") # for unmatrix
+library("VIM") # For matrixplot
+```
+
+### [Question 6: Add one new species with cover degree 9 at the site with the lowest number of species. Do a new DCA-ordination.]{style="color:cornflowerblue"}
+
+#### [Question:]{style="color:forestgreen"}
+
+#### [6.1: What happens with the eigenvalues and ordination diagram?]{style="color:forestgreen"}
+
+```{r ex6, inclue=TRUE, warning=FALSE, message=FALSE}
+# calculate the number of species present in each plot
+rowSums(dune != 0)
+# find the plot with the lowest number of species
+which.min(rowSums(dune != 0))
+# create a new data frame with a new species with cover degree 9 at site 1
+NewSp <- c(9, rep(0, 19))
+SpeciesNewSp <- data.frame(dune, NewSp)
+# run a new DCA with the extra species
+DCANewSp <- decorana(SpeciesNewSp)
+DCANewSp
+```
+
+```{r ex6plot, inclue=TRUE, warning=FALSE, message=FALSE}
+# plot the DCA
+ordiplot(DCANewSp, type="text", main="DCA with new sp.")
+```
+
+You may be surprised that you haven't got any total inertia values when
+printing decorana results, although in other software (e.g. CANOCO)
+these are available, together with percentage variance explained by
+particular axes. The reason for this is that DCA does not support the
+concept of total inertia values (also, it produces only four axes, i.e.
+four eigenvalues). See the comment in the code for the question 5.
+
+------------------------------------------------------------------------
+
+### [Question 7: Effects from increased variation.]{style="color:cornflowerblue"}
+
+Add one new sample to the data, then add a cover of 9 for the existing
+species Chenopodium album "Chealbu" in the new sample. Make a new
+DCA-ordination. Next, remove the Chealbu = 9, and add instead a cover of
+5 for the exisiting species Juncbufo and make a new DCA.
+
+#### [Questions:]{style="color:forestgreen"}
+
+#### [7.1 What happens with the eigenvalues and ordination after adding Chealbu and after adding Juncbufo?]{style="color:forestgreen"}
+
+#### [7.2 Why did we choose to add these two species in the new sample?]{style="color:forestgreen"}
+
+```{r ex7, inclue=TRUE, warning=FALSE, message=FALSE}
+# figure out the column number for Chenopodium album (abbreviated "Chenalbu")
+which(colnames(dune) == "Chenalbu")
+# create a new data frame with a new sample containing Chenopodium album with a cover of 9
+NewSampleChen <- c(rep(0, 7), 9, rep(0, 22))
+SpeciesNewSampleChen <- data.frame(rbind(dune, NewSampleChen))
+# run a new DCA with the extra sample
+DCANewSampleChen <- decorana(SpeciesNewSampleChen)
+DCANewSampleChen
+# plot the DCA
+ordiplot(DCANewSampleChen, type = "text", main = "DCA with new sample Chenopodium album")
+# figure out the column number for Juncbufo
+which(colnames(dune) == "Juncbufo")
+# create a new data frame with a new sample containing Juncbufo with a cover of 5
+NewSampleJunc <- c(rep(0, 15), 5, rep(0, 10))
+SpeciesNewSampleJunc <- data.frame(rbind(dune, NewSampleJunc))
+# run a new DCA with the extra sample
+DCANewSampleJunc <- decorana(SpeciesNewSampleJunc)
+DCANewSampleJunc
+# plot the DCA
+ordiplot(DCANewSampleJunc, type = "text", main = "DCA with new sample of Juncbufo")
+```
+
+------------------------------------------------------------------------
+
+### [Question 8: Principal Coordinates Analysis (PCoA)]{style="color:cornflowerblue"}
+
+Principal Coordinates Analysis (PCoA), also known as Multidimensional
+Scaling (MDS), is a generalization of the ordination techniques we have
+already seen as it can be estimated with any distance matrix. In
+contrast, PCA is restricted to Euclidean distances while CA preserves
+Chi-Square distances. Here, we will explore PCoA on four different
+distance matrices: (i) Bray-Curtis (ii) Jaccard (iii) Euclidean (iv)
+Mahalanobis
+
+The R base statistics library offers the routine cmdscale() for
+performing MDS. There are numerous other libraries offering PCoA
+analysis
+
+#### [Questions:]{style="color:forestgreen"}
+
+#### [8.1 How similar are the ordination plots based on the four distance matrices?(remember question 2!)]{style="color:forestgreen"}
+
+#### [8.2 Why are some plots more similar than others?]{style="color:forestgreen"}
+
+#### [8.3 Which PCoA plot is most similar to the output from a PCA?]{style="color:forestgreen"}
+
+#### [8.4 Which PCoA plot is most similar to the output from a CA?]{style="color:forestgreen"}
+
+```{r}
+# generate the four distance matrices
+dune.bray.distance.matrix <- vegdist(dune, method = "bray")
+dune.jaccard.distance.matrix <- vegdist(dune, method = "jaccard")
+dune.euclidean.distance.matrix <- vegdist(dune, method = "euclidean")
+dune.mahalanobis.distance.matrix <- vegdist(dune, method = "mahalanobis")
+#
+# what can be accomplished with the MDS routine?
+#
+help(cmdscale)
+#
+# run an MDS using cmdscale() for each of the four distance matrices
+#
+dune.bray.location <- cmdscale(dune.bray.distance.matrix)
+dune.jaccard.location <- cmdscale(dune.jaccard.distance.matrix)
+dune.euclidean.location <- cmdscale(dune.euclidean.distance.matrix)
+dune.mahalanobis.location <-
+  cmdscale(dune.mahalanobis.distance.matrix)
+#
+# now take a look at some plots
+#
+plot(dune.bray.location, xlab = "PCoA 1", ylab = "PCoA 2")
+title(main = "PCoA on Bray Curtis distances of dune sites")
+text(dune.bray.location,
+     labels = row.names(dune.bray.location),
+     pos = 2)
+#
+plot(dune.jaccard.location, xlab = "PCoA 1", ylab = "PCoA 2")
+title(main = "PCoA on Jaccard distances of dune sites")
+text(dune.jaccard.location,
+     labels = row.names(dune.jaccard.location),
+     pos = 2)
+#
+plot(dune.euclidean.location, xlab = "PCoA 1", ylab = "PCoA 2")
+title(main = "PCoA on Euclidean distances of dune sites")
+text(
+  dune.euclidean.location,
+  labels = row.names(dune.euclidean.location),
+  pos = 2
+)
+#
+plot(dune.mahalanobis.location, xlab = "PCoA 1", ylab = "PCoA 2")
+title(main = "PCoA on Mahalanobis distances of dune sites")
+text(
+  dune.mahalanobis.location,
+  labels = row.names(dune.mahalanobis.location),
+  pos = 2
+)
+```
+
+------------------------------------------------------------------------
+
+### [Question 9: Non Metric Multidimensional Scaling]{style="color:cornflowerblue"}
+
+NMDS does not use the absolute abundances of species in communities, but
+rather their *rank orders*. The use of ranks omits some of the issues
+associated with using absolute distance (e.g., sensitivity to
+transformation). At the conclusion of this exercise, you should be able
+to: State which metrics are supported in the vegan implementation of
+NMDS. Evaluate the appropriate number of dimensions for the ordination.
+Evaluate the consequences of using different distance metrics.
+
+#### [Question:]{style="color:forestgreen"}
+
+#### [9.1 Compare the vegan default NMDS to the results of a CA and a DCA.]{style="color:forestgreen"}
+
+```{r ex8, inclue=TRUE, warning=FALSE, message=FALSE}
+# run NMDS with the defaults and 2 dimensions, what is the stress?
+#
+dune.NMDS.bray.2 <- metaMDS(dune, k = 2)
+#
+# run NMDS with the defaults and 3 dimensions, what is the stress ?
+#
+dune.NMDS.bray.3 <- metaMDS(dune, k = 3)
+#
+# what happens when Euclidean distances are used?
+#
+dune.NMDS.euclidean.2 <- metaMDS(dune, distance = "euclidean", k = 2)
+#
+# plot some results
+#
+ordiplot(dune.NMDS.bray.2, type = "text", main = "NMDS from Bray Curtis distance, 2 Dimensions")
+ordiplot(dune.NMDS.euclidean.2, type = "text", main = "NMDS from Euclidean distance, 2 Dimensions")
+#
+# create Shepard plots to show how the stress evolves
+#
+stressplot(dune.NMDS.bray.2)
+stressplot(dune.NMDS.euclidean.2)
+#
+# generate the CA and DCA results
+#
+dune.CA <- cca(dune)
+dune.DCA <- decorana(dune)
+#
+# plot the CA and DCA results
+#
+ordiplot(dune.CA, type = "text", main = "CA on Dune Meadow data")
+ordiplot(dune.DCA, type = "text", main = "DCA on Dune Meadow data")
+
+
+```
+
+------------------------------------------------------------------------
+
+### [Question 10: Data Quality Assessment]{style="color:cornflowerblue"}
+
+These are only a few examples on how to assess data quality.
+
+#### [Questions:]{style="color:forestgreen"}
+
+#### [10.1 Is there a pattern in the distribution of missing values that may lead to the omission of a species or a sample?]{style="color:forestgreen"}
+
+#### [10.2 Would you say that the original Dune Meadow data set is OK for further analyses? Motivate your answer!]{style="color:forestgreen"}
+
+```{r ex10, inclue=TRUE, message=FALSE, warning=FALSE}
+data(dune)
+
+# Create some outliers and missing values in a temporary dataset called mvo.dune (acronym for MultiVariate Outlier)
+mvo.dune <- as.matrix(dune)
+n_outl <- 5 # Give number of outliers to be created, here 5
+v_outl <- 30 # Give value of the outlier(s), here 30
+mvo.dune[sample(1:length(mvo.dune), n_outl, replace = FALSE)] <-
+  v_outl # Replace some data with outliers, at random positions
+mvo.dune[sample(1:length(mvo.dune), n_outl, replace = FALSE)] <-
+  NA # Replace some data with NAs, at random positions
+
+# Cleveland plot to inspect data
+dotchart(as.matrix(mvo.dune), main = "Cleveland plot", xlab = "Observerd value")
+
+# Find data > 9, as no value should be higher than 9 in the dune meadow data set
+(GT9 <- which(mvo.dune > 9, arr.ind = TRUE))
+
+# Find missing values
+(mvo_miss <- which(is.na(mvo.dune), arr.ind = TRUE))
+
+# Two ways of visualising missing data, using the package "VIM"
+aggr(as.matrix(mvo.dune))
+matrixplot(mvo.dune) 
+```
+
+We can also try testing for outliers in the data. Be aware that this is
+only indicative, and you still need to exercise your judgement about
+what should be excluded as an outlier!
+
+```{r}
+
+# Indicative search for outliers in a multivariate data set.
+# Multiple peaks and high SD indicate outliers may occur
+dist1 <-
+  vegdist(
+    mvo.dune,
+    method = "euclidean",
+    binary = FALSE,
+    diag = FALSE,
+    upper = FALSE,
+    na.rm = TRUE
+  )
+d1 <- data.frame(unmatrix(as.matrix(dist1), byrow = TRUE))
+d1r <- t(data.frame(strsplit(row.names(d1), ":")))
+d1rr <- data.frame(d1, d1r)
+d1mean <- tapply(d1rr$unmatrix.as.matrix.dist1.., d1rr$X1, mean)
+sd(d1mean) # Standard deviation of the mean distances. If > 3: strong outlier(s)
+plot(
+  stats::density(d1mean),
+  col = "red",
+  xlab = "Distance between observations",
+  main = "Indicative test of multivariate outliers\nData with noise"
+)
+legend("topright", paste("SD =", round(sd(d1mean), 1))) # Legend with standard deviation
+
+# Same as above but on the original dune meadow dataset (i.e. without outliers)
+dist1 <-
+  vegdist(
+    dune,
+    method = "euclidean",
+    binary = FALSE,
+    diag = FALSE,
+    upper = FALSE,
+    na.rm = TRUE
+  )
+d1 <- data.frame(unmatrix(as.matrix(dist1), byrow = TRUE))
+d1r <- t(data.frame(strsplit(row.names(d1), ":")))
+d1rr <- data.frame(d1, d1r)
+d1mean <- tapply(d1rr$unmatrix.as.matrix.dist1.., d1rr$X1, mean)
+sd(d1mean) # Standard deviation of the mean distances. If > 3: strong outlier(s)
+plot(
+  stats::density(d1mean),
+  col = "red",
+  xlab = "Distance between observations",
+  main = "Indictive test of multivariate outliers\nOriginal Dune Meadow data"
+)
+legend("topright", paste("SD =", round(sd(d1mean), 1))) # Legend with standard deviation
+
+```
+
+Sometimes loaded packages in R can conflict with another package. This
+can happen after an update of one or more packages. Here the current
+version of VIM conflicts with some functions in Vegan that we use later,
+so we need to unload VIM now that we have finished using it.
+
+```{r}
+#VIM package loaded earlier conflicts with SIMPER
+detach("package:VIM", unload=TRUE, force = TRUE)
+.rs.restartR()
+```
+
+------------------------------------------------------------------------

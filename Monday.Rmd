@@ -1,0 +1,275 @@
+---
+title: "Monday"
+output: html_notebook
+---
+
+
+```{r setup, include=FALSE, message=FALSE, warning=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(vegan)
+library(tidyverse)
+library(corrplot)
+```
+
+### [Question 1. Introduction to R Notebooks and Markdown.]{style="color:cornflowerblue"}
+
+This exercise is only to get used to working with R Notebook/R Markdown.
+The data in this first exercise are not multivariate and the statistical
+analysis is a simple linear regression. All following exercises will
+start with this kind of introduction.
+
+### [For each exercise there will be a number of explicit questions written in green.]{style="color:forestgreen"}
+
+To pass the course, you should give your answers to these questions to
+one of the teachers during the computer labs.
+
+#### [Write your answers to the questions and any other comments or notes using the Answers.Rmd file as a template, or create a new file yourself.]{style="color:Red"}
+
+------------------------------------------------------------------------
+
+#### A quick note on R Notebooks and R Markdown
+
+These terms are often used interchangeably to mean a combination of R
+code, results, and formattable text, such as this one. They allow you to
+present your results, the code used to generate the results and your
+interpretation and comments all together in one document that you can
+easily update, and which is easy for a reader to understand (R Notebooks
+are a minor update of R Markdown files that allow for easier editing as
+you can run just part of your code and see the results in a preview.
+Both notebook and markdown are .Rmd files, and are written in exactly
+the same way, so don't worry about the difference for this course!).
+
+------------------------------------------------------------------------
+
+#### Example of a simple analysis
+
+First we load or create the data we will be using. The box below is an
+example of a code chunk.
+
+```{r}
+df <- read.table(header = TRUE, sep = ",", 
+               text = "x,y 
+               1,2
+               1.5,3.5
+               2,5
+               2.5,5
+               3,7")
+
+# Anything you write in a code chunk after a hash mark becomes a comment like this
+# and is ignored when running the code. If you are working in an R markdown notebook
+# such as this however, you can also write your longer notes in the text sections 
+# outside the code chunks.
+```
+
+So I could write my notes here instead, which is probably easier to read
+for anything more than a few words of explanation.
+
+Now we can do a simple linear regression. The results are stored in the
+object "reg".
+
+```{r}
+reg <- lm(y~x, df) 
+```
+
+Plot the result.
+
+```{r}
+plot(y~x, df)
+lines(df$x, predict(reg), col = 'red') # Add a regression line to the plot
+```
+
+Get a summary of the results
+
+```{r}
+summary(reg)
+```
+
+### [The R packages and data we will be using.]{style="color:cornflowerblue"}
+
+The "dune" dataset we will use is included in the vegan package (an
+extensive collection of tools for multivariate analysis), but we will
+also be using some slightly modified and extended versions of it, which
+we will load as needed. We will also load some other packages to extend
+the range of analyses available to us.
+
+------------------------------------------------------------------------
+
+### [Question 2: Simple exercise for illustrating effects of different distance metrics.]{style="color:cornflowerblue"}
+
+Here, we will create a simple data set consisting of 2 columns of
+measurement made at 3 sites we will then calculate a series of distance
+metrics using the vegdist() function.
+
+#### [Questions:]{style="color:forestgreen"}
+
+#### [2.1 How do the metrics differ?]{style="color:forestgreen"}
+
+#### [2.2 Which metric corresponds to a geographic distance?]{style="color:forestgreen"}
+
+#### [2.3 Where would one find the formula for the Mahalanobis distance?]{style="color:forestgreen"}
+
+```{r message=FALSE, warning=FALSE}
+# create a triangular data set with 2 columns (x and y) and 3 rows
+#
+dt <- data.frame(x = c(5, 5, 10), y = c(5, 10, 10))
+#plot dt
+plot(dt, xlim = c(0, 15), ylim = c(0, 15))
+# what does vegdist() do?
+#
+help(vegdist)
+#
+# create some distance matrices with using different metrics
+#
+(dt.bray <- vegdist(dt, method = "bray"))
+(dt.manhattan <- vegdist(dt, method = "manhattan"))
+(dt.euclidean <- vegdist(dt, method = "euclidean"))
+(dt.mahalanobis <- vegdist(dt, method = "mahalanobis"))
+
+```
+
+------------------------------------------------------------------------
+
+### [Question 3: In this exercise we will use Principal Components Analysis on the dune meadow explanatory data. We will also explore the effects of different kinds of scaling on the ordination plot. NOTE that the scaling issues applies to all ordination techniques!]{style="color:cornflowerblue"}
+
+Compare the plots on the PCA with and without scaling (PCA plot 4) and
+discuss the differences.
+
+#### [Questions:]{style="color:forestgreen"}
+
+#### [3.1 Is there any way to see that one is on scaled data and one is not?]{style="color:forestgreen"}
+
+#### [3.2 What is the difference between PCA plot 4 and PCA plot 5? Which one is best to use?]{style="color:forestgreen"}
+
+#### [3.3 Discuss the difference between the plots in plot PCA plot 6 and 7!]{style="color:forestgreen"}
+
+```{r, warning=FALSE, message=FALSE}
+data("dune")
+data("dune.env")
+dummy_management <-
+  as.data.frame(model.matrix(~ Management - 1, data = dune.env))
+#add these to the dataset
+dune.env.original <-
+  dune.env #we keep a copy of the original version
+dune.env <-
+  dune.env %>% select(A1, Moisture, Manure, Use) %>% cbind(., dummy_management)
+dune.env$Moisture <-
+  as.numeric(as.character(dune.env$Moisture)) #make numeric
+dune.env$Manure <- as.numeric(as.character(dune.env$Manure))
+dune.env$Use <- as.numeric(dune.env$Use)
+#make column names shorter
+dune.env <-
+  dune.env %>% rename(BF = ManagementBF,
+                      HF = ManagementHF,
+                      NM = ManagementNM,
+                      SF = ManagementSF)
+
+## PCA plot 1:
+# Start by looking at pairwise correlations among the variables.
+dune.env_cor <- cor(dune.env, method = "kendall")
+corrplot(
+  dune.env_cor,
+  type = "upper",
+  order = "hclust",
+  tl.col = "black",
+  tl.srt = 45
+)
+
+## PCA plot 2:
+# Then make a PCA, with scaling of the data
+env.pca <-
+  rda(dune.env, scale = TRUE) #vegan uses the same function for PCA and RDA, just depends on if it is constrained or #not.
+biplot(env.pca) #plot the results using the default plot scaling which is "species"
+env.pca #summarise results
+summary(eigenvals(env.pca)) #see variance explained
+
+## PCA plot 3:
+# Continue with a PCA on the same data, but without scaling of the data
+env.pca2 <-
+  rda(dune.env, scale = FALSE) #vegan uses the same function for PCA and RDA, just depends on if it is constrained or #not.
+biplot(env.pca2)#plot the results
+env.pca2 #summarise results
+summary(eigenvals(env.pca2)) #see variance explained
+
+## PCA plot 4:
+# Compare the PCAs with and without scaling of data
+# Default scaling of the plots, which is "species"
+par(mfrow = c(1, 2))
+biplot(env.pca, main = "PCA with scaling of data")
+biplot(env.pca2, main = "PCA without scaling of data")
+par(mfrow = c(1, 1))
+
+## PCA plot 5:
+# Plots from the same PCA, but with plot scaling focused on sites and on species
+par(mfrow = c(1, 2))
+biplot(env.pca, scaling = "sites", main = "Plot scaling on sites")
+biplot(env.pca, scaling = "species", main = "Plot scaling on species")
+par(mfrow = c(1, 1))
+
+## PCA plot 6:
+# Then, a plot from the PCA on un-scaled data,
+# but with plot scaling to mimic a PCA on scaled data (correlation = TRUE)
+# Second plot is the PCA on scaled data
+# Both plots with plot scaling focused on species
+par(mfrow = c(1, 2))
+biplot(env.pca2,
+       scaling = "species",
+       correlation = TRUE,
+       main = "PCA on un-scaled data,\nplot scaling on correlations")
+biplot(env.pca,
+       scaling = "species",
+       correlation = FALSE,
+       main = "PCA on scaled data")
+par(mfrow = c(1, 1))
+
+## PCA plot 7:
+# Finally a plot from the PCA on un-scaled data,
+# but with plot scaling to mimic a PCA on scaled data
+# Second plot is the PCA on scaled data
+# Both plots with plot scaling focused on sites
+par(mfrow = c(1, 2))
+biplot(env.pca2,
+       scaling = "sites",
+       correlation = TRUE,
+       main = "PCA on un-scaled data,\nplot scaling on correlations")
+biplot(env.pca, scaling = "sites", main = "PCA on scaled data")
+par(mfrow = c(1, 1))
+
+```
+
+------------------------------------------------------------------------
+
+### [Question 4: Do a CA-ordination on the Dune Meadow species dataset.What are the results telling you?]{style="color:cornflowerblue"}
+
+#### [Question:]{style="color:forestgreen"}
+
+#### [4.1 Give a conceptual description on why objects/samples and descriptors/species to the left differ from objects and descriptors to the right, and those at the bottom from those at the top! (Plant ecologists may give a more detailed description, using their knowledge about the species in the dataset).]{style="color:forestgreen"}
+
+```{r, warning=FALSE, message=FALSE}
+dune.ca <- cca(dune)
+plot(dune.ca)
+dune.ca
+summary(eigenvals(dune.ca)) #proportion variance explained
+```
+
+------------------------------------------------------------------------
+
+### [Question 5: Repeat exercise 4, but with DCA ordination instead.]{style="color:cornflowerblue"}
+
+#### [Question:]{style="color:forestgreen"}
+
+#### [5.1 Look at the eigenvalues, the length of gradient, the total variation and the ordination diagram. Explain the differences between results from CA and DCA.]{style="color:forestgreen"}
+
+```{r, warning=FALSE, message=FALSE}
+dune.dca <- decorana(dune)
+dune.dca 
+#Detrended correspondence analysis (function decorana).
+#Note that we do not get "variation explained" in the R implementation of DCA (and some other functions).
+#Here, the developer explains why, "The total amount of variation is undefined in detrended 
+#correspondence analysis and therefore proportions from total are unknown and undefined. 
+#DCA is not a method for decomposition of variation, and therefore
+#these proportions would not make sense either.
+plot(dune.dca)
+```
+
+------------------------------------------------------------------------
+

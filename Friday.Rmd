@@ -1,0 +1,466 @@
+---
+title: "Friday"
+output: html_notebook
+wrap: 72
+---
+
+```{r setup, include=FALSE, message=FALSE, warning=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(vegan)
+library(tidyverse)
+library(labdsv)
+library(caret)
+library(MASS)
+library(gllvm) #Generalised linear latent variable models
+library(readxl)
+library(mvabund)
+library(lattice)
+library(pls)
+
+```
+
+
+### [Question 28: Differences between groups. ANOSIM, adonis and SIMPER]{style="color:cornflowerblue"}
+
+ANOSIM (Analysis Of Similarities) is a non-parametric test of
+significant difference between two or more groups, based on any distance
+measure. In this case, use the clusters from the K-means exercise.
+Change to Bray-Curtis similarity index.
+
+ANOSIM gives you the P value and an R value. R value close to 1
+indicates high separation between levels of your factor while R value
+close to 0 indicate no separation between levels of your factor.
+
+Try also the recommended alternative "adonis" - Analysis of variance
+using distance matrices - for partitioning distance matrices among
+sources of variation and fitting linear models (e.g., factors,
+polynomial regression) to distance matrices; uses a permutation test
+with pseudo-F ratios.
+
+#### [Questions:]{style="color:forestgreen"}
+
+#### [28.1 What do the results from anosim and adonis tell you?]{style="color:forestgreen"}
+
+#### [28.2 Give one other example of predefined groups that could be used as the grouping variable(s)!]{style="color:forestgreen"}
+
+```{r}
+# Start with a CA with Management as environmental factor and hulls around the different management types
+dune.ca <- cca(dune)
+fit.mgm <- envfit(dune.ca ~ Management, dune.env.original, perm = 0)
+plot(dune.ca, type = "n", scaling = "symmetric")
+with(
+  dune.env.original,
+  points(
+    dune.ca,
+    display = "sites",
+    scaling = "symmetric",
+    col = as.numeric(Management),
+    pch = 16
+  )
+)
+with(
+  dune.env.original,
+  ordispider(dune.ca, Management, scaling = "symmetric", col = "skyblue")
+)
+with(dune.env.original,
+     ordihull(dune.ca, Management, scaling = "symmetric", label = TRUE))
+
+dune.dist <-
+  vegdist(dune, method = "bray") #create distance matrix based on Bray-Curtis method
+dune.ano <-
+  anosim(dune.dist, dune.env.original$Management) #Comparing groupings based on management
+summary(dune.ano)
+plot(dune.ano, xlab = "Anosim, Dune meadow management types") #note the error message here:
+#notches are used in box plots to help visually assess whether the medians of distributions #differ. If the notches do not overlap, this is evidence that the medians are different.Here #the confidence region (the notch) went past the bounds (or hinges) of one of the boxes. 
+
+#ANOSIM gives you the P value and a R value. R value close to 1 indicates high separation between levels of your factor while R value #close to 0 indicate no separation between levels of your factor.
+
+# Try also the recommended alternative "adonis" - Analysis of variance using distance matrices - for partitioning distance matrices among sources of variation and fitting linear models (e.g., factors, polynomial regression) to distance matrices; uses a permutation test with pseudo-F ratios.
+
+dune.ado<-adonis2(formula = dune~Management, data = dune.env.original, method = "bray")
+dune.ado
+
+# You can also have more advanced models in adonis
+dune.ado2<-adonis2(dune~Management*A1, data = dune.env.original)
+dune.ado2
+```
+
+After a significant ANOSIM, you may want to know which species are
+primarily responsible for the observed difference between clusters.
+SIMPER (Similarity Percentage) will do this for you. The test does not
+come with significance testing. In the output tables, taxa are sorted in
+descending order of contribution to group difference.
+
+#### [28.3 Compare the different groups and check which species contribute mostly to the difference between pairs of clusters.]{style="color:forestgreen"}
+
+```{r message=FALSE, warning=FALSE}
+sim <- simper(dune, dune.env.original$Management) #try management groupings
+summary(sim)
+```
+
+Visually compare the result from simper with species positions in a
+biplot.
+
+```{r}
+plot(dune.ca, type = "n", scaling = "species")
+with(dune.env.original, points(dune.ca, display = "sites", scaling = "species", col = as.numeric(Management), pch=16))
+with(dune.env.original, orditorp(dune.ca, display = "species", scaling = "species"))
+with(dune.env.original, ordihull(dune.ca, Management, scaling = "species",label = TRUE))
+```
+
+A complementary/alternative approach to identifying which species are
+most reposnisble for the differences between the groups is that of
+indicator species - which species best characterise the groups or
+clusters that we have identified?
+
+In this exercise we will investigate if any particular species are
+indicative for the four different management types.
+
+#### [28.4 Use the resulting data table to find the two top indicator species for each of the four Management types!]{style="color:forestgreen"}
+
+```{r, warning=FALSE, message=FALSE}
+iva <- indval(dune, dune.env.original$Management) #this time we don't need dummy variables for management
+iva.df <- as.data.frame(iva$indval)
+#arrange in descending order to find best indicator species, change BF to other management types as needed
+dplyr::arrange(rownames_to_column(iva.df), desc(HF))
+```
+
+------------------------------------------------------------------------
+
+------------------------------------------------------------------------
+
+### [Question 29: DFA]{style="color:cornflowerblue"}
+
+The algorithm starts by finding directions that maximize the separation
+between classes, then use these directions to predict the class of
+individuals. These directions, called linear discriminants, are linear
+combinations of predictor variables. The Dune dataset is too small to
+really make use of this method (since we need to split the data into
+test and training parts) so we will here use the classic "Iris" dataset
+of different Iris plant species and the dimensions of different parts of
+their flowers
+
+#### [Questions:]{style="color:forestgreen"}
+
+#### [29.1 How well does the algorithm distinguish between the species?]{style="color:forestgreen"}
+
+#### [29.2 Here our groups are pre-defined (species). Would it be OK to use one of the clustering methods to find groups before running the DFA?]{style="color:forestgreen"}
+
+```{r DFA}
+# Load the data
+data("iris")
+
+# Split the data into training (80%) and test set (20%)
+set.seed(123)
+training.samples <- iris$Species %>%
+  createDataPartition(p = 0.8, list = FALSE)
+train.data <- iris[training.samples,]
+test.data <- iris[-training.samples,]
+
+# Discriminant analysis can be affected by the scale/unit in which predictor variables are measured. 
+# It’s generally recommended to standardize/normalize continuous predictor before the analysis.
+# Normalize the data. Categorical variables are automatically ignored.
+# Estimate preprocessing parameters
+preproc.param <- train.data %>%
+  preProcess(method = c("center", "scale"))
+# Transform the data using the estimated parameters
+train.transformed <- preproc.param %>% predict(train.data)
+test.transformed <- preproc.param %>% predict(test.data)
+
+# Linear discriminant analysis - LDA ####
+# Fit the model
+model <- lda(Species ~ ., data = train.transformed)
+
+model
+plot(model, dimen = 1)#, type="both")
+```
+
+LDA determines group means and computes, for each individual, the
+probability of belonging to the different groups. Each
+observation/individual is then assigned to the group with the highest
+probability score.
+
+The lda() outputs contain the following elements:
+
+Prior probabilities of groups: the proportion of training observations
+in each group. For example 33% of the training observations are in the
+Setosa group.
+
+Group means: group center of gravity. Shows the mean of each variable in
+each group.
+
+Coefficients of linear discriminants: Shows the linear combination of
+predictor variables that are used to form the LDA decision rule. If the
+predictor variables are standardized before computing LDA, the
+discriminator weights can be used as measures of variable importance for
+feature selection.
+
+Using the function plot() produces plots of the linear discriminants,
+obtained by computing LD1 and LD2 for each of the training observations.
+
+```{r}
+# Make predictions
+predictions <- model %>% predict(test.transformed)
+# Model accuracy
+mean(predictions$class==test.transformed$Species)
+
+# The predict() function returns the following elements:
+#   
+# class: predicted classes of observations.
+# posterior: is a matrix whose columns are the groups, rows are the individuals and values are the posterior probability that the corresponding observation belongs to the groups.
+# x: contains the linear discriminants, described above
+
+# Predicted classes
+head(predictions$class, 6)
+# Predicted probabilities of class membership.
+head(predictions$posterior, 6) 
+# Linear discriminants
+head(predictions$x, 3) 
+
+lda.data <- cbind(train.transformed, predict(model)$x)
+#lda.data <- cbind(test.transformed, predictions$x)
+ggplot(lda.data, aes(LD1, LD2)) +
+  geom_point(aes(color = Species),size=3)+
+  scale_colour_manual(name="",  
+                      values = c("setosa"="blue", "versicolor"="orange", "virginica"="black"))
+
+# Model accuracy
+mean(predictions$class==test.transformed$Species)
+
+#More detailed assessment (probably more information than we need!)
+#Calculates a cross-tabulation of observed and predicted classes with associated statistics.
+confusionMatrix(test.data$Species, predictions$class)
+
+```
+
+------------------------------------------------------------------------
+
+### [Question 30: Model based ordination]{style="color:cornflowerblue"}
+
+Dissimilarity-based ordination methods begin by calculating a
+dissimilarity or distance matrix between sites (or more generally,
+observational units). Afterwards, these are collapsed to a small number
+of dimensions for plotting using an algorithm that attempts to preserve
+and display information about these relative distances. The model-based
+approach explicitly specifies a statistical model of the process that
+generated the observed data. Model-based ordination methods (mostly) use
+an extension of generalised linear mixed models known as latent variable
+models. As the name suggests, these models account for the correlation
+between taxa via the inclusion of a small number of latent variables.
+Latent variables act as natural ordination axes reflecting unobserved
+covariates.
+
+#### [Question:]{style="color:forestgreen"}
+
+#### [30.1 How do the ordinations produced compare to a distance based ordination (for example an NMDS) of the same species data?]{style="color:forestgreen"}
+
+```{r}
+#load species abundance data
+spe<-as.data.frame(read_xlsx("dune.xlsx", na = ".",sheet = 1, col_names = TRUE)); spe[1]<-NULL
+#we need to provide the model with an appropriate probability distribution for the data.
+#Given our abundance data is on a scale of 1 - 9 we could classify it as ordinal data,
+#but we can try another distribution as well to compare results.
+
+fitnb <- gllvm(y = spe, family = "negative.binomial") #This takes a minute or so to run!
+fitord <- gllvm(y = spe, family = "ordinal", zeta.struc = "common")
+#ignore the warning messages generated for now!
+
+#As with "normal" linear regressions we can check model fit with widely used tools like
+#Akaike Information Criterion (AIC). AIC aims to select the model which best explains 
+#the variance in the dependent variable with the fewest number of independent variables
+#So it helps select a simpler model over a complex model, if the complexity is not helpful.
+#A lower AIC is better!
+
+AIC(fitnb)
+AIC(fitord)
+
+#It seems the ordinal model is the best.
+```
+
+We can also use graphical checks of model fit, as with any regression.
+If you are familiar with these try running plot(fitord) and plot(fitnb).
+
+Now we can look at the ordination plot for the best model.
+
+```{r}
+par(mfrow = c(1, 2))
+ordiplot.gllvm(
+  fitord,
+  main = NULL,
+  biplot = T,
+  s.colors = "black",
+  spp.colors = "blue",
+  alpha = 0.45,
+  cex.spp = 0.7,
+  jitter = F,
+  s.cex = 0.6
+)
+
+abline(h = 0, v = 0, lty = 2)
+#compare with an NMDS
+distord <- metaMDS(spe)
+vegan::ordiplot(distord, type = "t")
+par(mfrow = c(1, 1))
+```
+
+We can do a lot more with model based ordinations, including
+incorporating environmental variables. We can also include information
+on traits and perform a fourth corner analysis.
+
+------------------------------------------------------------------------
+
+### [Question 31: Fourth Corner]{style="color:cornflowerblue"}
+
+Here we will use another model based method (the "mvabund" package for
+analysing multivariate abundance data) to perform a fourth corner
+analysis. That is to say we will include trait information and
+environmental variables, and investigate the relationship between plant
+traits and environmental variables.
+
+#### [Question:]{style="color:forestgreen"}
+
+#### [31.1 Do the correlations in the plot make sense ecologically?]{style="color:forestgreen"}
+
+```{r}
+# Read and treat data
+
+env<-as.data.frame(read_xlsx("dune_env.xlsx", na = "NA",sheet = 1, col_names = TRUE)); env[1]<-NULL
+env$Management<-as.factor(env$Management)
+env$Use<-as.factor(env$Use)
+#This is from a database of plant traits
+traits<-as.data.frame(read_xlsx("TylerTraits.xlsx", na = "NA",sheet = 1, col_names = TRUE, skip = 1))
+rownames(traits)<-traits$Spe; traits$Spe<-NULL 
+names(traits)
+traits<-traits[,-c(1:6,22, 27,29,30:32)] # Remove trait not feasible for this analysis
+
+#Fourth corner
+#Given that there are many traits and even environmental factors that are not strong predictors #of abundance, we can reduce the number of predictor terms in our models.LASSO is an #optimization algorithm (Least Absolute Shrinkage and Selection Operator) that is used in this #case.
+
+fitfourth = traitglm(spe, env, traits, method = "glm1path")
+fitfourth$fourth #examine fourth corner terms
+#and plot the results
+a        = max(abs(fitfourth$fourth.corner))
+colort   = colorRampPalette(c("blue", "white", "red"))
+plot.4th = levelplot(
+  t(as.matrix(fitfourth$fourth.corner)),
+  xlab = "Environmental Variables",
+  ylab = "Species traits",
+  col.regions = colort(100),
+  at = seq(-a, a, length = 100),
+  scales = list(x = list(rot = 45))
+)
+print(plot.4th)
+
+plot(fitfourth) # for a Dunn-smyth residual plot
+qqnorm(residuals(fitfourth)); abline(c(0,1),col="red") # for a normal quantile plot.
+
+#We can test for overall significance using an anova (only on default manyglm model, 
+#not available for Lasso model)
+fitfourth2 = traitglm(spe, env, traits)
+pvalues <- anova.traitglm(fitfourth2,nBoot=10) #overall significant
+#We can also explore the effects of individual trait by environment interactions using the #summary function ** Warning this is very very #slow, even with limited n** Don't run this 
+#last line of code unless you want to take a long coffee break!
+#We will limit the number of bootstrap reps to 5 (nBoot=5) but 1000 should be using for final analyses
+#summary(fitfourth2, nboot=5)
+#Example of output if you don't want to wait for the code to run...
+#UsePasture.N_fix1           0.467     0.115    
+#Manure.BioDivRel            0.782     0.014 *  
+#Manure.Nectar               0.591     0.015 *  
+
+```
+
+------------------------------------------------------------------------
+### [Question 32: PLS]{style="color:cornflowerblue"}
+
+PLS regression, like PCA, seeks to find components which maximize the
+variability of predictors but differs from PCA as PLS requires the
+components to have maximum correlation with the response. The predictor
+variables are mapped to a smaller set of variables, and within that
+smaller space we perform a regression against the outcome variable. PLS
+aims to choose new mapped variables that maximally explain the outcome
+variable.
+
+#### [Questions:]{style="color:forestgreen"}
+
+#### [32.1 Which explanatory variables are most important to explain the response variables (A1 and Moisture)?]{style="color:forestgreen"}
+
+#### [32.2 Are there any obvious outliers in the dataset?]{style="color:forestgreen"}
+
+#### [32.3 Does the data seem to be in need of a transformation?]{style="color:forestgreen"}
+
+```{r PLS, echo=TRUE, message=FALSE, warning=FALSE}
+
+library(pls)
+
+#This function takes the same form as a lot of regression models in R:
+#plsr(Response variable ~ Explanatory Variables, data = yourdata, scale = TRUE/FALSE)
+#However the response variable can be a matrix of variables.
+
+#Here we will use the dune species to predict environmental variables A1 and moisture.
+#We have mostly done this in the other direction, but correlations go both ways! 
+pls.response <- dplyr::select(dune.env.original, A1, Moisture)
+pls.response$Moisture <-  as.numeric(pls.response$Moisture)
+pls.response <- as.matrix(pls.response)
+pls.exp <- as.matrix(dune)
+pls.fit <- plsr(pls.response ~ pls.exp,
+                na.action = na.omit,
+                validation = "LOO")
+
+#Cross validation is used to help us find the optimal number of retained dimensions.
+#Then the model is rebuilt with this optimal number of dimensions.
+#Find the number of dimensions with lowest cross validation error
+cv <- RMSEP(pls.fit)
+best.dims <- which.min(cv$val[estimate = "adjCV", ,]) - 1
+best.dims #3 seems optimal
+
+summary(pls.fit)
+
+# Rerun the model with optimal dimensions
+pls.fit2 <-
+  plsr(pls.response ~ pls.exp, ncomp = best.dims, na.action = na.omit)
+#Finally, we extract the useful information and format the output.
+coefficients <-  coef(pls.fit2)
+sum.coef <-  sum(sapply(coefficients, abs))
+coefficients <-  coefficients * 100 / sum.coef
+coefficients <-  sort(coefficients[, 1 , 1])
+barplot(tail(coefficients, 3))
+#The regression coefficients are normalized so their absolute sum is 100 and the result is sorted.
+
+#You can run the following to see the other end of the scale for negative predictors.
+barplot(head(coefficients, 3))
+
+summary(pls.fit2)
+#pls.fit2$loadings
+#We can plot the scores
+corrplot(pls.fit2,
+         comps = 1:3,
+         labels = names(coefficients))
+
+#This gives a pairwise plot of the score values for the three first components.
+#Score plots are often used to look for patterns, groups or outliers in the data.
+#The scores represents the different locations
+plot(pls.fit2, plottype = "scores", comps = 1:3)
+#study the predicted vs. measured plot to see if the data needs to be transformed
+plot(pls.fit2,
+     ncomp = best.dims,
+     asp = 1,
+     line = TRUE)
+
+#IGNORE THIS CODE # included for backup purposes
+#.rs.restartR()
+#library(pls)
+#library(dplyr)
+#library(vegan)
+#data("dune.env")
+#data("dune")
+
+#pls.response <- dplyr::select(dune.env, A1, Moisture)
+#pls.response$Moisture <-  as.numeric(pls.response$Moisture)
+#pls.response <- as.matrix(pls.response)
+#pls.exp <- as.matrix(dune)
+#pls.fit <- plsr(pls.response ~ pls.exp,
+#                na.action = na.omit,
+#                validation = "LOO")
+ 
+
+```
