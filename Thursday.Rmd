@@ -32,8 +32,8 @@ indicator values) to interpret the results of the ordinations.
 
 ```{r message=FALSE, warning=FALSE}
 #load Ellenberg data
-dune.ell <- readRDS("Ellenberg.RDS")
-dune.mean.ell <- readRDS("Mean_Ellenberg.RDS")
+dune.ell <- readRDS("Data_2/Ellenberg.RDS")
+dune.mean.ell <- readRDS("Data_2/Mean_Ellenberg.RDS")
 #The vegan implementation of forward selection of variables does not accept NA values.
 #To get around this we will replace the two NAs with the mean value for all plots in that column.
 #Do not do this in a real analysis without seriously thinking about how it affects your results!
@@ -129,8 +129,8 @@ between the ten plots.
 ```{r, warning=FALSE, message=FALSE}
 #This partials out the effect of Plot before analysing the effects of Time
 #First load the time series versions of the data
-SpeTS <- readRDS("SpeTS.RDS")
-EnvTS <- readRDS("EnvTS.RDS")
+SpeTS <- readRDS("Data_2/SpeTS.RDS")
+EnvTS <- readRDS("Data_2/EnvTS.RDS")
 time.cca <- cca(SpeTS ~ Time + Condition(Plot), data = EnvTS)
 time.cca
 treat <- EnvTS$Time 
@@ -254,7 +254,7 @@ plants.DCA <- decorana(dune)
 #
 # DCA on the insect data (called Bugs)
 #
-insects <- readRDS("Bugs.RDS")
+insects <- readRDS("Data_2/Bugs.RDS")
 insects.DCA <- decorana(insects)
 #
 # Have a look at the DCA based on insects
