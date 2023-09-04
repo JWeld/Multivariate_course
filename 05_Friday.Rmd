@@ -256,7 +256,7 @@ covariates.
 
 ```{r}
 #load species abundance data
-spe<-as.data.frame(read_xlsx("Data_2/dune.xlsx", na = ".",sheet = 1, col_names = TRUE)); spe[1]<-NULL
+spe<-as.data.frame(read_xlsx("Data/dune.xlsx", na = ".",sheet = 1, col_names = TRUE)); spe[1]<-NULL
 #we need to provide the model with an appropriate probability distribution for the data.
 #Given our abundance data is on a scale of 1 - 9 we could classify it as ordinal data,
 #but we can try another distribution as well to compare results.
@@ -324,11 +324,11 @@ traits and environmental variables.
 ```{r}
 # Read and treat data
 
-env<-as.data.frame(read_xlsx("Data_2/dune_env.xlsx", na = "NA",sheet = 1, col_names = TRUE)); env[1]<-NULL
+env<-as.data.frame(read_xlsx("Data/dune_env.xlsx", na = "NA",sheet = 1, col_names = TRUE)); env[1]<-NULL
 env$Management<-as.factor(env$Management)
 env$Use<-as.factor(env$Use)
 #This is from a database of plant traits
-traits<-as.data.frame(read_xlsx("Data_2/TylerTraits.xlsx", na = "NA",sheet = 1, col_names = TRUE, skip = 1))
+traits<-as.data.frame(read_xlsx("Data/TylerTraits.xlsx", na = "NA",sheet = 1, col_names = TRUE, skip = 1))
 rownames(traits)<-traits$Spe; traits$Spe<-NULL 
 names(traits)
 traits<-traits[,-c(1:6,22, 27,29,30:32)] # Remove trait not feasible for this analysis
@@ -358,9 +358,10 @@ qqnorm(residuals(fitfourth)); abline(c(0,1),col="red") # for a normal quantile p
 #not available for Lasso model)
 fitfourth2 = traitglm(spe, env, traits)
 pvalues <- anova.traitglm(fitfourth2,nBoot=10) #overall significant
-#We can also explore the effects of individual trait by environment interactions using the #summary function ** Warning this is very very #slow, even with limited n** Don't run this 
+#We can also explore the effects of individual trait by environment interactions using the 
+#summary function ** Warning this is very very slow, even with limited n** Don't run this 
 #last line of code unless you want to take a long coffee break!
-#We will limit the number of bootstrap reps to 5 (nBoot=5) but 1000 should be using for final analyses
+#We will limit the number of bootstrap reps to 5 (nBoot=5) but 1000 should be used for final analyses
 #summary(fitfourth2, nboot=5)
 #Example of output if you don't want to wait for the code to run...
 #UsePasture.N_fix1           0.467     0.115    
