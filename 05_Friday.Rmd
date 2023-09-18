@@ -1,7 +1,6 @@
 ---
 title: "Friday"
 output: html_notebook
-wrap: 72
 ---
 
 ```{r setup, include=FALSE, message=FALSE, warning=FALSE}
