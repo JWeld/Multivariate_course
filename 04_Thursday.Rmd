@@ -1,6 +1,5 @@
 ---
 title: "Thursday"
-output: html_notebook
 ---
 
 ```{r setup, include=FALSE, message=FALSE, warning=FALSE}

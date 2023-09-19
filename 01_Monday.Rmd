@@ -1,6 +1,5 @@
 ---
 title: "Monday"
-output: html_notebook
 ---
 
 ```{r setup, include=FALSE, message=FALSE, warning=FALSE}
@@ -12,15 +11,11 @@ library(corrplot)
 
 ### [Question 1. Introduction to R Notebooks and Markdown.]{style="color:cornflowerblue"}
 
-This exercise is only to get used to working with R Notebook/R Markdown.
-The data in this first exercise are not multivariate and the statistical
-analysis is a simple linear regression. All following exercises will
-start with this kind of introduction.
+This exercise is only to get used to working with R Notebook/R Markdown. The data in this first exercise are not multivariate and the statistical analysis is a simple linear regression. All following exercises will start with this kind of introduction.
 
 ### [For each exercise there will be a number of explicit questions written in green.]{style="color:forestgreen"}
 
-To pass the course, you should give your answers to these questions to
-one of the teachers during the computer labs.
+To pass the course, you should give your answers to these questions to one of the teachers during the computer labs.
 
 #### [Write your answers to the questions and any other comments or notes using the Answers.Rmd file as a template, or create a new file yourself.]{style="color:Red"}
 
@@ -28,22 +23,13 @@ one of the teachers during the computer labs.
 
 #### A quick note on R Notebooks and R Markdown
 
-These terms are often used interchangeably to mean a combination of R
-code, results, and formattable text, such as this one. They allow you to
-present your results, the code used to generate the results and your
-interpretation and comments all together in one document that you can
-easily update, and which is easy for a reader to understand (R Notebooks
-are a minor update of R Markdown files that allow for easier editing as
-you can run just part of your code and see the results in a preview.
-Both notebook and markdown are .Rmd files, and are written in exactly
-the same way, so don't worry about the difference for this course!).
+These terms are often used interchangeably to mean a combination of R code, results, and formattable text, such as this one. They allow you to present your results, the code used to generate the results and your interpretation and comments all together in one document that you can easily update, and which is easy for a reader to understand (R Notebooks are a minor update of R Markdown files that allow for easier editing as you can run just part of your code and see the results in a preview. Both notebook and markdown are .Rmd files, and are written in exactly the same way, so don't worry about the difference for this course!).
 
 ------------------------------------------------------------------------
 
 #### Example of a simple analysis
 
-First we load or create the data we will be using. The box below is an
-example of a code chunk.
+First we load or create the data we will be using. The box below is an example of a code chunk.
 
 ```{r}
 df <- read.table(header = TRUE, sep = ",", 
@@ -60,11 +46,9 @@ df <- read.table(header = TRUE, sep = ",",
 # outside the code chunks.
 ```
 
-So I could write my notes here instead, which is probably easier to read
-for anything more than a few words of explanation.
+So I could write my notes here instead, which is probably easier to read for anything more than a few words of explanation.
 
-Now we can do a simple linear regression. The results are stored in the
-object "reg".
+Now we can do a simple linear regression. The results are stored in the object "reg".
 
 ```{r}
 reg <- lm(y~x, df) 
@@ -85,19 +69,13 @@ summary(reg)
 
 ### [The R packages and data we will be using.]{style="color:cornflowerblue"}
 
-The "dune" dataset we will use is included in the vegan package (an
-extensive collection of tools for multivariate analysis), but we will
-also be using some slightly modified and extended versions of it, which
-we will load as needed. We will also load some other packages to extend
-the range of analyses available to us.
+The "dune" dataset we will use is included in the vegan package (an extensive collection of tools for multivariate analysis), but we will also be using some slightly modified and extended versions of it, which we will load as needed. We will also load some other packages to extend the range of analyses available to us.
 
 ------------------------------------------------------------------------
 
 ### [Question 2: Simple exercise for illustrating effects of different distance metrics.]{style="color:cornflowerblue"}
 
-Here, we will create a simple data set consisting of 2 columns of
-measurement made at 3 sites we will then calculate a series of distance
-metrics using the vegdist() function.
+Here, we will create a simple data set consisting of 2 columns of measurement made at 3 sites we will then calculate a series of distance metrics using the vegdist() function.
 
 #### [Questions:]{style="color:forestgreen"}
 
@@ -130,8 +108,7 @@ help(vegdist)
 
 ### [Question 3: In this exercise we will use Principal Components Analysis on the dune meadow explanatory data. We will also explore the effects of different kinds of scaling on the ordination plot. NOTE that the scaling issues applies to all ordination techniques!]{style="color:cornflowerblue"}
 
-Compare the plots on the PCA with and without scaling (PCA plot 4) and
-discuss the differences.
+Compare the plots on the PCA with and without scaling (PCA plot 4) and discuss the differences.
 
 #### [Questions:]{style="color:forestgreen"}
 

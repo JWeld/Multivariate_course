@@ -1,8 +1,6 @@
 ---
 title: "Tuesday"
-output: html_notebook
 ---
-
 
 ```{r setup, include=FALSE, message=FALSE, warning=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -37,21 +35,13 @@ DCANewSp
 ordiplot(DCANewSp, type="text", main="DCA with new sp.")
 ```
 
-You may be surprised that you haven't got any total inertia values when
-printing decorana results, although in other software (e.g. CANOCO)
-these are available, together with percentage variance explained by
-particular axes. The reason for this is that DCA does not support the
-concept of total inertia values (also, it produces only four axes, i.e.
-four eigenvalues). See the comment in the code for the question 5.
+You may be surprised that you haven't got any total inertia values when printing decorana results, although in other software (e.g. CANOCO) these are available, together with percentage variance explained by particular axes. The reason for this is that DCA does not support the concept of total inertia values (also, it produces only four axes, i.e. four eigenvalues). See the comment in the code for the question 5.
 
 ------------------------------------------------------------------------
 
 ### [Question 7: Effects from increased variation.]{style="color:cornflowerblue"}
 
-Add one new sample to the data, then add a cover of 9 for the existing
-species Chenopodium album "Chealbu" in the new sample. Make a new
-DCA-ordination. Next, remove the Chealbu = 9, and add instead a cover of
-5 for the exisiting species Juncbufo and make a new DCA.
+Add one new sample to the data, then add a cover of 9 for the existing species Chenopodium album "Chealbu" in the new sample. Make a new DCA-ordination. Next, remove the Chealbu = 9, and add instead a cover of 5 for the exisiting species Juncbufo and make a new DCA.
 
 #### [Questions:]{style="color:forestgreen"}
 
@@ -86,17 +76,9 @@ ordiplot(DCANewSampleJunc, type = "text", main = "DCA with new sample of Juncbuf
 
 ### [Question 8: Principal Coordinates Analysis (PCoA)]{style="color:cornflowerblue"}
 
-Principal Coordinates Analysis (PCoA), also known as Multidimensional
-Scaling (MDS), is a generalization of the ordination techniques we have
-already seen as it can be estimated with any distance matrix. In
-contrast, PCA is restricted to Euclidean distances while CA preserves
-Chi-Square distances. Here, we will explore PCoA on four different
-distance matrices: (i) Bray-Curtis (ii) Jaccard (iii) Euclidean (iv)
-Mahalanobis
+Principal Coordinates Analysis (PCoA), also known as Multidimensional Scaling (MDS), is a generalization of the ordination techniques we have already seen as it can be estimated with any distance matrix. In contrast, PCA is restricted to Euclidean distances while CA preserves Chi-Square distances. Here, we will explore PCoA on four different distance matrices: (i) Bray-Curtis (ii) Jaccard (iii) Euclidean (iv) Mahalanobis
 
-The R base statistics library offers the routine cmdscale() for
-performing MDS. There are numerous other libraries offering PCoA
-analysis
+The R base statistics library offers the routine cmdscale() for performing MDS. There are numerous other libraries offering PCoA analysis
 
 #### [Questions:]{style="color:forestgreen"}
 
@@ -162,13 +144,7 @@ text(
 
 ### [Question 9: Non Metric Multidimensional Scaling]{style="color:cornflowerblue"}
 
-NMDS does not use the absolute abundances of species in communities, but
-rather their *rank orders*. The use of ranks omits some of the issues
-associated with using absolute distance (e.g., sensitivity to
-transformation). At the conclusion of this exercise, you should be able
-to: State which metrics are supported in the vegan implementation of
-NMDS. Evaluate the appropriate number of dimensions for the ordination.
-Evaluate the consequences of using different distance metrics.
+NMDS does not use the absolute abundances of species in communities, but rather their *rank orders*. The use of ranks omits some of the issues associated with using absolute distance (e.g., sensitivity to transformation). At the conclusion of this exercise, you should be able to: State which metrics are supported in the vegan implementation of NMDS. Evaluate the appropriate number of dimensions for the ordination. Evaluate the consequences of using different distance metrics.
 
 #### [Question:]{style="color:forestgreen"}
 
@@ -248,9 +224,7 @@ aggr(as.matrix(mvo.dune))
 matrixplot(mvo.dune) 
 ```
 
-We can also try testing for outliers in the data. Be aware that this is
-only indicative, and you still need to exercise your judgement about
-what should be excluded as an outlier!
+We can also try testing for outliers in the data. Be aware that this is only indicative, and you still need to exercise your judgement about what should be excluded as an outlier!
 
 ```{r}
 
@@ -303,15 +277,7 @@ legend("topright", paste("SD =", round(sd(d1mean), 1))) # Legend with standard d
 
 ```
 
-Sometimes loaded packages in R can conflict with another package. This
-can mean that the same function name is used in different packages for 
-example, so the your code may give a different output (or fail) depending
-on the packages you have loaded at the time! It is good practice to write
-code that has a narrow purpose and loads the packages needed for that
-purpose, rather than one huge script running many different analyses.
-However, you may sometimes need to unload a package or restart R to get
-the expected results. You can restart R (note: not the same as restarting
-RStudio!) from the RStudio Session menu or using the following code.
+Sometimes loaded packages in R can conflict with another package. This can mean that the same function name is used in different packages for example, so the your code may give a different output (or fail) depending on the packages you have loaded at the time! It is good practice to write code that has a narrow purpose and loads the packages needed for that purpose, rather than one huge script running many different analyses. However, you may sometimes need to unload a package or restart R to get the expected results. You can restart R (note: not the same as restarting RStudio!) from the RStudio Session menu or using the following code.
 
 ```{r}
 #VIM package loaded earlier conflicts with SIMPER function in Vegan
