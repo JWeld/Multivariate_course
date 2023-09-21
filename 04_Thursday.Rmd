@@ -1,5 +1,8 @@
 ---
 title: "Thursday"
+editor_options: 
+  markdown: 
+    wrap: 72
 ---
 
 ```{r setup, include=FALSE, message=FALSE, warning=FALSE}
@@ -332,21 +335,11 @@ hierarchical clustering technique. Also try Ward's method
 
 #### [25.4 Interpret the Hopkins statistic for the Dune data set.]{style="color:forestgreen"}
 
-```{r, warning=FALSE, message=FALSE}
-#
-# Have a look to see what NbClust does
-#
-help(NbClust)
-#
-# make a distance matrix using the Bray-Curtis method
-#
-dune.dist <- vegdist(dune, method = "bray")
-#
+```{r}
+
 # see how many clusters there appear to be in the data
-#
-res<-NbClust(dune, diss=dune.dist, distance = NULL, 
-	min.nc=2, max.nc=12, method = "kmeans", index = "kl") 
-	
+kk <- cascadeKM(dune,inf.gr=2,sup.gr=6)
+plot(kk)
 #
 # K-Means Cluster Analysis based on the previously identified number of clusters
 #
@@ -416,8 +409,9 @@ tanglegram(dend2, dend3)
 #
 # finally, should the Dune data be clustered at all?
 #
-# Compute Hopkins statistic for the Dune dataset
-#
+# Compute Hopkins statistic for the Dune dataset.
+# Calculated values 0-0.3 indicate regularly-spaced data. Values around 0.5 indicate random # # data. Values 0.7-1 indicate clustered data.
+# BUT NOTE! The value returned by this function is actually 1-Hopkins statistic.
 set.seed(123)
 #
 hopkins(dune, n = nrow(dune)-1)
@@ -553,4 +547,3 @@ anova(pyrifos.PRC, permutations = pyrifos.PRC.ctrl, first = TRUE)
 ```
 
 ------------------------------------------------------------------------
-
