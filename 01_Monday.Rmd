@@ -17,7 +17,7 @@ This exercise is only to get used to working with R Notebook/R Markdown. The dat
 
 To pass the course, you should give your answers to these questions to one of the teachers during the computer labs.
 
-#### [Write your answers to the questions and any other comments or notes using the Answers.Rmd file as a template, or create a new file yourself.]{style="color:Red"}
+#### [If you find it useful, you can write your answers to the questions and any other comments or notes using the Answers.Rmd file as a template, but you are free to create a new file yourself, modify your local copy of the questions or do whatever works for you!.]{style="color:Red"}
 
 ------------------------------------------------------------------------
 
