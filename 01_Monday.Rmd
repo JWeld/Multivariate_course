@@ -154,7 +154,7 @@ corrplot(
 # Then make a PCA, with scaling of the data
 env.pca <-
   rda(dune.env, scale = TRUE) #vegan uses the same function for PCA and RDA, just depends on if it is constrained or #not.
-biplot(env.pca) #plot the results using the default plot scaling which is "species"
+biplot(env.pca, main = "Plot 2") #plot the results using the default plot scaling which is "species"
 env.pca #summarise results
 summary(eigenvals(env.pca)) #see variance explained
 
@@ -162,7 +162,7 @@ summary(eigenvals(env.pca)) #see variance explained
 # Continue with a PCA on the same data, but without scaling of the data
 env.pca2 <-
   rda(dune.env, scale = FALSE) #vegan uses the same function for PCA and RDA, just depends on if it is constrained or #not.
-biplot(env.pca2)#plot the results
+biplot(env.pca2, main = "Plot 3")#plot the results
 env.pca2 #summarise results
 summary(eigenvals(env.pca2)) #see variance explained
 
@@ -170,15 +170,15 @@ summary(eigenvals(env.pca2)) #see variance explained
 # Compare the PCAs with and without scaling of data
 # Default scaling of the plots, which is "species"
 par(mfrow = c(1, 2))
-biplot(env.pca, main = "PCA with scaling of data")
-biplot(env.pca2, main = "PCA without scaling of data")
+biplot(env.pca, main = "PCA plot 4, with scaling of data")
+biplot(env.pca2, main = "PCA plot 4, without scaling of data")
 par(mfrow = c(1, 1))
 
 ## PCA plot 5:
 # Plots from the same PCA, but with plot scaling focused on sites and on species
 par(mfrow = c(1, 2))
-biplot(env.pca, scaling = "sites", main = "Plot scaling on sites")
-biplot(env.pca, scaling = "species", main = "Plot scaling on species")
+biplot(env.pca, scaling = "sites", main = "Plot 5, scaling on sites")
+biplot(env.pca, scaling = "species", main = "Plot 5, scaling on species")
 par(mfrow = c(1, 1))
 
 ## PCA plot 6:
@@ -190,11 +190,11 @@ par(mfrow = c(1, 2))
 biplot(env.pca2,
        scaling = "species",
        correlation = TRUE,
-       main = "PCA on un-scaled data,\nplot scaling on correlations")
+       main = "PCA plot 6 on un-scaled data,\nplot scaling on correlations")
 biplot(env.pca,
        scaling = "species",
        correlation = FALSE,
-       main = "PCA on scaled data")
+       main = "PCA plot 6, on scaled data")
 par(mfrow = c(1, 1))
 
 ## PCA plot 7:
@@ -206,8 +206,8 @@ par(mfrow = c(1, 2))
 biplot(env.pca2,
        scaling = "sites",
        correlation = TRUE,
-       main = "PCA on un-scaled data,\nplot scaling on correlations")
-biplot(env.pca, scaling = "sites", main = "PCA on scaled data")
+       main = "PCA plot 7, on un-scaled data,\nplot scaling on correlations")
+biplot(env.pca, scaling = "sites", main = "PCAplot 7, on scaled data")
 par(mfrow = c(1, 1))
 
 ```
