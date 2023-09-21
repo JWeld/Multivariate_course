@@ -1,5 +1,8 @@
 ---
 title: "Friday"
+editor_options: 
+  markdown: 
+    wrap: 72
 ---
 
 ```{r setup, include=FALSE, message=FALSE, warning=FALSE}
@@ -17,6 +20,29 @@ library(pls)
 
 ```
 
+Load the data we are using
+
+```{r}
+data("dune")
+data("dune.env")
+dummy_management <-
+  as.data.frame(model.matrix(~ Management - 1, data = dune.env))
+#add these to the dataset
+dune.env.original <-
+  dune.env #we keep a copy of the original version
+dune.env <-
+  dune.env %>% dplyr::select(A1, Moisture, Manure, Use) %>% cbind(., dummy_management)
+dune.env$Moisture <-
+  as.numeric(as.character(dune.env$Moisture)) #make numeric
+dune.env$Manure <- as.numeric(as.character(dune.env$Manure))
+dune.env$Use <- as.numeric(dune.env$Use)
+#make column names shorter
+dune.env <-
+  dune.env %>% rename(BF = ManagementBF,
+                      HF = ManagementHF,
+                      NM = ManagementNM,
+                      SF = ManagementSF)
+```
 
 ### [Question 28: Differences between groups. ANOSIM, adonis and SIMPER]{style="color:cornflowerblue"}
 
@@ -144,7 +170,7 @@ their flowers
 
 #### [29.2 Here our groups are pre-defined (species). Would it be OK to use one of the clustering methods to find groups before running the DFA?]{style="color:forestgreen"}
 
-```{r DFA}
+```{r}
 # Load the data
 data("iris")
 
@@ -369,6 +395,7 @@ pvalues <- anova.traitglm(fitfourth2,nBoot=10) #overall significant
 ```
 
 ------------------------------------------------------------------------
+
 ### [Question 32: PLS]{style="color:cornflowerblue"}
 
 PLS regression, like PCA, seeks to find components which maximize the

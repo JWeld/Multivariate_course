@@ -9,6 +9,31 @@ library("reshape2")
 library("outliers")
 library("gdata") # for unmatrix
 library("VIM") # For matrixplot
+library("dplyr") 
+```
+
+Load the data we are using
+
+```{r}
+data("dune")
+data("dune.env")
+dummy_management <-
+  as.data.frame(model.matrix(~ Management - 1, data = dune.env))
+#add these to the dataset
+dune.env.original <-
+  dune.env #we keep a copy of the original version
+dune.env <-
+  dune.env %>% select(A1, Moisture, Manure, Use) %>% cbind(., dummy_management)
+dune.env$Moisture <-
+  as.numeric(as.character(dune.env$Moisture)) #make numeric
+dune.env$Manure <- as.numeric(as.character(dune.env$Manure))
+dune.env$Use <- as.numeric(dune.env$Use)
+#make column names shorter
+dune.env <-
+  dune.env %>% rename(BF = ManagementBF,
+                      HF = ManagementHF,
+                      NM = ManagementNM,
+                      SF = ManagementSF)
 ```
 
 ### [Question 6: Add one new species with cover degree 9 at the site with the lowest number of species. Do a new DCA-ordination.]{style="color:cornflowerblue"}
@@ -199,7 +224,7 @@ These are only a few examples on how to assess data quality.
 #### [10.2 Would you say that the original Dune Meadow data set is OK for further analyses? Motivate your answer!]{style="color:forestgreen"}
 
 ```{r ex10, inclue=TRUE, message=FALSE, warning=FALSE}
-data(dune)
+#data(dune)
 
 # Create some outliers and missing values in a temporary dataset called mvo.dune (acronym for MultiVariate Outlier)
 mvo.dune <- as.matrix(dune)

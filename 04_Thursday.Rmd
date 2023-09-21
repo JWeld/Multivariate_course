@@ -14,6 +14,31 @@ library("factoextra")
 library("NbClust")
 library("dendextend")
 library("clustertend")
+library("dplyr")
+```
+
+Load the data we are using
+
+```{r}
+data("dune")
+data("dune.env")
+dummy_management <-
+  as.data.frame(model.matrix(~ Management - 1, data = dune.env))
+#add these to the dataset
+dune.env.original <-
+  dune.env #we keep a copy of the original version
+dune.env <-
+  dune.env %>% select(A1, Moisture, Manure, Use) %>% cbind(., dummy_management)
+dune.env$Moisture <-
+  as.numeric(as.character(dune.env$Moisture)) #make numeric
+dune.env$Manure <- as.numeric(as.character(dune.env$Manure))
+dune.env$Use <- as.numeric(dune.env$Use)
+#make column names shorter
+dune.env <-
+  dune.env %>% rename(BF = ManagementBF,
+                      HF = ManagementHF,
+                      NM = ManagementNM,
+                      SF = ManagementSF)
 ```
 
 ### [Question 20: Interpreting ordination results using species traits]{style="color:cornflowerblue"}
@@ -391,8 +416,12 @@ dend2 <- dune %>% # data
   as.dendrogram # Turn the object into a dendrogram.
 dend2 %>% set("labels_color") %>% set("branches_lwd") %>%  set("branches_k_color", k = 4) %>% plot(main = "Euclidean")
 #
-#the dist() function does not include Bray-Curtis but we have already made a distance matrix using 
-#the vegdist() function from vegan.
+# the dist() function does not include Bray-Curtis but we can make a distance matrix using 
+# the vegdist() function from vegan.
+#
+# make a distance matrix using the Bray-Curtis method
+#
+dune.dist <- vegdist(dune, method = "bray")
 #
 dend3 <- dune.dist %>% # data (Bray-Curtis)
   hclust(method = "aver") %>% # Hierarchical clustering, choose method
