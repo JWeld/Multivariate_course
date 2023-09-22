@@ -522,18 +522,16 @@ Principal Response Curves (PRC).
 #
 help(pyrifos)
 #
-# As you will have seen from the description of the pyrifos data set, we need to do some data manipulation
-# before it will be possible to perform any analysis.
+# As you will have seen from the description of the pyrifos data set, we need to do some data # # manipulation before it will be possible to perform any analysis.
 #
 data(pyrifos)
 ditch_ <- gl(12, 1, length=132)
 week_ <- gl(11, 12, labels=c(-4, -1, 0.1, 1, 2, 4, 8, 12, 15, 19, 24))
 dose_ <- factor(rep(c(0.1, 0, 0, 0.9, 0, 44, 6, 0.1, 44, 0.9, 0, 6), 11)) 
 #
-# first, let's see if there is temporal structure in the data by performing an RDA with time as the 
-# predictor variable
+# First, let's see if there is temporal structure in the data by performing an RDA with time as # the predictor variable. Here, ditch_ is added as cofactor to remove the spatial variation to # disentangle it from the temporal variation (as in exercise 22).
 #
-pyrifos.RDA.week<-rda(pyrifos ~ week_)
+pyrifos.RDA.week<-rda(pyrifos ~ week_ + Condition(ditch_))
 pyrifos.RDA.week
 # Display the ordination plot to see if there may be interpretable temporal structure
 #
