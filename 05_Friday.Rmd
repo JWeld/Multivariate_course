@@ -104,9 +104,11 @@ plot(dune.ano, xlab = "Anosim, Dune meadow management types") #note the error me
 dune.ado<-adonis2(formula = dune~Management, data = dune.env.original, method = "bray")
 dune.ado
 
-# You can also have more advanced models in adonis
-dune.ado2<-adonis2(dune~Management*A1, data = dune.env.original)
+# You can also use adonis to test more advanced models. Here is an example how the same model as in the partial CCA in exercise 17 can be tested by adonis.
+dune.ado2<-adonis2(dune~Manure+Management, data = dune.env.original, permutations = 9999)
 dune.ado2
+# As in the partial CCA, management is non-significant and accounts for 14% of variation (alongside 36% for manure, and 50% residual)
+ 
 ```
 
 After a significant ANOSIM, you may want to know which species are
@@ -146,7 +148,7 @@ indicative for the four different management types.
 iva <- indval(dune, dune.env.original$Management) #this time we don't need dummy variables for management
 iva.df <- as.data.frame(iva$indval)
 #arrange in descending order to find best indicator species, change BF to other management types as needed
-dplyr::arrange(rownames_to_column(iva.df), desc(HF))
+dplyr::arrange(rownames_to_column(iva.df), desc(BF))
 ```
 
 ------------------------------------------------------------------------
@@ -472,21 +474,6 @@ plot(pls.fit2,
      asp = 1,
      line = TRUE)
 
-#IGNORE THIS CODE # included for backup purposes
-#.rs.restartR()
-#library(pls)
-#library(dplyr)
-#library(vegan)
-#data("dune.env")
-#data("dune")
 
-#pls.response <- dplyr::select(dune.env, A1, Moisture)
-#pls.response$Moisture <-  as.numeric(pls.response$Moisture)
-#pls.response <- as.matrix(pls.response)
-#pls.exp <- as.matrix(dune)
-#pls.fit <- plsr(pls.response ~ pls.exp,
-#                na.action = na.omit,
-#                validation = "LOO")
- 
 
 ```
