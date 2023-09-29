@@ -144,8 +144,18 @@ indicative for the four different management types.
 
 #### [28.4 Use the resulting data table to find the two top indicator species for each of the four Management types!]{style="color:forestgreen"}
 
-```{r, warning=FALSE, message=FALSE}
+```{r}
 iva <- indval(dune, dune.env.original$Management) #this time we don't need dummy variables for management
+iva
+
+```
+
+We can take the output and convert it to a dataframe so we summarise the
+most important information in all of this, and easily rearrange the
+columns to show the best indicator for each group.
+
+```{r}
+#we convert the output to a dataframe and do more with it
 iva.df <- as.data.frame(iva$indval)
 #arrange in descending order to find best indicator species, change BF to other management types as needed
 dplyr::arrange(rownames_to_column(iva.df), desc(BF))
