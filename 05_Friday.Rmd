@@ -20,30 +20,6 @@ library(pls)
 
 ```
 
-Load the data we are using
-
-```{r}
-data("dune")
-data("dune.env")
-dummy_management <-
-  as.data.frame(model.matrix(~ Management - 1, data = dune.env))
-#add these to the dataset
-dune.env.original <-
-  dune.env #we keep a copy of the original version
-dune.env <-
-  dune.env %>% dplyr::select(A1, Moisture, Manure, Use) %>% cbind(., dummy_management)
-dune.env$Moisture <-
-  as.numeric(as.character(dune.env$Moisture)) #make numeric
-dune.env$Manure <- as.numeric(as.character(dune.env$Manure))
-dune.env$Use <- as.numeric(dune.env$Use)
-#make column names shorter
-dune.env <-
-  dune.env %>% rename(BF = ManagementBF,
-                      HF = ManagementHF,
-                      NM = ManagementNM,
-                      SF = ManagementSF)
-```
-
 ### [Question 28: Differences between groups. ANOSIM, adonis and SIMPER]{style="color:cornflowerblue"}
 
 ANOSIM (Analysis Of Similarities) is a non-parametric test of
@@ -104,18 +80,22 @@ plot(dune.ano, xlab = "Anosim, Dune meadow management types") #note the error me
 dune.ado<-adonis2(formula = dune~Management, data = dune.env.original, method = "bray")
 dune.ado
 
-# You can also use adonis to test more advanced models. Here is an example how the same model as in the partial CCA in exercise 17 can be tested by adonis.
-dune.ado2<-adonis2(dune~Manure+Management, data = dune.env.original, permutations = 9999)
+# You can also have more advanced models in adonis
+dune.ado2<-adonis2(dune~Management*A1, data = dune.env.original)
 dune.ado2
-# As in the partial CCA, management is non-significant and accounts for 14% of variation (alongside 36% for manure, and 50% residual)
- 
 ```
 
 After a significant ANOSIM, you may want to know which species are
 primarily responsible for the observed difference between clusters.
-SIMPER (Similarity Percentage) will do this for you. The test does not
-come with significance testing. In the output tables, taxa are sorted in
-descending order of contribution to group difference.
+SIMPER (Similarity Percentage) will do this for you. The test gives
+by-species p values for changes in abundance, but does not do
+significance testing for overall difference between groups. In the
+output tables, taxa are sorted in descending order of contribution to
+group difference. Consider those contributions (effect sizes), not just
+the p values - statistically significant does not mean ecologically
+important! Especially if you have a large dataset, you may find some
+small differences that are probably ecologically unimportant
+nevertheless yield a p value under 0.05...
 
 #### [28.3 Compare the different groups and check which species contribute mostly to the difference between pairs of clusters.]{style="color:forestgreen"}
 
@@ -144,21 +124,11 @@ indicative for the four different management types.
 
 #### [28.4 Use the resulting data table to find the two top indicator species for each of the four Management types!]{style="color:forestgreen"}
 
-```{r}
+```{r, warning=FALSE, message=FALSE}
 iva <- indval(dune, dune.env.original$Management) #this time we don't need dummy variables for management
-iva
-
-```
-
-We can take the output and convert it to a dataframe so we summarise the
-most important information in all of this, and easily rearrange the
-columns to show the best indicator for each group.
-
-```{r}
-#we convert the output to a dataframe and do more with it
 iva.df <- as.data.frame(iva$indval)
 #arrange in descending order to find best indicator species, change BF to other management types as needed
-dplyr::arrange(rownames_to_column(iva.df), desc(BF))
+dplyr::arrange(rownames_to_column(iva.df), desc(HF))
 ```
 
 ------------------------------------------------------------------------
@@ -182,7 +152,7 @@ their flowers
 
 #### [29.2 Here our groups are pre-defined (species). Would it be OK to use one of the clustering methods to find groups before running the DFA?]{style="color:forestgreen"}
 
-```{r}
+```{r DFA}
 # Load the data
 data("iris")
 
@@ -394,15 +364,16 @@ qqnorm(residuals(fitfourth)); abline(c(0,1),col="red") # for a normal quantile p
 #not available for Lasso model)
 fitfourth2 = traitglm(spe, env, traits)
 pvalues <- anova.traitglm(fitfourth2,nBoot=10) #overall significant
+
 #We can also explore the effects of individual trait by environment interactions using the 
-#summary function ** Warning this is very very slow, even with limited n** Don't run this 
-#last line of code unless you want to take a long coffee break!
-#We will limit the number of bootstrap reps to 5 (nBoot=5) but 1000 should be used for final analyses
+#summary function ** Warning this is very very slow, even with limited n ** Don't run this 
+#last line of code unless you want to take a rather long coffee break!
+#We will limit the number of bootstrap reps to 5 (nBoot=5) but 1000 should be used for reliable results/final analyses. Given how slow this is with nBoot=5, I guess this would take at least several days...
+
 #summary(fitfourth2, nboot=5)
+
 #Example of output if you don't want to wait for the code to run...
 #UsePasture.N_fix1           0.467     0.115    
-#Manure.BioDivRel            0.782     0.014 *  
-#Manure.Nectar               0.591     0.015 *  
 
 ```
 
@@ -484,6 +455,21 @@ plot(pls.fit2,
      asp = 1,
      line = TRUE)
 
+#IGNORE THIS CODE # included for backup purposes
+#.rs.restartR()
+#library(pls)
+#library(dplyr)
+#library(vegan)
+#data("dune.env")
+#data("dune")
 
+#pls.response <- dplyr::select(dune.env, A1, Moisture)
+#pls.response$Moisture <-  as.numeric(pls.response$Moisture)
+#pls.response <- as.matrix(pls.response)
+#pls.exp <- as.matrix(dune)
+#pls.fit <- plsr(pls.response ~ pls.exp,
+#                na.action = na.omit,
+#                validation = "LOO")
+ 
 
 ```

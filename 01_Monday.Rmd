@@ -79,11 +79,9 @@ Here, we will create a simple data set consisting of 2 columns of measurement ma
 
 #### [Questions:]{style="color:forestgreen"}
 
-#### [2.1 How do the metrics differ?]{style="color:forestgreen"}
+#### [2.1 How do the metrics differ (conceptually, not a detailed mathematical explanation)?]{style="color:forestgreen"}
 
 #### [2.2 Which metric corresponds to a geographic distance?]{style="color:forestgreen"}
-
-#### [2.3 Where would one find the formula for the Mahalanobis distance?]{style="color:forestgreen"}
 
 ```{r message=FALSE, warning=FALSE}
 # create a triangular data set with 2 columns (x and y) and 3 rows
@@ -112,7 +110,7 @@ Compare the plots on the PCA with and without scaling (PCA plot 4) and discuss t
 
 #### [Questions:]{style="color:forestgreen"}
 
-#### [3.1 Is there any way to see that one is on scaled data and one is not?]{style="color:forestgreen"}
+#### [3.1 Is there any way to see that one is on scaled data and one is not just by looking?]{style="color:forestgreen"}
 
 #### [3.2 What is the difference between PCA plot 4 and PCA plot 5? Which one is best to use?]{style="color:forestgreen"}
 

@@ -163,11 +163,11 @@ time.cca
 treat <- EnvTS$Time 
 colvec <-
   c("red2", "blue") #set colours to be applied to different levels of factor "Time"
-plot(time.cca, type = "n", display = c("lc"))#plots the axes
+plot(time.cca, type = "n", display = c("wa"))#plots the axes
 with(time.cca,
      points(
        time.cca,
-       display = c("lc"),
+       display = c("wa"),
        col = colvec[treat],
        #plots the points
        pch = 21,
@@ -178,7 +178,7 @@ with(time.cca,
 
 ```{r}
 #permutation test
-with(EnvTS, anova(time.cca, by="term", perm=500, strata=Plot))
+with(EnvTS, anova(time.cca, by="term", perm=999, strata=Plot))
 ```
 
 ```{r, warning=FALSE, message=FALSE}
@@ -186,7 +186,7 @@ with(EnvTS, anova(time.cca, by="term", perm=500, strata=Plot))
 time2.cca <- cca(SpeTS ~ Time, data=EnvTS)
 time2.cca
 #permutation test
-with(EnvTS, anova(time2.cca, by="term", perm=100))
+with(EnvTS, anova(time2.cca, by="term", perm=999))
 ```
 
 ```{r, warning=FALSE, message=FALSE}
@@ -331,9 +331,9 @@ ca.site.scores <-
 dune.env.bugs <-
   cbind(dune.env, ca.site.scores) # Add the site scores to the dune.env
 dune.bugs.cca <-
-  cca(dune, dune.env.bugs) # Make a CCA on the plant data with CA axis 1 and 2 as additional environmental variables
+  cca(dune~., dune.env.bugs) # Make a CCA on the plant data with CA axis 1 and 2 as additional environmental variables
 dune.bugs.cca
-anova(dune.bugs.cca)
+anova(dune.bugs.cca, by = "terms")
 plot(dune.bugs.cca)
 ```
 
