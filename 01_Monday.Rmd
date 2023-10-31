@@ -114,7 +114,7 @@ Compare the plots on the PCA with and without scaling (PCA plot 4) and discuss t
 
 #### [3.2 What is the difference between PCA plot 4 and PCA plot 5? Which one is best to use?]{style="color:forestgreen"}
 
-#### [3.3 Discuss the difference between the plots in plot PCA plot 6 and 7!]{style="color:forestgreen"}
+#### [3.3 What is the difference between the plots in plot 6? Which one is best to use?]{style="color:forestgreen"}
 
 ```{r, warning=FALSE, message=FALSE}
 data("dune")
@@ -149,7 +149,7 @@ corrplot(
 )
 
 ## PCA plot 2:
-# Then make a PCA, with scaling of the data
+# Then make a PCA, with scaling of (=standardising) the data
 env.pca <-
   rda(dune.env, scale = TRUE) #vegan uses the same function for PCA and RDA, just depends on if it is constrained or #not.
 biplot(env.pca, main = "Plot 2") #plot the results using the default plot scaling which is "species"
@@ -180,34 +180,11 @@ biplot(env.pca, scaling = "species", main = "Plot 5, scaling on species")
 par(mfrow = c(1, 1))
 
 ## PCA plot 6:
-# Then, a plot from the PCA on un-scaled data,
-# but with plot scaling to mimic a PCA on scaled data (correlation = TRUE)
-# Second plot is the PCA on scaled data
-# Both plots with plot scaling focused on species
-par(mfrow = c(1, 2))
-biplot(env.pca2,
-       scaling = "species",
-       correlation = TRUE,
-       main = "PCA plot 6 on un-scaled data,\nplot scaling on correlations")
-biplot(env.pca,
-       scaling = "species",
-       correlation = FALSE,
-       main = "PCA plot 6, on scaled data")
-par(mfrow = c(1, 1))
-
-## PCA plot 7:
-# Finally a plot from the PCA on un-scaled data,
-# but with plot scaling to mimic a PCA on scaled data
-# Second plot is the PCA on scaled data
-# Both plots with plot scaling focused on sites
-par(mfrow = c(1, 2))
-biplot(env.pca2,
-       scaling = "sites",
-       correlation = TRUE,
-       main = "PCA plot 7, on un-scaled data,\nplot scaling on correlations")
-biplot(env.pca, scaling = "sites", main = "PCAplot 7, on scaled data")
-par(mfrow = c(1, 1))
-
+# Same as plot 5, but without species for better visual inspection of the sites
+par(mfrow = c(1,2))
+biplot(env.pca, scaling = "sites", display = "sites", main = "Plot scaling on sites")
+biplot(env.pca, scaling = "species", display = "sites", main = "Plot scaling on species \n not correct projection of sites")
+par(mfrow = c(1,1))
 ```
 
 ------------------------------------------------------------------------
