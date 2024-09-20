@@ -7,9 +7,10 @@ knitr::opts_chunk$set(echo = TRUE)
 library(vegan)
 library(tidyverse)
 library(corrplot)
+library(BiodiversityR) # JAMES: New package added /Ulf
 ```
 
-### [Question 1. Introduction to R Notebooks and Markdown.]{style="color:cornflowerblue"}
+### [Exercise 1. Introduction to R Notebooks and Markdown.]{style="color:cornflowerblue"}
 
 This exercise is only to get used to working with R Notebook/R Markdown. The data in this first exercise are not multivariate and the statistical analysis is a simple linear regression. All following exercises will start with this kind of introduction.
 
@@ -17,7 +18,7 @@ This exercise is only to get used to working with R Notebook/R Markdown. The dat
 
 To pass the course, you should give your answers to these questions to one of the teachers during the computer labs.
 
-#### [If you find it useful, you can write your answers to the questions and any other comments or notes using the Answers.Rmd file as a template, but you are free to create a new file yourself, modify your local copy of the questions or do whatever works for you!.]{style="color:Red"}
+#### [If you find it useful, you can write your answers to the questions and any other comments or notes using the Answers.Rmd file as a template, but you are free to create a new file yourself, modify your local copy of the exercises or do whatever works for you!.]{style="color:Red"}
 
 ------------------------------------------------------------------------
 
@@ -48,7 +49,7 @@ df <- read.table(header = TRUE, sep = ",",
 
 So I could write my notes here instead, which is probably easier to read for anything more than a few words of explanation.
 
-Now we can do a simple linear regression. The results are stored in the object "reg".
+Now we can do a simple linear regression, using variables x and y in the dataset called df. The results are stored in the object "reg".
 
 ```{r}
 reg <- lm(y~x, df) 
@@ -69,13 +70,15 @@ summary(reg)
 
 ### [The R packages and data we will be using.]{style="color:cornflowerblue"}
 
-The "dune" dataset we will use is included in the vegan package (an extensive collection of tools for multivariate analysis), but we will also be using some slightly modified and extended versions of it, which we will load as needed. We will also load some other packages to extend the range of analyses available to us.
+The "dune" dataset we will use is included in the vegan package (an extensive collection of tools for multivariate analysis). The dune data consists of one file with species abundance in sampling plots, and one file with environmental (also called explanantory) data for the same monitoring plots.
+
+We will also be using some slightly modified and extended versions of the dune data, which we will load as needed. We will also load some other packages to extend the range of analyses available to us.
 
 ------------------------------------------------------------------------
 
-### [Question 2: Simple exercise for illustrating effects of different distance metrics.]{style="color:cornflowerblue"}
+### [Exercise 2: Simple exercise for illustrating effects of different distance metrics.]{style="color:cornflowerblue"}
 
-Here, we will create a simple data set consisting of 2 columns of measurement made at 3 sites we will then calculate a series of distance metrics using the vegdist() function.
+Here, we will create a simple data set consisting of 2 columns of measurement made at 3 sites. We will then calculate a series of distance metrics using the vegdist() function.
 
 #### [Questions:]{style="color:forestgreen"}
 
@@ -104,21 +107,21 @@ help(vegdist)
 
 ------------------------------------------------------------------------
 
-### [Question 3: In this exercise we will use Principal Components Analysis on the dune meadow explanatory data. We will also explore the effects of different kinds of scaling on the ordination plot. NOTE that the scaling issues applies to all ordination techniques!]{style="color:cornflowerblue"}
+### [Exercise 3: In this exercise we will use Principal Components Analysis on the dune meadow explanatory data. We will also explore the effects of different kinds of scaling on the ordination plot. NOTE that the scaling issues applies to all ordination techniques!]{style="color:cornflowerblue"}
 
 Compare the plots on the PCA with and without scaling (PCA plot 4) and discuss the differences.
 
 #### [Questions:]{style="color:forestgreen"}
 
-#### [3.1 Is there any way to see that one is on scaled data and one is not just by looking?]{style="color:forestgreen"}
+#### [3.1 Is there any way to see if a PCA plot is based on scaled or unscaled data, just by looking at the plot (i.e. compare plot 2 and 3)?]{style="color:forestgreen"}
 
-#### [3.2 What is the difference between PCA plot 4 and PCA plot 5? Which one is best to use?]{style="color:forestgreen"}
+#### [3.2 What is the difference between the two plots in "PCA plot 4" ? Which one is best to use?]{style="color:forestgreen"}
 
-#### [3.3 What is the difference between the plots in plot 6? Which one is best to use?]{style="color:forestgreen"}
+#### [3.3 What is the difference between the plots in plot 5 (or 6)? Which one is best to use?]{style="color:forestgreen"}
 
 ```{r, warning=FALSE, message=FALSE}
-data("dune")
-data("dune.env")
+data("dune") # the dune species data
+data("dune.env") # the dune explanatory data
 dummy_management <-
   as.data.frame(model.matrix(~ Management - 1, data = dune.env))
 #add these to the dataset
@@ -189,11 +192,45 @@ par(mfrow = c(1,1))
 
 ------------------------------------------------------------------------
 
-### [Question 4: Do a CA-ordination on the Dune Meadow species dataset.What are the results telling you?]{style="color:cornflowerblue"}
+### [Exercise 4: Significance test for the axes in the PCA in Question 3]{style="color:cornflowerblue"}
+
+Here we will learn that only looking at a ordination plot or the basic numerical output may not be sufficient to tell if the ordination axes are interpretable in terms of expressing a latent gradient.
+
+#### [Questions:]{style="color:forestgreen"}
+
+#### [4.1 Look at the loadings, i.e. the effects by the different variables for axis 1 and axis 2. Which variables are most important?]{style="color:forestgreen"}
+
+#### [4.2 Continue with an approximate significance test of the variables. Which variables are important for the ordination?]{style="color:forestgreen"}
+
+#### [4.3 Finally, have a look at the indicative significance of each PCA axis, i.e. compare explained variation in the data, with explained variation in a null model (broken-stick). What does the result tell you? Is the PCA on the Dune Meadow explanatory data reliable?]{style="color:forestgreen"}
+
+```{r, warning=FALSE, message=FALSE}
+# Start to look at the effects by individual variables
+loadings <- scores(env.pca, display = 'species', scaling = 0)
+sort(abs(loadings[,1]), decreasing = TRUE) # Loadings axel 1
+sort(abs(loadings[,2]), decreasing = TRUE) # Loadings axel 2
+
+# Then look at the significnace of the variables
+env.plot <- ordiplot(env.pca, type = "none", scaling=1)
+points(env.plot, "sites", pch=19, col="red")
+points(env.plot, "species", pch=4, col="red")
+text(env.plot, "species", col="blue", cex=0.9)
+ordiequilibriumcircle(env.pca, env.plot)
+
+# Finally, test if the ordination axes are worth interperting
+sig <- PCAsignificance(env.pca, axes = 7)
+barplot (sig[c("percentage of variance", "broken-stick percentage"), ], beside = T,
+         xlab = "PCA axis", ylab = "Explained variation [%]", col = c('grey', 'black'), legend = TRUE)
+  
+```
+
+------------------------------------------------------------------------
+
+### [Exercise 5: Do a CA-ordination on the Dune Meadow species dataset. What are the results telling you?]{style="color:cornflowerblue"}
 
 #### [Question:]{style="color:forestgreen"}
 
-#### [4.1 Give a conceptual description on why objects/samples and descriptors/species to the left differ from objects and descriptors to the right, and those at the bottom from those at the top! (Plant ecologists may give a more detailed description, using their knowledge about the species in the dataset).]{style="color:forestgreen"}
+#### [5.1 Give a conceptual description on why objects/samples and descriptors/species to the left differ from objects and descriptors to the right, and those at the bottom from those at the top! (Plant ecologists may give a more detailed description, using their knowledge about the species in the dataset).]{style="color:forestgreen"}
 
 ```{r, warning=FALSE, message=FALSE}
 dune.ca <- cca(dune)
@@ -204,21 +241,18 @@ summary(eigenvals(dune.ca)) #proportion variance explained
 
 ------------------------------------------------------------------------
 
-### [Question 5: Repeat exercise 4, but with DCA ordination instead.]{style="color:cornflowerblue"}
+### [Exercise 6: Repeat exercise 5, but with DCA ordination instead.]{style="color:cornflowerblue"}
 
 #### [Question:]{style="color:forestgreen"}
 
-#### [5.1 Look at the eigenvalues, the length of gradient, the total variation and the ordination diagram. Explain the differences between results from CA and DCA.]{style="color:forestgreen"}
+#### [6.1 Look at the eigenvalues, the length of gradient, the total variation and the ordination diagram. Explain the differences between results from CA and DCA.]{style="color:forestgreen"}
+
+Note that we do not get "variation explained" in the R implementation of DCA (and some other functions). The developer of the vegan package explains: "*The total amount of variation is undefined in detrended correspondence analysis and therefore proportions from total are unknown and undefined. DCA is not a method for decomposition of variation, and therefore these proportions would not make sense either.*"
 
 ```{r, warning=FALSE, message=FALSE}
+#Detrended correspondence analysis (function decorana).
 dune.dca <- decorana(dune)
 dune.dca 
-#Detrended correspondence analysis (function decorana).
-#Note that we do not get "variation explained" in the R implementation of DCA (and some other functions).
-#Here, the developer explains why, "The total amount of variation is undefined in detrended 
-#correspondence analysis and therefore proportions from total are unknown and undefined. 
-#DCA is not a method for decomposition of variation, and therefore
-#these proportions would not make sense either.
 plot(dune.dca)
 ```
 

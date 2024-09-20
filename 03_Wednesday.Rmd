@@ -8,7 +8,7 @@ library(vegan)
 library(tidyverse)
 ```
 
-### [Question 11: Do an RDA and a CCA on the Dune Meadow data set, using the full set of environmental variables.]{style="color:cornflowerblue"}
+### [Exercise 11: Do an RDA and a CCA on the Dune Meadow data set, using the full set of environmental variables.]{style="color:cornflowerblue"}
 
 #### [Questions:]{style="color:forestgreen"}
 
@@ -16,7 +16,11 @@ library(tidyverse)
 
 #### [11.2 When only looking at the results, which method explains the variation best?]{style="color:forestgreen"}
 
-#### [11.3 Taking the nature of the data into account, which method should be used?]{style="color:forestgreen"}
+#### [11.3 Taking the nature of the data into account, which method (RDA or CCA) should be used? ]{style="color:forestgreen"}
+
+#### [11.4 What is the difference between sequential and marginal significance tests? ]{style="color:forestgreen"}
+
+#### [11.5 How can you determine in which order your terms should be, in a sequential test?]{style="color:forestgreen"}
 
 ```{r ex11, echo=FALSE, message=FALSE, warning=FALSE, inclue=TRUE}
 data("dune")
@@ -42,11 +46,32 @@ dune.env <-
 dune.rda <- rda(dune ~ . , dune.env)
 summary(dune.rda)
 anova(dune.rda)
+# Test the significance of the axes
+anova(dune.rda, by = "axis")
+
+# Testing terms sequentially 
+anova(dune.rda, by = "term")
+
+# Testing terms marginal effects 
+anova(dune.rda, by = "margin")
+
 
 # CCA
 dune.cca <- cca(dune ~ . , dune.env)
 summary(dune.cca)
 anova(dune.cca)
+# Test the significance of the axes
+anova(dune.cca, by = "axis")
+
+# Testing terms sequentially 
+anova(dune.cca, by = "term")
+# Compare with a cca with the terms in another order
+dune.cca2 <- cca(dune ~ SF+A1+Moisture+HF+BF+Use+Manure+NM , dune.env)
+anova(dune.cca2, by = "term")
+
+# Testing terms marginal effects 
+anova(dune.cca, by = "margin")
+anova(dune.cca2, by = "margin")
 
 #plots
 par(mfrow = c(1, 2))
@@ -122,6 +147,9 @@ dune.env2$Moisture<-as.numeric(dune.env$Moisture) #Set Moisture to numeric for t
 cca.dune<-cca(dune~Management + Moisture, dune.env2)
 # Look at the result
 anova(cca.dune)
+# Test the significance of the axes
+anova(cca.dune, by = "axis")
+
 summary(eigenvals(cca.dune))
 
 # Make two plots, one with weighted average (WA) and one with Linear Combination (LC) to calculate the site scores. 
