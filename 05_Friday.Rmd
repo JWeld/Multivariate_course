@@ -8,16 +8,39 @@ editor_options:
 ```{r setup, include=FALSE, message=FALSE, warning=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(vegan)
+library(MASS)
 library(tidyverse)
 library(labdsv)
 library(caret)
-library(MASS)
 library(gllvm) #Generalised linear latent variable models
 library(readxl)
 library(mvabund)
 library(lattice)
 library(pls)
+```
 
+Load the data we are using
+
+```{r}
+data("dune")
+data("dune.env")
+dummy_management <-
+  as.data.frame(model.matrix(~ Management - 1, data = dune.env))
+#add these to the dataset
+dune.env.original <-
+  dune.env #we keep a copy of the original version
+dune.env <-
+  dune.env %>% select(A1, Moisture, Manure, Use) %>% cbind(., dummy_management)
+dune.env$Moisture <-
+  as.numeric(as.character(dune.env$Moisture)) #make numeric
+dune.env$Manure <- as.numeric(as.character(dune.env$Manure))
+dune.env$Use <- as.numeric(dune.env$Use)
+#make column names shorter
+dune.env <-
+  dune.env %>% rename(BF = ManagementBF,
+                      HF = ManagementHF,
+                      NM = ManagementNM,
+                      SF = ManagementSF)
 ```
 
 ### [Question 28: Differences between groups. ANOSIM, adonis and SIMPER]{style="color:cornflowerblue"}
