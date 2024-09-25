@@ -7,7 +7,7 @@ knitr::opts_chunk$set(echo = TRUE)
 library(vegan)
 library(tidyverse)
 library(corrplot)
-library(BiodiversityR) # JAMES: New package added /Ulf
+library(BiodiversityR)
 ```
 
 ### [Exercise 1. Introduction to R Notebooks and Markdown.]{style="color:cornflowerblue"}
@@ -255,5 +255,7 @@ dune.dca <- decorana(dune)
 dune.dca 
 plot(dune.dca)
 ```
+
+
 
 ------------------------------------------------------------------------

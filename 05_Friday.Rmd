@@ -5,6 +5,18 @@ editor_options:
     wrap: 72
 ---
 
+Sometimes loaded packages in R can conflict with another package. Among other issues, this can mean that the same function name (e.g. select()) is used in different packages, so the your code may give a different output (or fail) depending on the packages you have loaded at the time! It is good practice to write code that has a narrow purpose and loads the packages needed for that purpose, rather than one huge script running many different analyses. However, you may sometimes need to unload a package or restart R to get the expected results. You can restart R (note: not the same as restarting RStudio!) from the RStudio Session menu or using the following code. The code is commented out because we don't actually need to do this now, but it is good to know!
+
+```{r}
+#VIM package loaded on Tuesday conflicts with SIMPER function in Vegan which we will use today, if you wanted to use SIMPER after VIM you can detach VIM first
+#detach("package:VIM", unload=TRUE, force = TRUE)
+
+#Alternatively you can restart R and load only the packages you need
+#.rs.restartR()
+```
+
+Now load the packages we need today
+
 ```{r setup, include=FALSE, message=FALSE, warning=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(vegan)
@@ -43,7 +55,7 @@ dune.env <-
                       SF = ManagementSF)
 ```
 
-### [Question 28: Differences between groups. ANOSIM, adonis and SIMPER]{style="color:cornflowerblue"}
+### [Question 30: Differences between groups. ANOSIM, adonis and SIMPER]{style="color:cornflowerblue"}
 
 ANOSIM (Analysis Of Similarities) is a non-parametric test of
 significant difference between two or more groups, based on any distance
@@ -62,9 +74,9 @@ with pseudo-F ratios.
 
 #### [Questions:]{style="color:forestgreen"}
 
-#### [28.1 What do the results from anosim and adonis tell you?]{style="color:forestgreen"}
+#### [30.1 What do the results from anosim and adonis tell you?]{style="color:forestgreen"}
 
-#### [28.2 Give one other example of predefined groups that could be used as the grouping variable(s)!]{style="color:forestgreen"}
+#### [30.2 Give one other example of predefined groups that could be used as the grouping variable(s)!]{style="color:forestgreen"}
 
 ```{r}
 # Start with a CA with Management as environmental factor and hulls around the different management types
@@ -120,7 +132,7 @@ important! Especially if you have a large dataset, you may find some
 small differences that are probably ecologically unimportant
 nevertheless yield a p value under 0.05...
 
-#### [28.3 Compare the different groups and check which species contribute mostly to the difference between pairs of clusters.]{style="color:forestgreen"}
+#### [30.3 Compare the different groups and check which species contribute mostly to the difference between pairs of clusters.]{style="color:forestgreen"}
 
 ```{r message=FALSE, warning=FALSE}
 sim <- simper(dune, dune.env.original$Management) #try management groupings
@@ -145,7 +157,7 @@ clusters that we have identified?
 In this exercise we will investigate if any particular species are
 indicative for the four different management types.
 
-#### [28.4 Use the resulting data table to find the two top indicator species for each of the four Management types!]{style="color:forestgreen"}
+#### [30.4 Use the resulting data table to find the two top indicator species for each of the four Management types!]{style="color:forestgreen"}
 
 ```{r, warning=FALSE, message=FALSE}
 iva <- indval(dune, dune.env.original$Management) #this time we don't need dummy variables for management
@@ -158,7 +170,7 @@ dplyr::arrange(rownames_to_column(iva.df), desc(HF))
 
 ------------------------------------------------------------------------
 
-### [Question 29: DFA]{style="color:cornflowerblue"}
+### [Question 31: DFA]{style="color:cornflowerblue"}
 
 The algorithm starts by finding directions that maximize the separation
 between classes, then use these directions to predict the class of
@@ -171,9 +183,9 @@ their flowers
 
 #### [Questions:]{style="color:forestgreen"}
 
-#### [29.1 How well does the algorithm distinguish between the species?]{style="color:forestgreen"}
+#### [31.1 How well does the algorithm distinguish between the species?]{style="color:forestgreen"}
 
-#### [29.2 Here our groups are pre-defined (species). Would it be OK to use one of the clustering methods to find groups before running the DFA?]{style="color:forestgreen"}
+#### [31.2 Here our groups are pre-defined (species). Would it be OK to use one of the clustering methods to find groups before running the DFA?]{style="color:forestgreen"}
 
 ```{r DFA}
 # Load the data
@@ -264,7 +276,7 @@ confusionMatrix(test.data$Species, predictions$class)
 
 ------------------------------------------------------------------------
 
-### [Question 30: Model based ordination]{style="color:cornflowerblue"}
+### [Question 32: Model based ordination]{style="color:cornflowerblue"}
 
 Dissimilarity-based ordination methods begin by calculating a
 dissimilarity or distance matrix between sites (or more generally,
@@ -281,7 +293,7 @@ covariates.
 
 #### [Question:]{style="color:forestgreen"}
 
-#### [30.1 How do the ordinations produced compare to a distance based ordination (for example an NMDS) of the same species data?]{style="color:forestgreen"}
+#### [32.1 How do the ordinations produced compare to a distance based ordination (for example an NMDS) of the same species data?]{style="color:forestgreen"}
 
 ```{r}
 #load species abundance data
@@ -338,7 +350,7 @@ on traits and perform a fourth corner analysis.
 
 ------------------------------------------------------------------------
 
-### [Question 31: Fourth Corner]{style="color:cornflowerblue"}
+### [Question 33: Fourth Corner]{style="color:cornflowerblue"}
 
 Here we will use another model based method (the "mvabund" package for
 analysing multivariate abundance data) to perform a fourth corner
@@ -348,7 +360,7 @@ traits and environmental variables.
 
 #### [Question:]{style="color:forestgreen"}
 
-#### [31.1 Do the correlations in the plot make sense ecologically?]{style="color:forestgreen"}
+#### [33.1 Do the correlations in the plot make sense ecologically?]{style="color:forestgreen"}
 
 ```{r}
 # Read and treat data
@@ -363,7 +375,7 @@ names(traits)
 traits<-traits[,-c(1:6,22, 27,29,30:32)] # Remove trait not feasible for this analysis
 
 #Fourth corner
-#Given that there are many traits and even environmental factors that are not strong predictors #of abundance, we can reduce the number of predictor terms in our models.LASSO is an #optimization algorithm (Least Absolute Shrinkage and Selection Operator) that is used in this #case.
+#Given that there are many traits and even environmental factors that are not strong predictors of abundance, we can reduce the number of #predictor terms in our models.LASSO is an optimization algorithm (Least Absolute Shrinkage and Selection Operator) that is used in this #case.
 
 fitfourth = traitglm(spe, env, traits, method = "glm1path")
 fitfourth$fourth #examine fourth corner terms
@@ -391,7 +403,7 @@ pvalues <- anova.traitglm(fitfourth2,nBoot=10) #overall significant
 #We can also explore the effects of individual trait by environment interactions using the 
 #summary function ** Warning this is very very slow, even with limited n ** Don't run this 
 #last line of code unless you want to take a rather long coffee break!
-#We will limit the number of bootstrap reps to 5 (nBoot=5) but 1000 should be used for reliable results/final analyses. Given how slow this is with nBoot=5, I guess this would take at least several days...
+#We will limit the number of bootstrap reps to 5 (nBoot=5) but 1000 should be used for reliable results/final analyses. Given how slow this is with nBoot=5, I guess this would take many hours...
 
 #summary(fitfourth2, nboot=5)
 
@@ -402,7 +414,7 @@ pvalues <- anova.traitglm(fitfourth2,nBoot=10) #overall significant
 
 ------------------------------------------------------------------------
 
-### [Question 32: PLS]{style="color:cornflowerblue"}
+### [Question 34: PLS]{style="color:cornflowerblue"}
 
 PLS regression, like PCA, seeks to find components which maximize the
 variability of predictors but differs from PCA as PLS requires the
@@ -414,11 +426,11 @@ variable.
 
 #### [Questions:]{style="color:forestgreen"}
 
-#### [32.1 Which explanatory variables are most important to explain the response variables (A1 and Moisture)?]{style="color:forestgreen"}
+#### [34.1 Which explanatory variables are most important to explain the response variables (A1 and Moisture)?]{style="color:forestgreen"}
 
-#### [32.2 Are there any obvious outliers in the dataset?]{style="color:forestgreen"}
+#### [34.2 Are there any obvious outliers in the dataset?]{style="color:forestgreen"}
 
-#### [32.3 Does the data seem to be in need of a transformation?]{style="color:forestgreen"}
+#### [34.3 Does the data seem to be in need of a transformation?]{style="color:forestgreen"}
 
 ```{r PLS, echo=TRUE, message=FALSE, warning=FALSE}
 

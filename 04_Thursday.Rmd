@@ -41,7 +41,7 @@ dune.env <-
                       SF = ManagementSF)
 ```
 
-### [Question 20: Interpreting ordination results using species traits]{style="color:cornflowerblue"}
+### [Question 22: Interpreting ordination results using species traits]{style="color:cornflowerblue"}
 
 Experienced plant ecologists may already have looked at the species in
 the Dune Meadow ordination graphs and concluded that species with
@@ -53,9 +53,9 @@ indicator values) to interpret the results of the ordinations.
 
 #### [Questions:]{style="color:forestgreen"}
 
-#### [20.1 Which Ellenberg values are most important for the distribution of the species?]{style="color:forestgreen"}
+#### [22.1 Which Ellenberg values are most important for the distribution of the species?]{style="color:forestgreen"}
 
-#### [20.2 What do the different axes represent in terms of environmental gradients?]{style="color:forestgreen"}
+#### [22.2 What do the different axes represent in terms of environmental gradients?]{style="color:forestgreen"}
 
 ```{r message=FALSE, warning=FALSE}
 #load Ellenberg data
@@ -93,7 +93,7 @@ step2$anova # which three are most significant in the final selection?
 
 ------------------------------------------------------------------------
 
-### [Question 21: Decomposition of variance]{style="color:cornflowerblue"}
+### [Question 23: Decomposition of variance]{style="color:cornflowerblue"}
 
 In usual analysis of variance experiments, the variance is decomposed
 into components. The same can be done in multivariate analyses. In this
@@ -115,7 +115,7 @@ eigenvalues.
 
 #### [Questions:]{style="color:forestgreen"}
 
-#### [21.1 Perform the analyses and interpret the results - how much of the total variation (% of All) is explained by: - uniquely by Management (effect of Soil removed), - uniquely by Soil (effect of Management removed), - jointly by Soil and Management (the interaction) - Not by Soil or Management?]{style="color:forestgreen"}
+#### [23.1 Perform the analyses and interpret the results - how much of the total variation (% of All) is explained by: - uniquely by Management (effect of Soil removed), - uniquely by Soil (effect of Management removed), - jointly by Soil and Management (the interaction) - Not by Soil or Management?]{style="color:forestgreen"}
 
 ```{r, warning=FALSE, message=FALSE}
 
@@ -135,7 +135,7 @@ plot (
 
 ------------------------------------------------------------------------
 
-### [Question 22: Analysing a time series with vegetation data]{style="color:cornflowerblue"}
+### [Question 24: Analysing a time series with vegetation data]{style="color:cornflowerblue"}
 
 Quite often vegetation ecologists have data from repeated inventories in
 permanent plots. The overall question to answer is if there has been a
@@ -149,9 +149,9 @@ between the ten plots.
 
 #### [Questions:]{style="color:forestgreen"}
 
-#### [22.1 Is there a significant change in species composition over time?]{style="color:forestgreen"}
+#### [24.1 Is there a significant change in species composition over time?]{style="color:forestgreen"}
 
-#### [22.2 What is the effect of defining Plots as co-factors?]{style="color:forestgreen"}
+#### [24.2 What is the effect of defining Plots as co-factors?]{style="color:forestgreen"}
 
 ```{r, warning=FALSE, message=FALSE}
 #This partials out the effect of Plot before analysing the effects of Time
@@ -211,7 +211,7 @@ ordihull(
 
 ------------------------------------------------------------------------
 
-### [Question 23: A multivariate Before-After-Control- Impact (BACI) study]{style="color:cornflowerblue"}
+### [Question 25: A multivariate Before-After-Control- Impact (BACI) study]{style="color:cornflowerblue"}
 
 In this exercise we will continue to use the rearranged Dune Meadow data
 from exercise 22. A difference is that the plots are now divided into
@@ -227,9 +227,9 @@ from the change in the control plots.
 
 #### [Questions:]{style="color:forestgreen"}
 
-#### [23.1 Did the treatment have an effect?]{style="color:forestgreen"}
+#### [25.1 Did the treatment have an effect?]{style="color:forestgreen"}
 
-#### [23.2 What was permuted?]{style="color:forestgreen"}
+#### [25.2 What was permuted?]{style="color:forestgreen"}
 
 ```{r, warning=FALSE, message=FALSE}
 baci.cca <- cca(SpeTS ~ Treat + Condition(Plot + Time), data=EnvTS)
@@ -258,7 +258,7 @@ ordihull(
 
 ------------------------------------------------------------------------
 
-### [Question 24: Comparing ordinations]{style="color:cornflowerblue"}
+### [Question 26: Comparing ordinations]{style="color:cornflowerblue"}
 
 These are two ways of comparing ordinations or the structure in related
 multivariate datasets. They are used to compare how objects differ when
@@ -269,9 +269,9 @@ new data is insect abundance at the different plots.
 
 #### [Questions:]{style="color:forestgreen"}
 
-#### [24.1 How similar is the arrangement of sites in ordination space based on plant and insect data?]{style="color:forestgreen"}
+#### [26.1 How similar is the arrangement of sites in ordination space based on plant and insect data?]{style="color:forestgreen"}
 
-#### [24.2 Do the three analyses (Procrustes, Co-Correspondence and Mantel) indicate similar ordinations of sites based on plant vs. insect data?]{style="color:forestgreen"}
+#### [26.2 Do the three analyses (Procrustes, Co-Correspondence and Mantel) indicate similar ordinations of sites based on plant vs. insect data?]{style="color:forestgreen"}
 
 ```{r ex24, inclue=TRUE, warning=FALSE, message=FALSE}
 #
@@ -339,7 +339,7 @@ plot(dune.bugs.cca)
 
 ------------------------------------------------------------------------
 
-### [Question 25 : Classification 1]{style="color:cornflowerblue"}
+### [Question 27 : Classification 1]{style="color:cornflowerblue"}
 
 Start by testing the non-hierarchical K-means clustering, using Multivar
 / K-Means. Note that it is recommended that K-means need at least 100
@@ -352,13 +352,13 @@ hierarchical clustering technique. Also try Ward's method
 
 #### [Questions:]{style="color:forestgreen"}
 
-#### [25.1 How many clusters seem to exist in the Dune data set?]{style="color:forestgreen"}
+#### [27.1 How many clusters seem to exist in the Dune data set?]{style="color:forestgreen"}
 
-#### [25.2 Is a 3- or 4-cluster solution a better match to the management type in the dune.env dataset?]{style="color:forestgreen"}
+#### [27.2 Is a 3- or 4-cluster solution a better match to the management type in the dune.env dataset?]{style="color:forestgreen"}
 
-#### [25.3 Do the two approaches to hierarchical clustering reveal similar patterns in the Dune data set?]{style="color:forestgreen"}
+#### [27.3 Do the two approaches to hierarchical clustering reveal similar patterns in the Dune data set?]{style="color:forestgreen"}
 
-#### [25.4 Interpret the Hopkins statistic for the Dune data set.]{style="color:forestgreen"}
+#### [27.4 Interpret the Hopkins statistic for the Dune data set.]{style="color:forestgreen"}
 
 ```{r}
 
@@ -448,7 +448,7 @@ hopkins(dune, n = nrow(dune)-1)
 
 ------------------------------------------------------------------------
 
-### [Question 26: Classification 2: Partition and Regression Trees]{style="color:cornflowerblue"}
+### [Question 28: Classification 2: Partition and Regression Trees]{style="color:cornflowerblue"}
 
 Most of the code is taken from
 <https://jonlefcheck.net/2015/02/06/a-practical-guide-to-machine-learning-in-ecology/>
@@ -458,11 +458,11 @@ discrimination.<https://en.wikipedia.org/wiki/Iris_flower_data_set>
 
 #### [Questions:]{style="color:forestgreen"}
 
-#### [26.1 Based on a visual analysis, which dimensions provide the best separation between iris species?]{style="color:forestgreen"}
+#### [28.1 Based on a visual analysis, which dimensions provide the best separation between iris species?]{style="color:forestgreen"}
 
-#### [26.2 Are your insights from the visual analysis confirmed by the partition tree analysis?]{style="color:forestgreen"}
+#### [28.2 Are your insights from the visual analysis confirmed by the partition tree analysis?]{style="color:forestgreen"}
 
-#### [26.3 Does the partition tree provide a perfect species identification or are there misclassifications?]{style="color:forestgreen"}
+#### [28.3 Does the partition tree provide a perfect species identification or are there misclassifications?]{style="color:forestgreen"}
 
 ```{r}
 # Before starting the analysis, we will generate pairwise scatterplots of the data
@@ -504,7 +504,7 @@ abline(h = 1.75)
 
 ------------------------------------------------------------------------
 
-### [Question 27: Principal Response Curves]{style="color:cornflowerblue"}
+### [Question 29: Principal Response Curves]{style="color:cornflowerblue"}
 
 In the following exercise, we will attempt to identify temporal
 structure in a data set in two ways. First, we will perform an RDA
@@ -513,9 +513,9 @@ Principal Response Curves (PRC).
 
 #### [Questions:]{style="color:forestgreen"}
 
-#### [27.1 Was there an effect of dose over time on the invertebrate community?]{style="color:forestgreen"}
+#### [29.1 Was there an effect of dose over time on the invertebrate community?]{style="color:forestgreen"}
 
-#### [27.2 Which species were most affected, i.e changed most under the highest dose compared to the control ?]{style="color:forestgreen"}
+#### [29.2 Which species were most affected, i.e changed most under the highest dose compared to the control ?]{style="color:forestgreen"}
 
 ```{r}
 # We will use the pyrifos data set, which we have not previously seen.

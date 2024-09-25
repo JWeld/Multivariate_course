@@ -36,11 +36,11 @@ dune.env <-
                       SF = ManagementSF)
 ```
 
-### [Question 6: Add one new species with cover degree 9 at the site with the lowest number of species. Do a new DCA-ordination.]{style="color:cornflowerblue"}
+### [Question 7: Add one new species with cover degree 9 at the site with the lowest number of species. Do a new DCA-ordination.]{style="color:cornflowerblue"}
 
 #### [Question:]{style="color:forestgreen"}
 
-#### [6.1: What happens with the eigenvalues and ordination diagram?]{style="color:forestgreen"}
+#### [7.1: What happens with the eigenvalues and ordination diagram?]{style="color:forestgreen"}
 
 ```{r ex6, inclue=TRUE, warning=FALSE, message=FALSE}
 # calculate the number of species present in each plot
@@ -64,15 +64,15 @@ You may be surprised that you haven't got any total inertia values when printing
 
 ------------------------------------------------------------------------
 
-### [Question 7: Effects from increased variation.]{style="color:cornflowerblue"}
+### [Question 8: Effects from increased variation.]{style="color:cornflowerblue"}
 
 Add one new sample to the data, then add a cover of 9 for the existing species Chenopodium album "Chealbu" in the new sample. Make a new DCA-ordination. Next, remove the Chealbu = 9, and add instead a cover of 5 for the exisiting species Juncbufo and make a new DCA.
 
 #### [Questions:]{style="color:forestgreen"}
 
-#### [7.1 What happens with the eigenvalues and ordination after adding Chealbu and after adding Juncbufo?]{style="color:forestgreen"}
+#### [8.1 What happens with the eigenvalues and ordination after adding Chealbu and after adding Juncbufo?]{style="color:forestgreen"}
 
-#### [7.2 Why did we choose to add these two species in the new sample?]{style="color:forestgreen"}
+#### [8.2 Why did we choose to add these two species in the new sample?]{style="color:forestgreen"}
 
 ```{r ex7, inclue=TRUE, warning=FALSE, message=FALSE}
 # figure out the column number for Chenopodium album (abbreviated "Chenalbu")
@@ -99,7 +99,7 @@ ordiplot(DCANewSampleJunc, type = "text", main = "DCA with new sample of Juncbuf
 
 ------------------------------------------------------------------------
 
-### [Question 8: Principal Coordinates Analysis (PCoA)]{style="color:cornflowerblue"}
+### [Question 9: Principal Coordinates Analysis (PCoA)]{style="color:cornflowerblue"}
 
 Principal Coordinates Analysis (PCoA), also known as Multidimensional Scaling (MDS), is a generalization of the ordination techniques we have already seen as it can be estimated with any distance matrix. In contrast, PCA is restricted to Euclidean distances while CA preserves Chi-Square distances. Here, we will explore PCoA on four different distance matrices: (i) Bray-Curtis (ii) Jaccard (iii) Euclidean (iv) Mahalanobis
 
@@ -107,13 +107,13 @@ The R base statistics library offers the routine cmdscale() for performing MDS. 
 
 #### [Questions:]{style="color:forestgreen"}
 
-#### [8.1 How similar are the ordination plots based on the four distance matrices?(remember question 2!)]{style="color:forestgreen"}
+#### [9.1 How similar are the ordination plots based on the four distance matrices?(remember question 2!)]{style="color:forestgreen"}
 
-#### [8.2 Why are some plots more similar than others?]{style="color:forestgreen"}
+#### [9.2 Why are some plots more similar than others?]{style="color:forestgreen"}
 
-#### [8.3 Which PCoA plot is most similar to the output from a PCA?]{style="color:forestgreen"}
+#### [9.3 Which PCoA plot is most similar to the output from a PCA?]{style="color:forestgreen"}
 
-#### [8.4 Which PCoA plot is most similar to the output from a CA?]{style="color:forestgreen"}
+#### [9.4 Which PCoA plot is most similar to the output from a CA?]{style="color:forestgreen"}
 
 ```{r}
 # generate the four distance matrices
@@ -167,13 +167,13 @@ text(
 
 ------------------------------------------------------------------------
 
-### [Question 9: Non Metric Multidimensional Scaling]{style="color:cornflowerblue"}
+### [Question 10: Non Metric Multidimensional Scaling]{style="color:cornflowerblue"}
 
 NMDS does not use the absolute abundances of species in communities, but rather their *rank orders*. The use of ranks omits some of the issues associated with using absolute distance (e.g., sensitivity to transformation). At the conclusion of this exercise, you should be able to: State which metrics are supported in the vegan implementation of NMDS. Evaluate the appropriate number of dimensions for the ordination. Evaluate the consequences of using different distance metrics.
 
 #### [Question:]{style="color:forestgreen"}
 
-#### [9.1 Compare the vegan default NMDS to the results of a CA and a DCA.]{style="color:forestgreen"}
+#### [10.1 Compare the vegan default NMDS to the results of a CA and a DCA.]{style="color:forestgreen"}
 
 ```{r ex8, inclue=TRUE, warning=FALSE, message=FALSE}
 # run NMDS with the defaults and 2 dimensions, what is the stress?
@@ -213,15 +213,15 @@ ordiplot(dune.DCA, type = "text", main = "DCA on Dune Meadow data")
 
 ------------------------------------------------------------------------
 
-### [Question 10: Data Quality Assessment]{style="color:cornflowerblue"}
+### [Question 11: Data Quality Assessment]{style="color:cornflowerblue"}
 
 These are only a few examples on how to assess data quality.
 
 #### [Questions:]{style="color:forestgreen"}
 
-#### [10.1 Is there a pattern in the distribution of missing values that may lead to the omission of a species or a sample?]{style="color:forestgreen"}
+#### [11.1 Is there a pattern in the distribution of missing values that may lead to the omission of a species or a sample?]{style="color:forestgreen"}
 
-#### [10.2 Would you say that the original Dune Meadow data set is OK for further analyses? Motivate your answer!]{style="color:forestgreen"}
+#### [11.2 Would you say that the original Dune Meadow data set is OK for further analyses? Motivate your answer!]{style="color:forestgreen"}
 
 ```{r ex10, inclue=TRUE, message=FALSE, warning=FALSE}
 #data(dune)
@@ -302,13 +302,37 @@ legend("topright", paste("SD =", round(sd(d1mean), 1))) # Legend with standard d
 
 ```
 
-Sometimes loaded packages in R can conflict with another package. This can mean that the same function name is used in different packages for example, so the your code may give a different output (or fail) depending on the packages you have loaded at the time! It is good practice to write code that has a narrow purpose and loads the packages needed for that purpose, rather than one huge script running many different analyses. However, you may sometimes need to unload a package or restart R to get the expected results. You can restart R (note: not the same as restarting RStudio!) from the RStudio Session menu or using the following code.
+### Question 12: Messy ordination plots {style="color:cornflowerblue"}
+
+By now you have seen a number of ordination plots, and probably realised that some plots get messy with a lot of species overlapping. To solve this, we can plot only those species that contribute the most to the ordination. The vegan function, goodness(), tells us how well species abundances are fitted by the ordination axes. We can then reduce the amount of information presented by labeling only those species which are well-fitted by the ordination axes being displayed. The function computes goodness of fit values for all species and you can then select a cut-off value for which species that should get a label (note that goodness of fit can also be useful information for purposes other than tidying up plots!). Here we try this with the CA from exercise 5 yesterday.
+
+#### [Questions:]{style="color:forestgreen"}
+
+#### [12.1 Is there any situation when this option should not be used?]{style="color:forestgreen"}
 
 ```{r}
-#VIM package loaded earlier conflicts with SIMPER function in Vegan
-detach("package:VIM", unload=TRUE, force = TRUE)
-#To restart R
-.rs.restartR()
+dune.ca <- cca(dune)
+# goodness of fit
+gf <- goodness(dune.ca, model = "CA", display = "species", choices = 1:2)
+head(gf)#the values in column PC2 are the cummulative goodness of fit values over the two axes
+take <- gf[,2] >= 0.4 # which species to label. Here we choose species where fitted abundance on the two axes is at least 40%
+scl <- "symmetric"    # choose scaling to use
+
+# make an empty plot
+plot(dune.ca, type = "n", scaling = scl, display = c("species", "sites"))
+
+# add points for the species
+points(dune.ca, scaling = scl, display = "species", cex = 0.7, col = "red", pch = "+")
+
+# add points for the samples
+points(dune.ca, scaling = scl, display = "sites", pch = NA)
+
+# label the samples and species points
+ordipointlabel(dune.ca, display = "sites", scaling = scl, add = TRUE)
+ordipointlabel(dune.ca, display = "species", scaling = scl,col = "red", cex = 0.7, add = TRUE, select = take)
+
+#compare with the original
+plot(dune.ca)
 ```
 
 ------------------------------------------------------------------------

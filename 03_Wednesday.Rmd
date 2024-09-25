@@ -8,21 +8,21 @@ library(vegan)
 library(tidyverse)
 ```
 
-### [Exercise 11: Do an RDA and a CCA on the Dune Meadow data set, using the full set of environmental variables.]{style="color:cornflowerblue"}
+### [Exercise 13: Do an RDA and a CCA on the Dune Meadow data set, using the full set of environmental variables.]{style="color:cornflowerblue"}
 
 #### [Questions:]{style="color:forestgreen"}
 
-#### [11.1 Compare the ordination diagrams and numerical results! What does the significance test tell you?]{style="color:forestgreen"}
+#### [13.1 Compare the ordination diagrams and numerical results! What does the significance test tell you?]{style="color:forestgreen"}
 
-#### [11.2 When only looking at the results, which method explains the variation best?]{style="color:forestgreen"}
+#### [13.2 When only looking at the results, which method explains the variation best?]{style="color:forestgreen"}
 
-#### [11.3 Taking the nature of the data into account, which method (RDA or CCA) should be used? ]{style="color:forestgreen"}
+#### [13.3 Taking the nature of the data into account, which method (RDA or CCA) should be used? ]{style="color:forestgreen"}
 
-#### [11.4 What is the difference between sequential and marginal significance tests? ]{style="color:forestgreen"}
+#### [13.4 What is the difference between sequential and marginal significance tests? ]{style="color:forestgreen"}
 
-#### [11.5 How can you determine in which order your terms should be, in a sequential test?]{style="color:forestgreen"}
+#### [13.5 How can you determine in which order your terms should be, in a sequential test?]{style="color:forestgreen"}
 
-```{r ex11, echo=FALSE, message=FALSE, warning=FALSE, inclue=TRUE}
+```{r ex13, echo=FALSE, message=FALSE, warning=FALSE, inclue=TRUE}
 data("dune")
 data("dune.env")
 dummy_management <-
@@ -82,13 +82,13 @@ par(mfrow = c(1, 1))
 
 ------------------------------------------------------------------------
 
-### [Question 12: Use the results from the CCA ordination in exercise 11 to look at and interpret the variance inflation factor, and to look for warnings about outliers in the explanatory data]{style="color:cornflowerblue"}
+### [Question 14: Use the results from the CCA ordination in exercise 11 to look at and interpret the variance inflation factor, and to look for warnings about outliers in the explanatory data]{style="color:cornflowerblue"}
 
 #### [Question:]{style="color:forestgreen"}
 
-#### [12.1 Look at and interpret the inflation factors for each environmental variable.]{style="color:forestgreen"}
+#### [14.1 Look at and interpret the inflation factors for each environmental variable.]{style="color:forestgreen"}
 
-```{r ex12, inclue=TRUE, warning=FALSE, message=FALSE}
+```{r ex14, inclue=TRUE, warning=FALSE, message=FALSE}
 # VIF for CCA 
 dune.cca <- cca(dune ~ . , dune.env)
 vif.cca <- vif.cca(dune.cca)
@@ -99,15 +99,15 @@ Function vif.cca gives the variance inflation factors for each constraint or con
 
 ------------------------------------------------------------------------
 
-### [Question 13: Do a CA on the Dune Meadow data set, with the full set of environmental variables included in the analysis, and compare with a CCA on the same data sets.]{style="color:cornflowerblue"}
+### [Question 15: Do a CA on the Dune Meadow data set, with the full set of environmental variables included in the analysis, and compare with a CCA on the same data sets.]{style="color:cornflowerblue"}
 
 #### [Questions:]{style="color:forestgreen"}
 
-#### [13.1 Compare the constrained and unconstrained ordinations. What is the difference between the methods?]{style="color:forestgreen"}
+#### [15.1 Compare the constrained and unconstrained ordinations. What is the difference between the methods?]{style="color:forestgreen"}
 
-#### [13.2 When could an unconstrained ordination with explanatory variables be a good option?]{style="color:forestgreen"}
+#### [15.2 When could an unconstrained ordination with explanatory variables be a good option?]{style="color:forestgreen"}
 
-```{r ex13, inclue=TRUE, warning=FALSE, message=FALSE}
+```{r ex15, inclue=TRUE, warning=FALSE, message=FALSE}
 # CA with env. variables
 dune.ca <- cca(dune)
 fit <- envfit(dune.ca, dune.env, perm = 999)
@@ -129,13 +129,13 @@ par(mfrow = c(1, 1))
 
 ------------------------------------------------------------------------
 
-### [Question 14: Site scores can be calculated in two ways; Weighted Average and Linear Combination. Here you will do both and compare the results. Both options are available in most software, but the default varies.]{style="color:cornflowerblue"}
+### [Question 16: Site scores can be calculated in two ways; Weighted Average and Linear Combination. Here you will do both and compare the results. Both options are available in most software, but the default varies.]{style="color:cornflowerblue"}
 
 #### [Questions:]{style="color:forestgreen"}
 
-#### [14.1 What is the main difference between the two ways. How to know which method to select?]{style="color:forestgreen"}
+#### [16.1 What is the main difference between the two ways. How to know which method to select?]{style="color:forestgreen"}
 
-#### [14.2 What does the display = "cn" in the last plots mean? How is the location of the point/text drawn by this option determined?]{style="color:forestgreen"}
+#### [16.2 What does the display = "cn" in the last plots mean? How is the location of the point/text drawn by this option determined?]{style="color:forestgreen"}
 
 ```{r}
 #### Illustration of difference between WA and LC scores
@@ -173,13 +173,13 @@ par(mfrow= c(1,1))
 
 ```
 
-### [Question 15: Investigate management regimes.]{style="color:cornflowerblue"}
+### [Question 17: Investigate management regimes.]{style="color:cornflowerblue"}
 
 Next, you should investigate whether the four different management regimes (SF standard farming, BF biodynamical farming, HF hobby farming, and NM nature management) have any effect on the species distribution. This is done by using these four management types as environmental variables in a constrained ordination.
 
 #### [Question:]{style="color:forestgreen"}
 
-#### [15.1 Inspect and interpret the results of the permutations and graph! Compare with the CCA on the full set of explanatory data in exercise 13.]{style="color:forestgreen"}
+#### [17.1 Inspect and interpret the results of the permutations and graph! Compare with the CCA on the full set of explanatory data in exercise 13.]{style="color:forestgreen"}
 
 To investigate if the vegetational pattern is an effect of management, or if the pattern is random, Monte Carlo permutations will be used.
 
@@ -203,13 +203,13 @@ par(mfrow =c(1,2))
 
 ------------------------------------------------------------------------
 
-### [Question 16: Next, investigate whether initial soil characteristics (A1 and moisture) also are important for differences in species composition between fields.]{style="color:cornflowerblue"}
+### [Question 18: Next, investigate whether initial soil characteristics (A1 and moisture) also are important for differences in species composition between fields.]{style="color:cornflowerblue"}
 
 To do this, do another CCA with A1 and Moisture as environmental variables and perform a significance test.
 
 #### [Question:]{style="color:forestgreen"}
 
-#### [16.1 Explain the results of the permutations! Compare the results in exercises 15 and 16]{style="color:forestgreen"}
+#### [18.1 Explain the results of the permutations! Compare the results in exercises 15 and 16]{style="color:forestgreen"}
 
 ```{r ex16, inclue=TRUE, warning=FALSE, message=FALSE}
 # CCA using A1 and moisture as the environmental variable
@@ -227,15 +227,15 @@ ordiplot(dune.ccaA1ms, type="text", main="CCA A1 and moisture")
 
 ## Direct methods with testing of environmental variables
 
-### [Question 17: Partial ordination]{style="color:cornflowerblue"}
+### [Question 19: Partial ordination]{style="color:cornflowerblue"}
 
 Now, you have concluded that both soil characteristics and management type are determining the species composition significantly. But, what if the observed differences between management types are not caused by management type but by initial differences in soil characteristics? To investigate this, you have to test whether there still is a difference in vegetation between management types, after accounting for (i.e. removing) the effects of soil characteristics. This is done by a partial CCA ordination. Partial ordinations are used to eliminate effects of selected variables by specifying them as covariates. In this case, use the two soil characterising variables (A1 and Moisture) as covariates, and the four management types as environmental variables.
 
 #### [Questions:]{style="color:forestgreen"}
 
-#### [17.1 What does the permutation test tell you?]{style="color:forestgreen"}
+#### [19.1 What does the permutation test tell you?]{style="color:forestgreen"}
 
-#### [17.2 Compare the results with the results from the permutation test on only management types]{style="color:forestgreen"}
+#### [19.2 Compare the results with the results from the permutation test on only management types]{style="color:forestgreen"}
 
 ```{r ex17, inclue=TRUE, warning=FALSE, message=FALSE}
 #This partials out the effect of A1 and Moisture before analysing the effects of management
@@ -257,17 +257,17 @@ ordihull(
 
 ------------------------------------------------------------------------
 
-### [Question 18: Partial ordination II]{style="color:cornflowerblue"}
+### [Question 20: Partial ordination II]{style="color:cornflowerblue"}
 
 The amount of applied manure is a third important variable given in the environmental data set associated with the dune meadow data set. Repeat exercise 17, but with manure added to the set of covariates.
 
 #### [Questions:]{style="color:forestgreen"}
 
-#### [18.1 What was the effect of adding manure to the set of covariates?]{style="color:forestgreen"}
+#### [20.1 What was the effect of adding manure to the set of covariates?]{style="color:forestgreen"}
 
 We may expect that Management and Manure are related, check visually by making a boxplot of Manure vs Management type using the R code: boxplot(Manure\~Management, data = dune.env.original).
 
-#### [18.2 What does the result tell you?]{style="color:forestgreen"}
+#### [20.2 What does the result tell you?]{style="color:forestgreen"}
 
 ```{r ex18, inclue=TRUE, warning=FALSE, message=FALSE}
 #This partials out the effect of A1, Moisture, and Manure before analysing the effects of management
@@ -293,19 +293,19 @@ ordihull(
 
 ------------------------------------------------------------------------
 
-### [Question 19: Forward selection]{style="color:cornflowerblue"}
+### [Question 21: Forward selection]{style="color:cornflowerblue"}
 
 We have now concluded that management type is of subordinate importance. Now, you want to test the importance or significance of individual environmental variables. This is done by Forward selection.
 
 #### [Questions:]{style="color:forestgreen"}
 
-#### [19.1 What is the effect of Forward selection?]{style="color:forestgreen"}
+#### [21.1 What is the effect of Forward selection?]{style="color:forestgreen"}
 
-#### [19.2 In what way do these results differ from the results obtained when the whole Environmental data table was used as explanatory variables?]{style="color:forestgreen"}
+#### [21.2 In what way do these results differ from the results obtained when the whole Environmental data table was used as explanatory variables?]{style="color:forestgreen"}
 
-#### [19.3 Were the set of explanatory variables selected by the Forward selection the best set?]{style="color:forestgreen"}
+#### [21.3 Were the set of explanatory variables selected by the Forward selection the best set?]{style="color:forestgreen"}
 
-#### [19.4 Why would one perform a p-value correction?]{style="color:forestgreen"}
+#### [21.4 Why would one perform a p-value correction?]{style="color:forestgreen"}
 
 ```{r ex19, echo=TRUE, message=FALSE, warning=FALSE, inclue=TRUE}
 # A first CCA with all environmental variables
