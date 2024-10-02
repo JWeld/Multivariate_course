@@ -16,9 +16,9 @@ library(tidyverse)
 
 #### [13.2 When only looking at the results, which method explains the variation best?]{style="color:forestgreen"}
 
-#### [13.3 Taking the nature of the data into account, which method (RDA or CCA) should be used? ]{style="color:forestgreen"}
+#### [13.3 Taking the nature of the data into account, which method (RDA or CCA) should be used?]{style="color:forestgreen"}
 
-#### [13.4 What is the difference between sequential and marginal significance tests? ]{style="color:forestgreen"}
+#### [13.4 What is the difference between sequential and marginal significance tests?]{style="color:forestgreen"}
 
 #### [13.5 How can you determine in which order your terms should be, in a sequential test?]{style="color:forestgreen"}
 
@@ -82,7 +82,7 @@ par(mfrow = c(1, 1))
 
 ------------------------------------------------------------------------
 
-### [Question 14: Use the results from the CCA ordination in exercise 11 to look at and interpret the variance inflation factor, and to look for warnings about outliers in the explanatory data]{style="color:cornflowerblue"}
+### [Exercise 14: Use the results from the CCA ordination in exercise 11 to look at and interpret the variance inflation factor, and to look for warnings about outliers in the explanatory data]{style="color:cornflowerblue"}
 
 #### [Question:]{style="color:forestgreen"}
 
@@ -99,7 +99,7 @@ Function vif.cca gives the variance inflation factors for each constraint or con
 
 ------------------------------------------------------------------------
 
-### [Question 15: Do a CA on the Dune Meadow data set, with the full set of environmental variables included in the analysis, and compare with a CCA on the same data sets.]{style="color:cornflowerblue"}
+### [Exercise 15: Do a CA on the Dune Meadow data set, with the full set of environmental variables included in the analysis, and compare with a CCA on the same data sets.]{style="color:cornflowerblue"}
 
 #### [Questions:]{style="color:forestgreen"}
 
@@ -129,7 +129,7 @@ par(mfrow = c(1, 1))
 
 ------------------------------------------------------------------------
 
-### [Question 16: Site scores can be calculated in two ways; Weighted Average and Linear Combination. Here you will do both and compare the results. Both options are available in most software, but the default varies.]{style="color:cornflowerblue"}
+### [Exercise 16: Site scores can be calculated in two ways; Weighted Average and Linear Combination. Here you will do both and compare the results. Both options are available in most software, but the default varies.]{style="color:cornflowerblue"}
 
 #### [Questions:]{style="color:forestgreen"}
 
@@ -173,7 +173,7 @@ par(mfrow= c(1,1))
 
 ```
 
-### [Question 17: Investigate management regimes.]{style="color:cornflowerblue"}
+### [Exercise 17: Investigate management regimes.]{style="color:cornflowerblue"}
 
 Next, you should investigate whether the four different management regimes (SF standard farming, BF biodynamical farming, HF hobby farming, and NM nature management) have any effect on the species distribution. This is done by using these four management types as environmental variables in a constrained ordination.
 
@@ -203,7 +203,7 @@ par(mfrow =c(1,2))
 
 ------------------------------------------------------------------------
 
-### [Question 18: Next, investigate whether initial soil characteristics (A1 and moisture) also are important for differences in species composition between fields.]{style="color:cornflowerblue"}
+### [Exercise 18: Next, investigate whether initial soil characteristics (A1 and moisture) also are important for differences in species composition between fields.]{style="color:cornflowerblue"}
 
 To do this, do another CCA with A1 and Moisture as environmental variables and perform a significance test.
 
@@ -227,7 +227,7 @@ ordiplot(dune.ccaA1ms, type="text", main="CCA A1 and moisture")
 
 ## Direct methods with testing of environmental variables
 
-### [Question 19: Partial ordination]{style="color:cornflowerblue"}
+### [Exercise 19: Partial ordination]{style="color:cornflowerblue"}
 
 Now, you have concluded that both soil characteristics and management type are determining the species composition significantly. But, what if the observed differences between management types are not caused by management type but by initial differences in soil characteristics? To investigate this, you have to test whether there still is a difference in vegetation between management types, after accounting for (i.e. removing) the effects of soil characteristics. This is done by a partial CCA ordination. Partial ordinations are used to eliminate effects of selected variables by specifying them as covariates. In this case, use the two soil characterising variables (A1 and Moisture) as covariates, and the four management types as environmental variables.
 
@@ -257,7 +257,7 @@ ordihull(
 
 ------------------------------------------------------------------------
 
-### [Question 20: Partial ordination II]{style="color:cornflowerblue"}
+### [Exercise 20: Partial ordination II]{style="color:cornflowerblue"}
 
 The amount of applied manure is a third important variable given in the environmental data set associated with the dune meadow data set. Repeat exercise 17, but with manure added to the set of covariates.
 
@@ -293,7 +293,7 @@ ordihull(
 
 ------------------------------------------------------------------------
 
-### [Question 21: Forward selection]{style="color:cornflowerblue"}
+### [Exercise 21: Forward selection]{style="color:cornflowerblue"}
 
 We have now concluded that management type is of subordinate importance. Now, you want to test the importance or significance of individual environmental variables. This is done by Forward selection.
 

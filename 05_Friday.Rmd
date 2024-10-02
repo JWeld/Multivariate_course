@@ -5,7 +5,17 @@ editor_options:
     wrap: 72
 ---
 
-Sometimes loaded packages in R can conflict with another package. Among other issues, this can mean that the same function name (e.g. select()) is used in different packages, so the your code may give a different output (or fail) depending on the packages you have loaded at the time! It is good practice to write code that has a narrow purpose and loads the packages needed for that purpose, rather than one huge script running many different analyses. However, you may sometimes need to unload a package or restart R to get the expected results. You can restart R (note: not the same as restarting RStudio!) from the RStudio Session menu or using the following code. The code is commented out because we don't actually need to do this now, but it is good to know!
+Sometimes loaded packages in R can conflict with another package. Among
+other issues, this can mean that the same function name (e.g. select())
+is used in different packages, so the your code may give a different
+output (or fail) depending on the packages you have loaded at the time!
+It is good practice to write code that has a narrow purpose and loads
+the packages needed for that purpose, rather than one huge script
+running many different analyses. However, you may sometimes need to
+unload a package or restart R to get the expected results. You can
+restart R (note: not the same as restarting RStudio!) from the RStudio
+Session menu or using the following code. The code is commented out
+because we don't actually need to do this now, but it is good to know!
 
 ```{r}
 #VIM package loaded on Tuesday conflicts with SIMPER function in Vegan which we will use today, if you wanted to use SIMPER after VIM you can detach VIM first
@@ -55,7 +65,7 @@ dune.env <-
                       SF = ManagementSF)
 ```
 
-### [Question 30: Differences between groups. ANOSIM, adonis and SIMPER]{style="color:cornflowerblue"}
+### [Exercise 30: Differences between groups. ANOSIM, adonis and SIMPER]{style="color:cornflowerblue"}
 
 ANOSIM (Analysis Of Similarities) is a non-parametric test of
 significant difference between two or more groups, based on any distance
@@ -170,7 +180,7 @@ dplyr::arrange(rownames_to_column(iva.df), desc(HF))
 
 ------------------------------------------------------------------------
 
-### [Question 31: DFA]{style="color:cornflowerblue"}
+### [Exercise 31: DFA]{style="color:cornflowerblue"}
 
 The algorithm starts by finding directions that maximize the separation
 between classes, then use these directions to predict the class of
@@ -276,7 +286,7 @@ confusionMatrix(test.data$Species, predictions$class)
 
 ------------------------------------------------------------------------
 
-### [Question 32: Model based ordination]{style="color:cornflowerblue"}
+### [Exercise 32: Model based ordination]{style="color:cornflowerblue"}
 
 Dissimilarity-based ordination methods begin by calculating a
 dissimilarity or distance matrix between sites (or more generally,
@@ -350,7 +360,7 @@ on traits and perform a fourth corner analysis.
 
 ------------------------------------------------------------------------
 
-### [Question 33: Fourth Corner]{style="color:cornflowerblue"}
+### [Exercise 33: Fourth Corner]{style="color:cornflowerblue"}
 
 Here we will use another model based method (the "mvabund" package for
 analysing multivariate abundance data) to perform a fourth corner
@@ -414,7 +424,7 @@ pvalues <- anova.traitglm(fitfourth2,nBoot=10) #overall significant
 
 ------------------------------------------------------------------------
 
-### [Question 34: PLS]{style="color:cornflowerblue"}
+### [Exercise 34: PLS]{style="color:cornflowerblue"}
 
 PLS regression, like PCA, seeks to find components which maximize the
 variability of predictors but differs from PCA as PLS requires the

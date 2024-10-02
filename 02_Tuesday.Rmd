@@ -36,7 +36,7 @@ dune.env <-
                       SF = ManagementSF)
 ```
 
-### [Question 7: Add one new species with cover degree 9 at the site with the lowest number of species. Do a new DCA-ordination.]{style="color:cornflowerblue"}
+### [Exercise 7: Add one new species with cover degree 9 at the site with the lowest number of species. Do a new DCA-ordination.]{style="color:cornflowerblue"}
 
 #### [Question:]{style="color:forestgreen"}
 
@@ -60,7 +60,7 @@ DCANewSp
 ordiplot(DCANewSp, type="text", main="DCA with new sp.")
 ```
 
-You may be surprised that you haven't got any total inertia values when printing decorana results, although in other software (e.g. CANOCO) these are available, together with percentage variance explained by particular axes. The reason for this is that DCA does not support the concept of total inertia values (also, it produces only four axes, i.e. four eigenvalues). See the comment in the code for the question 5.
+You may be surprised that you haven't got any total inertia values when printing decorana results, although in other software (e.g. CANOCO) these are available, together with percentage variance explained by particular axes. The reason for this is that DCA does not support the concept of total inertia values (also, it produces only four axes, i.e. four eigenvalues). See the comment in the code for the Exercise 5.
 
 ------------------------------------------------------------------------
 
@@ -99,7 +99,7 @@ ordiplot(DCANewSampleJunc, type = "text", main = "DCA with new sample of Juncbuf
 
 ------------------------------------------------------------------------
 
-### [Question 9: Principal Coordinates Analysis (PCoA)]{style="color:cornflowerblue"}
+### [Exercise 9: Principal Coordinates Analysis (PCoA)]{style="color:cornflowerblue"}
 
 Principal Coordinates Analysis (PCoA), also known as Multidimensional Scaling (MDS), is a generalization of the ordination techniques we have already seen as it can be estimated with any distance matrix. In contrast, PCA is restricted to Euclidean distances while CA preserves Chi-Square distances. Here, we will explore PCoA on four different distance matrices: (i) Bray-Curtis (ii) Jaccard (iii) Euclidean (iv) Mahalanobis
 
@@ -167,7 +167,7 @@ text(
 
 ------------------------------------------------------------------------
 
-### [Question 10: Non Metric Multidimensional Scaling]{style="color:cornflowerblue"}
+### [Exercise 10: Non Metric Multidimensional Scaling]{style="color:cornflowerblue"}
 
 NMDS does not use the absolute abundances of species in communities, but rather their *rank orders*. The use of ranks omits some of the issues associated with using absolute distance (e.g., sensitivity to transformation). At the conclusion of this exercise, you should be able to: State which metrics are supported in the vegan implementation of NMDS. Evaluate the appropriate number of dimensions for the ordination. Evaluate the consequences of using different distance metrics.
 
@@ -213,7 +213,7 @@ ordiplot(dune.DCA, type = "text", main = "DCA on Dune Meadow data")
 
 ------------------------------------------------------------------------
 
-### [Question 11: Data Quality Assessment]{style="color:cornflowerblue"}
+### [Exercise 11: Data Quality Assessment]{style="color:cornflowerblue"}
 
 These are only a few examples on how to assess data quality.
 
@@ -302,7 +302,7 @@ legend("topright", paste("SD =", round(sd(d1mean), 1))) # Legend with standard d
 
 ```
 
-### Question 12: Messy ordination plots {style="color:cornflowerblue"}
+### Exercise 12: Messy ordination plots {style="color:cornflowerblue"}
 
 By now you have seen a number of ordination plots, and probably realised that some plots get messy with a lot of species overlapping. To solve this, we can plot only those species that contribute the most to the ordination. The vegan function, goodness(), tells us how well species abundances are fitted by the ordination axes. We can then reduce the amount of information presented by labeling only those species which are well-fitted by the ordination axes being displayed. The function computes goodness of fit values for all species and you can then select a cut-off value for which species that should get a label (note that goodness of fit can also be useful information for purposes other than tidying up plots!). Here we try this with the CA from exercise 5 yesterday.
 

@@ -41,7 +41,7 @@ dune.env <-
                       SF = ManagementSF)
 ```
 
-### [Question 22: Interpreting ordination results using species traits]{style="color:cornflowerblue"}
+### [Exercise 22: Interpreting ordination results using species traits]{style="color:cornflowerblue"}
 
 Experienced plant ecologists may already have looked at the species in
 the Dune Meadow ordination graphs and concluded that species with
@@ -93,7 +93,7 @@ step2$anova # which three are most significant in the final selection?
 
 ------------------------------------------------------------------------
 
-### [Question 23: Decomposition of variance]{style="color:cornflowerblue"}
+### [Exercise 23: Decomposition of variance]{style="color:cornflowerblue"}
 
 In usual analysis of variance experiments, the variance is decomposed
 into components. The same can be done in multivariate analyses. In this
@@ -135,7 +135,7 @@ plot (
 
 ------------------------------------------------------------------------
 
-### [Question 24: Analysing a time series with vegetation data]{style="color:cornflowerblue"}
+### [Exercise 24: Analysing a time series with vegetation data]{style="color:cornflowerblue"}
 
 Quite often vegetation ecologists have data from repeated inventories in
 permanent plots. The overall question to answer is if there has been a
@@ -211,7 +211,7 @@ ordihull(
 
 ------------------------------------------------------------------------
 
-### [Question 25: A multivariate Before-After-Control- Impact (BACI) study]{style="color:cornflowerblue"}
+### [Exercise 25: A multivariate Before-After-Control- Impact (BACI) study]{style="color:cornflowerblue"}
 
 In this exercise we will continue to use the rearranged Dune Meadow data
 from exercise 22. A difference is that the plots are now divided into
@@ -258,7 +258,7 @@ ordihull(
 
 ------------------------------------------------------------------------
 
-### [Question 26: Comparing ordinations]{style="color:cornflowerblue"}
+### [Exercise 26: Comparing ordinations]{style="color:cornflowerblue"}
 
 These are two ways of comparing ordinations or the structure in related
 multivariate datasets. They are used to compare how objects differ when
@@ -339,7 +339,7 @@ plot(dune.bugs.cca)
 
 ------------------------------------------------------------------------
 
-### [Question 27 : Classification 1]{style="color:cornflowerblue"}
+### [Exercise 27 : Classification 1]{style="color:cornflowerblue"}
 
 Start by testing the non-hierarchical K-means clustering, using Multivar
 / K-Means. Note that it is recommended that K-means need at least 100
@@ -448,7 +448,7 @@ hopkins(dune, n = nrow(dune)-1)
 
 ------------------------------------------------------------------------
 
-### [Question 28: Classification 2: Partition and Regression Trees]{style="color:cornflowerblue"}
+### [Exercise 28: Classification 2: Partition and Regression Trees]{style="color:cornflowerblue"}
 
 Most of the code is taken from
 <https://jonlefcheck.net/2015/02/06/a-practical-guide-to-machine-learning-in-ecology/>
@@ -504,7 +504,7 @@ abline(h = 1.75)
 
 ------------------------------------------------------------------------
 
-### [Question 29: Principal Response Curves]{style="color:cornflowerblue"}
+### [Exercise 29: Principal Response Curves]{style="color:cornflowerblue"}
 
 In the following exercise, we will attempt to identify temporal
 structure in a data set in two ways. First, we will perform an RDA
