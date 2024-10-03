@@ -7,7 +7,7 @@ knitr::opts_chunk$set(echo = TRUE)
 library(vegan)
 library(tidyverse)
 library(corrplot)
-library(BiodiversityR)
+
 ```
 
 ### [Exercise 1. Introduction to R Notebooks and Markdown.]{style="color:cornflowerblue"}
@@ -192,7 +192,7 @@ par(mfrow = c(1,1))
 
 ------------------------------------------------------------------------
 
-### [Exercise 4: Significance test for the axes in the PCA in Question 3]{style="color:cornflowerblue"}
+### [Exercise 4: Investigate the axes in the PCA in Question 3]{style="color:cornflowerblue"}
 
 Here we will learn that only looking at a ordination plot or the basic numerical output may not be sufficient to tell if the ordination axes are interpretable in terms of expressing a latent gradient.
 
@@ -200,28 +200,14 @@ Here we will learn that only looking at a ordination plot or the basic numerical
 
 #### [4.1 Look at the loadings, i.e. the effects by the different variables for axis 1 and axis 2. Which variables are most important?]{style="color:forestgreen"}
 
-#### [4.2 Continue with an approximate significance test of the variables. Which variables are important for the ordination?]{style="color:forestgreen"}
-
-#### [4.3 Finally, have a look at the indicative significance of each PCA axis, i.e. compare explained variation in the data, with explained variation in a null model (broken-stick). What does the result tell you? Is the PCA on the Dune Meadow explanatory data reliable?]{style="color:forestgreen"}
+As you saw in the lecture, you can also run significance tests. You can do this with the BiodiverityR package, but unfortunately we are unable to install that in the Posit Cloud environment (because it requires installing things in the underlying operating system as well as in R).
 
 ```{r, warning=FALSE, message=FALSE}
-# Start to look at the effects by individual variables
+# We can look at the effects by individual variables
 loadings <- scores(env.pca, display = 'species', scaling = 0)
 sort(abs(loadings[,1]), decreasing = TRUE) # Loadings axel 1
 sort(abs(loadings[,2]), decreasing = TRUE) # Loadings axel 2
 
-# Then look at the significnace of the variables
-env.plot <- ordiplot(env.pca, type = "none", scaling=1)
-points(env.plot, "sites", pch=19, col="red")
-points(env.plot, "species", pch=4, col="red")
-text(env.plot, "species", col="blue", cex=0.9)
-ordiequilibriumcircle(env.pca, env.plot)
-
-# Finally, test if the ordination axes are worth interperting
-sig <- PCAsignificance(env.pca, axes = 7)
-barplot (sig[c("percentage of variance", "broken-stick percentage"), ], beside = T,
-         xlab = "PCA axis", ylab = "Explained variation [%]", col = c('grey', 'black'), legend = TRUE)
-  
 ```
 
 ------------------------------------------------------------------------
