@@ -49,23 +49,23 @@ df <- read.table(header = TRUE, sep = ",",
 
 So I could write my notes here instead, which is probably easier to read for anything more than a few words of explanation.
 
-Now we can do a simple linear regression, using variables x and y in the dataset called df. The results are stored in the object "reg".
+Now we can do a simple linear regression, using variables x and y in the dataset called df. The results are stored in the object "reg". There is no output from this chunk as we have not asked for it. We only get the object "reg".
 
 ```{r}
 reg <- lm(y~x, df) 
 ```
 
-Plot the result.
+To get an output, you can ask for a summary of "reg"
+
+```{r}
+summary(reg)
+```
+
+Make a scatter plot of y as a function of x, and use the object "reg" to draw a regression line.
 
 ```{r}
 plot(y~x, df)
 lines(df$x, predict(reg), col = 'red') # Add a regression line to the plot
-```
-
-Get a summary of the results
-
-```{r}
-summary(reg)
 ```
 
 ### [The R packages and data we will be using.]{style="color:cornflowerblue"}
@@ -78,7 +78,7 @@ We will also be using some slightly modified and extended versions of the dune d
 
 ### [Exercise 2: Simple exercise for illustrating effects of different distance metrics.]{style="color:cornflowerblue"}
 
-Here, we will create a simple data set consisting of 2 columns of measurement made at 3 sites. We will then calculate a series of distance metrics using the vegdist() function.
+All methods you will meet this week are based on similarities or dissimilarities among your objects. These can be calculated in many different ways. Here, we will create a simple data set consisting of 2 columns of measurement made on 3 objects (or sites). We will then calculate a series of distance metrics using the vegdist() function.
 
 #### [Questions:]{style="color:forestgreen"}
 
@@ -113,13 +113,15 @@ Compare the plots on the PCA with and without scaling (PCA plot 4) and discuss t
 
 #### [Questions:]{style="color:forestgreen"}
 
-#### [3.1 Is there any way to see if a PCA plot is based on scaled or unscaled data, just by looking at the plot (i.e. compare plot 2 and 3)?]{style="color:forestgreen"}
+#### [3.1What is the difference between the two plots in "PCA plot 4" ? Which one is best to use?]{style="color:forestgreen"}
 
-#### [3.2 What is the difference between the two plots in "PCA plot 4" ? Which one is best to use?]{style="color:forestgreen"}
+#### [3.2 Is there any way to see if a PCA plot is based on scaled or unscaled data, just by looking at the plot?]{style="color:forestgreen"}
 
 #### [3.3 What is the difference between the plots in plot 5 (or 6)? Which one is best to use?]{style="color:forestgreen"}
 
-```{r, warning=FALSE, message=FALSE}
+First we load the Dune vegetation data we will use and clean it up a little.
+
+```{r}
 data("dune") # the dune species data
 data("dune.env") # the dune explanatory data
 dummy_management <-
@@ -139,9 +141,11 @@ dune.env <-
                       HF = ManagementHF,
                       NM = ManagementNM,
                       SF = ManagementSF)
+```
 
-## PCA plot 1:
-# Start by looking at pairwise correlations among the variables.
+Start by looking at pairwise correlations among the variables.
+
+```{r}
 dune.env_cor <- cor(dune.env, method = "kendall")
 corrplot(
   dune.env_cor,
@@ -150,44 +154,54 @@ corrplot(
   tl.col = "black",
   tl.srt = 45
 )
+```
 
-## PCA plot 2:
+Next we do some PCA analyses and plot the results
+
+```{r, warning=FALSE, message=FALSE}
+## PCA plot 1:
 # Then make a PCA, with scaling of (=standardising) the data
 env.pca <-
-  rda(dune.env, scale = TRUE) #vegan uses the same function for PCA and RDA, just depends on if it is constrained or #not.
-biplot(env.pca, main = "Plot 2") #plot the results using the default plot scaling which is "species"
+  rda(dune.env, scale = TRUE) #vegan uses the same function for PCA and RDA, just depends on if it is constrained or not.
+biplot(env.pca, main = "Plot 1") #plot the results using the default plot scaling which is "species"
 env.pca #summarise results
 summary(eigenvals(env.pca)) #see variance explained
 
-## PCA plot 3:
+## PCA plot 2:
 # Continue with a PCA on the same data, but without scaling of the data
 env.pca2 <-
   rda(dune.env, scale = FALSE) #vegan uses the same function for PCA and RDA, just depends on if it is constrained or #not.
-biplot(env.pca2, main = "Plot 3")#plot the results
+biplot(env.pca2, main = "Plot 2")#plot the results
 env.pca2 #summarise results
 summary(eigenvals(env.pca2)) #see variance explained
 
-## PCA plot 4:
-# Compare the PCAs with and without scaling of data
+```
+
+It can often be useful to put plots side by side to compare the results
+
+```{r}
+## PCA plot 3:
+# Put plot 1 and 2 beside each other
 # Default scaling of the plots, which is "species"
+par(mfrow = c(1, 2)) #This puts the plots below in 1 row and two columns
+biplot(env.pca, main = "PCA, with scaling of data")
+biplot(env.pca2, main = "PCA, without scaling of data")
+par(mfrow = c(1, 1)) # Restore the plot settings to one plot at the time
+
+## PCA plot 4:
+# Plots from the same PCA, but with plot scaling focused on sites and on species
 par(mfrow = c(1, 2))
-biplot(env.pca, main = "PCA plot 4, with scaling of data")
-biplot(env.pca2, main = "PCA plot 4, without scaling of data")
+biplot(env.pca, scaling = "sites", main = "PCA, plot scaling on sites")
+biplot(env.pca, scaling = "species", main = "PCA, plot scaling on species")
 par(mfrow = c(1, 1))
 
 ## PCA plot 5:
-# Plots from the same PCA, but with plot scaling focused on sites and on species
-par(mfrow = c(1, 2))
-biplot(env.pca, scaling = "sites", main = "Plot 5, scaling on sites")
-biplot(env.pca, scaling = "species", main = "Plot 5, scaling on species")
-par(mfrow = c(1, 1))
-
-## PCA plot 6:
-# Same as plot 5, but without species for better visual inspection of the sites
+# Same as plot 4, but without species for better visual inspection of the sites
 par(mfrow = c(1,2))
 biplot(env.pca, scaling = "sites", display = "sites", main = "Plot scaling on sites")
 biplot(env.pca, scaling = "species", display = "sites", main = "Plot scaling on species \n not correct projection of sites")
 par(mfrow = c(1,1))
+# In this case there are only minor differences between the two plots
 ```
 
 ------------------------------------------------------------------------
@@ -198,9 +212,7 @@ Here we will learn that only looking at a ordination plot or the basic numerical
 
 #### [Questions:]{style="color:forestgreen"}
 
-#### [4.1 Look at the loadings, i.e. the effects by the different variables for axis 1 and axis 2. Which variables are most important?]{style="color:forestgreen"}
-
-As you saw in the lecture, you can also run significance tests. You can do this with the BiodiverityR package, but unfortunately we are unable to install that in the Posit Cloud environment (because it requires installing things in the underlying operating system as well as in R).
+#### [4.1 Look at the loadings (=species scores), i.e. the effects by the different variables for axis 1 and axis 2. Which variables are most important?]{style="color:forestgreen"}
 
 ```{r, warning=FALSE, message=FALSE}
 # We can look at the effects by individual variables
@@ -208,6 +220,22 @@ loadings <- scores(env.pca, display = 'species', scaling = 0)
 sort(abs(loadings[,1]), decreasing = TRUE) # Loadings axel 1
 sort(abs(loadings[,2]), decreasing = TRUE) # Loadings axel 2
 
+```
+
+As you saw in the lecture, you can also run approximate significance tests for a PCA. You can do this with e.g. the BiodiverityR package, but unfortunately we are unable to install that in the Posit Cloud environment (because it requires installing things in the underlying operating system as well as in R). We can anyway draw an Equilibrium Contribution Circle, by adding the equations for the circle in our code. This defines a region beyond which variables can be interpreted with greatest confidence.
+
+#### [4.2 Which variables are unimportant for the for the two-dimesional projection of your sites along axis 1 and 2?]{style="color:forestgreen"}
+
+```{r, warning=FALSE, message=FALSE}
+# Equilibruium Circle 
+biplot(env.pca, scaling="species", main="Scaling = species")
+d <- 2 # Two axes plotted (axis 1 and axis 2)
+p <- ncol(dune.env) # Number of descriptors
+radi <- sqrt(d/p)
+
+circ <- seq(0,2*pi,length=100)
+coords <- t(rbind(sin(circ)*radi, cos(circ)*radi))
+lines(coords, col="blue")
 ```
 
 ------------------------------------------------------------------------
