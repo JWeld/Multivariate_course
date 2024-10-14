@@ -224,7 +224,7 @@ sort(abs(loadings[,2]), decreasing = TRUE) # Loadings axel 2
 
 As you saw in the lecture, you can also run approximate significance tests for a PCA. You can do this with e.g. the BiodiverityR package, but unfortunately we are unable to install that in the Posit Cloud environment (because it requires installing things in the underlying operating system as well as in R). We can anyway draw an Equilibrium Contribution Circle, by adding the equations for the circle in our code. This defines a region beyond which variables can be interpreted with greatest confidence.
 
-#### [4.2 Which variables are unimportant for the for the two-dimesional projection of your sites along axis 1 and 2?]{style="color:forestgreen"}
+#### [4.2 Which variables are unimportant for the for the two-dimensional projection of your sites along axis 1 and 2?]{style="color:forestgreen"}
 
 ```{r, warning=FALSE, message=FALSE}
 # Equilibruium Circle 
