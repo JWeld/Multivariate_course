@@ -117,7 +117,7 @@ Compare the plots on the PCA with and without scaling (PCA plot 4) and discuss t
 
 #### [3.2 Is there any way to see if a PCA plot is based on scaled or unscaled data, just by looking at the plot?]{style="color:forestgreen"}
 
-#### [3.3 What is the difference between the plots in plot 5 (or 6)? Which one is best to use?]{style="color:forestgreen"}
+#### [3.3 What is the difference between the plots in plot 5? Which one is best to use?]{style="color:forestgreen"}
 
 First we load the Dune vegetation data we will use and clean it up a little.
 
@@ -146,6 +146,7 @@ dune.env <-
 Start by looking at pairwise correlations among the variables.
 
 ```{r}
+#Plot 1
 dune.env_cor <- cor(dune.env, method = "kendall")
 corrplot(
   dune.env_cor,
@@ -159,7 +160,7 @@ corrplot(
 Next we do some PCA analyses and plot the results
 
 ```{r, warning=FALSE, message=FALSE}
-## PCA plot 1:
+## PCA plot 2:
 # Then make a PCA, with scaling of (=standardising) the data
 env.pca <-
   rda(dune.env, scale = TRUE) #vegan uses the same function for PCA and RDA, just depends on if it is constrained or not.
@@ -167,7 +168,7 @@ biplot(env.pca, main = "Plot 1") #plot the results using the default plot scalin
 env.pca #summarise results
 summary(eigenvals(env.pca)) #see variance explained
 
-## PCA plot 2:
+## PCA plot 3:
 # Continue with a PCA on the same data, but without scaling of the data
 env.pca2 <-
   rda(dune.env, scale = FALSE) #vegan uses the same function for PCA and RDA, just depends on if it is constrained or #not.
@@ -180,23 +181,23 @@ summary(eigenvals(env.pca2)) #see variance explained
 It can often be useful to put plots side by side to compare the results
 
 ```{r}
-## PCA plot 3:
-# Put plot 1 and 2 beside each other
+## PCA plot 4:
+# Put plot 2 and 3 beside each other
 # Default scaling of the plots, which is "species"
 par(mfrow = c(1, 2)) #This puts the plots below in 1 row and two columns
 biplot(env.pca, main = "PCA, with scaling of data")
 biplot(env.pca2, main = "PCA, without scaling of data")
 par(mfrow = c(1, 1)) # Restore the plot settings to one plot at the time
 
-## PCA plot 4:
+## PCA plot 5:
 # Plots from the same PCA, but with plot scaling focused on sites and on species
 par(mfrow = c(1, 2))
 biplot(env.pca, scaling = "sites", main = "PCA, plot scaling on sites")
 biplot(env.pca, scaling = "species", main = "PCA, plot scaling on species")
 par(mfrow = c(1, 1))
 
-## PCA plot 5:
-# Same as plot 4, but without species for better visual inspection of the sites
+## PCA plot 6:
+# Same as plot 6, but without species for better visual inspection of the sites
 par(mfrow = c(1,2))
 biplot(env.pca, scaling = "sites", display = "sites", main = "Plot scaling on sites")
 biplot(env.pca, scaling = "species", display = "sites", main = "Plot scaling on species \n not correct projection of sites")
