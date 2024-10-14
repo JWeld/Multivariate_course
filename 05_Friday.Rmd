@@ -9,6 +9,8 @@ Sometimes loaded packages in R can conflict with another package. Among
 other issues, this can mean that the same function name (e.g. select())
 is used in different packages, so the your code may give a different
 output (or fail) depending on the packages you have loaded at the time!
+By default, R uses the most recently loaded version of the function. This 
+can be over-ridden using the "conflicted" package.
 It is good practice to write code that has a narrow purpose and loads
 the packages needed for that purpose, rather than one huge script
 running many different analyses. However, you may sometimes need to
