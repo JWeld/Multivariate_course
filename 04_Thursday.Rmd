@@ -237,7 +237,7 @@ baci.cca
 ```
 
 ```{r, warning=FALSE, message=FALSE}
-with(EnvTS, anova(baci.cca, by="term", perm=500, strata=Treat))
+with(EnvTS, anova(baci.cca, by="term", permutations=500, strata=Treat))
 #Here with() is a special function that makes variables in dune.env visible to
 #the following command. If you only type Moisture in an R prompt, you will get
 #an error of missing variables
