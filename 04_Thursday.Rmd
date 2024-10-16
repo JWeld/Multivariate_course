@@ -214,7 +214,7 @@ ordihull(
 ### [Exercise 25: A multivariate Before-After-Control- Impact (BACI) study]{style="color:cornflowerblue"}
 
 In this exercise we will continue to use the rearranged Dune Meadow data
-from exercise 22. A difference is that the plots are now divided into
+from exercise 24. A difference is that the plots are now divided into
 four groups: 1. Control plots before a treatment (i.e. not treated) 2.
 Control plots after a treatment (i.e. not treated) 3. Impact plots
 before treatment (i.e. not treated) 4. Impact plots after treatment

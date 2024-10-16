@@ -8,21 +8,9 @@ library(vegan)
 library(tidyverse)
 ```
 
-### [Exercise 13: Do an RDA and a CCA on the Dune Meadow data set, using the full set of environmental variables.]{style="color:cornflowerblue"}
+Get our data for the session
 
-#### [Questions:]{style="color:forestgreen"}
-
-#### [13.1 Compare the ordination diagrams and numerical results! What does the significance test tell you?]{style="color:forestgreen"}
-
-#### [13.2 When only looking at the results, which method explains the variation best?]{style="color:forestgreen"}
-
-#### [13.3 Taking the nature of the data into account, which method (RDA or CCA) should be used?]{style="color:forestgreen"}
-
-#### [13.4 What is the difference between sequential and marginal significance tests?]{style="color:forestgreen"}
-
-#### [13.5 How can you determine in which order your terms should be, in a sequential test?]{style="color:forestgreen"}
-
-```{r ex13, echo=FALSE, message=FALSE, warning=FALSE, inclue=TRUE}
+```{r}
 data("dune")
 data("dune.env")
 dummy_management <-
@@ -42,6 +30,24 @@ dune.env <-
                       HF = ManagementHF,
                       NM = ManagementNM,
                       SF = ManagementSF)
+```
+
+### [Exercise 13: Do an RDA and a CCA on the Dune Meadow data set, using the full set of environmental variables.]{style="color:cornflowerblue"}
+
+#### [Questions:]{style="color:forestgreen"}
+
+#### [13.1 Compare the ordination diagrams and numerical results! What does the significance test tell you?]{style="color:forestgreen"}
+
+#### [13.2 When only looking at the results, which method explains the variation best?]{style="color:forestgreen"}
+
+#### [13.3 Taking the nature of the data into account, which method (RDA or CCA) should be used?]{style="color:forestgreen"}
+
+#### [13.4 What is the difference between sequential and marginal significance tests?]{style="color:forestgreen"}
+
+#### [13.5 How can you determine in which order your terms should be, in a sequential test?]{style="color:forestgreen"}
+
+```{r ex13, echo=FALSE, message=FALSE, warning=FALSE, inclue=TRUE}
+
 # RDA
 dune.rda <- rda(dune ~ . , dune.env)
 summary(dune.rda)
@@ -82,7 +88,7 @@ par(mfrow = c(1, 1))
 
 ------------------------------------------------------------------------
 
-### [Exercise 14: Use the results from the CCA ordination in exercise 11 to look at and interpret the variance inflation factor, and to look for warnings about outliers in the explanatory data]{style="color:cornflowerblue"}
+### [Exercise 14: Use the results from the CCA ordination to look at and interpret the variance inflation factor, and to look for warnings about outliers in the explanatory data]{style="color:cornflowerblue"}
 
 #### [Question:]{style="color:forestgreen"}
 
@@ -179,7 +185,7 @@ Next, you should investigate whether the four different management regimes (SF s
 
 #### [Question:]{style="color:forestgreen"}
 
-#### [17.1 Inspect and interpret the results of the permutations and graph! Compare with the CCA on the full set of explanatory data in exercise 13.]{style="color:forestgreen"}
+#### [17.1 Inspect and interpret the results of the permutations and graph! Compare with the CCA on the full set of explanatory data in exercise 15.]{style="color:forestgreen"}
 
 To investigate if the vegetational pattern is an effect of management, or if the pattern is random, Monte Carlo permutations will be used.
 
@@ -209,7 +215,7 @@ To do this, do another CCA with A1 and Moisture as environmental variables and p
 
 #### [Question:]{style="color:forestgreen"}
 
-#### [18.1 Explain the results of the permutations! Compare the results in exercises 15 and 16]{style="color:forestgreen"}
+#### [18.1 Explain the results of the permutations! Compare the results in exercises 16 and 17]{style="color:forestgreen"}
 
 ```{r ex16, inclue=TRUE, warning=FALSE, message=FALSE}
 # CCA using A1 and moisture as the environmental variable
@@ -259,7 +265,7 @@ ordihull(
 
 ### [Exercise 20: Partial ordination II]{style="color:cornflowerblue"}
 
-The amount of applied manure is a third important variable given in the environmental data set associated with the dune meadow data set. Repeat exercise 17, but with manure added to the set of covariates.
+The amount of applied manure is a third important variable given in the environmental data set associated with the dune meadow data set. Repeat exercise 19, but with manure added to the set of covariates.
 
 #### [Questions:]{style="color:forestgreen"}
 

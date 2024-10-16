@@ -60,11 +60,11 @@ DCANewSp
 ordiplot(DCANewSp, type="text", main="DCA with new sp.")
 ```
 
-You may be surprised that you haven't got any total inertia values when printing decorana results, although in other software (e.g. CANOCO) these are available, together with percentage variance explained by particular axes. The reason for this is that DCA does not support the concept of total inertia values (also, it produces only four axes, i.e. four eigenvalues). See the comment in the code for the Exercise 5.
+You may be surprised that you haven't got any total inertia values when printing decorana results, although in other software (e.g. CANOCO) these are available, together with percentage variance explained by particular axes. The reason for this is that DCA does not support the concept of total inertia values (also, it produces only four axes, i.e. four eigenvalues). See the explanation in the introduction to Exercise 6.
 
 ------------------------------------------------------------------------
 
-### [Question 8: Effects from increased variation.]{style="color:cornflowerblue"}
+### [Excercise 8: Effects from increased variation.]{style="color:cornflowerblue"}
 
 Add one new sample to the data, then add a cover of 9 for the existing species Chenopodium album "Chealbu" in the new sample. Make a new DCA-ordination. Next, remove the Chealbu = 9, and add instead a cover of 5 for the exisiting species Juncbufo and make a new DCA.
 
