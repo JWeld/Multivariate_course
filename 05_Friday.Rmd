@@ -9,15 +9,15 @@ Sometimes loaded packages in R can conflict with another package. Among
 other issues, this can mean that the same function name (e.g. select())
 is used in different packages, so the your code may give a different
 output (or fail) depending on the packages you have loaded at the time!
-By default, R uses the most recently loaded version of the function. This 
-can be over-ridden using the "conflicted" package.
-It is good practice to write code that has a narrow purpose and loads
-the packages needed for that purpose, rather than one huge script
-running many different analyses. However, you may sometimes need to
-unload a package or restart R to get the expected results. You can
-restart R (note: not the same as restarting RStudio!) from the RStudio
-Session menu or using the following code. The code is commented out
-because we don't actually need to do this now, but it is good to know!
+By default, R uses the most recently loaded version of the function.
+This can be over-ridden using the "conflicted" package. It is good
+practice to write code that has a narrow purpose and loads the packages
+needed for that purpose, rather than one huge script running many
+different analyses. However, you may sometimes need to unload a package
+or restart R to get the expected results. You can restart R (note: not
+the same as restarting RStudio!) from the RStudio Session menu or using
+the following code. The code is commented out because we don't actually
+need to do this now, but it is good to know!
 
 ```{r}
 #VIM package loaded on Tuesday conflicts with SIMPER function in Vegan which we will use today, if you wanted to use SIMPER after VIM you can detach VIM first
@@ -385,9 +385,16 @@ traits<-as.data.frame(read_xlsx("Data/TylerTraits.xlsx", na = "NA",sheet = 1, co
 rownames(traits)<-traits$Spe; traits$Spe<-NULL 
 names(traits)
 traits<-traits[,-c(1:6,22, 27,29,30:32)] # Remove trait not feasible for this analysis
+```
 
-#Fourth corner
-#Given that there are many traits and even environmental factors that are not strong predictors of abundance, we can reduce the number of #predictor terms in our models.LASSO is an optimization algorithm (Least Absolute Shrinkage and Selection Operator) that is used in this #case.
+**Fourth corner analysis**
+
+Given that there are many traits and even environmental factors that are
+not strong predictors of abundance, we can reduce the number of
+#predictor terms in our models.LASSO is an optimization algorithm (Least
+Absolute Shrinkage and Selection Operator) that is used in this case.
+
+```{r}
 
 fitfourth = traitglm(spe, env, traits, method = "glm1path")
 fitfourth$fourth #examine fourth corner terms
@@ -411,17 +418,25 @@ qqnorm(residuals(fitfourth)); abline(c(0,1),col="red") # for a normal quantile p
 #not available for Lasso model)
 fitfourth2 = traitglm(spe, env, traits)
 pvalues <- anova.traitglm(fitfourth2,nBoot=10) #overall significant
+```
 
-#We can also explore the effects of individual trait by environment interactions using the 
-#summary function ** Warning this is very very slow, even with limited n ** Don't run this 
-#last line of code unless you want to take a rather long coffee break!
-#We will limit the number of bootstrap reps to 5 (nBoot=5) but 1000 should be used for reliable results/final analyses. Given how slow this is with nBoot=5, I guess this would take many hours...
+We can also explore the effects of individual trait by environment
+interactions using the summary() function of the mvabund package.
+Warning! This code is commented out as it is very slow to run with this
+many traits and environmental variables, even with a limited number of
+iterations. Don't run this code chunk unless you want to take a rather
+long coffee break!
 
-#summary(fitfourth2, nboot=5)
+```{r}
+#We will limit the number of bootstrap reps to 5 (nBoot=5) but 1000 should be used for reliable results/final analyses. Given how slow this is with nBoot=5, I guess this would take many hours
+
+#summary(fitfourth2, resamp = "montecarlo", nboot=5)
 
 #Example of output if you don't want to wait for the code to run...
+
 #UsePasture.N_fix1           0.467     0.115    
 
+#The numbers returned are a test statistic and a P-value calculated by resampling rows of the data. In this case the interaction is not significant (p=0.115)
 ```
 
 ------------------------------------------------------------------------
