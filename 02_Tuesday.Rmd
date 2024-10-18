@@ -200,7 +200,7 @@ stressplot(dune.NMDS.euclidean.2)
 #
 # generate the CA and DCA results
 #
-dune.CA <- cca(dune)
+dune.CA <- ca(dune)
 dune.DCA <- decorana(dune)
 #
 # plot the CA and DCA results
@@ -311,7 +311,7 @@ By now you have seen a number of ordination plots, and probably realised that so
 #### [12.1 Is there any situation when this option should not be used?]{style="color:forestgreen"}
 
 ```{r}
-dune.ca <- cca(dune)
+dune.ca <- ca(dune)
 # goodness of fit
 gf <- goodness(dune.ca, model = "CA", display = "species", choices = 1:2)
 head(gf)#the values in column PC2 are the cummulative goodness of fit values over the two axes

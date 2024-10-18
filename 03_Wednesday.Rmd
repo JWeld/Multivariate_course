@@ -114,8 +114,8 @@ Function vif.cca gives the variance inflation factors for each constraint or con
 #### [15.2 When could an unconstrained ordination with explanatory variables be a good option?]{style="color:forestgreen"}
 
 ```{r ex15, inclue=TRUE, warning=FALSE, message=FALSE}
-# CA with env. variables
-dune.ca <- cca(dune)
+# CA with env. variables fitted afterwards
+dune.ca <- ca(dune)
 fit <- envfit(dune.ca, dune.env, perm = 999)
 fit
 ordiplot(dune.ca,  type = "text", main = "CA with env. variables fitted after")

@@ -397,7 +397,9 @@ Absolute Shrinkage and Selection Operator) that is used in this case.
 ```{r}
 
 fitfourth = traitglm(spe, env, traits, method = "glm1path")
-fitfourth$fourth #examine fourth corner terms
+fitfourth$fourth #examine fourth corner terms, you may want to convert to a dataframe for further analysis
+#View(as.data.frame(fitfourth$fourth))
+
 #and plot the results
 a        = max(abs(fitfourth$fourth.corner))
 colort   = colorRampPalette(c("blue", "white", "red"))
@@ -414,21 +416,26 @@ print(plot.4th)
 plot(fitfourth) # for a Dunn-smyth residual plot
 qqnorm(residuals(fitfourth)); abline(c(0,1),col="red") # for a normal quantile plot.
 
-#We can test for overall significance using an anova (only on default manyglm model, 
-#not available for Lasso model)
-fitfourth2 = traitglm(spe, env, traits)
-pvalues <- anova.traitglm(fitfourth2,nBoot=10) #overall significant
+
 ```
 
-We can also explore the effects of individual trait by environment
-interactions using the summary() function of the mvabund package.
-Warning! This code is commented out as it is very slow to run with this
-many traits and environmental variables, even with a limited number of
-iterations. Don't run this code chunk unless you want to take a rather
-long coffee break!
+We can also test for significance and explore the effects of individual
+trait by environment interactions using the summary() function of the
+mvabund package. Warning! This code is commented out as it is very slow
+to run with this many traits and environmental variables, even with a
+limited number of iterations. Don't run this code chunk unless you want
+to take a rather long coffee break! If this is something you do want to
+do, narrow down the focus to fewer traits and environmental factors,
+using only those you are really interested in.
 
 ```{r}
-#We will limit the number of bootstrap reps to 5 (nBoot=5) but 1000 should be used for reliable results/final analyses. Given how slow this is with nBoot=5, I guess this would take many hours
+#We can test for overall significance using an anova (only on default manyglm model, 
+#not available for Lasso model). This is a bit slow, but only several minutes.
+#fitfourth2 = traitglm(spe, env, traits)
+#pvalues <- anova.traitglm(fitfourth2,nBoot=20) #overall significant
+
+#INDIVIDUAL TRAITS#
+#We will limit the number of bootstrap reps to 5 (nBoot=5) but at least several hundred should be used for reliable results/final analyses. Given how slow this is with nBoot=5, I guess this would take many hours
 
 #summary(fitfourth2, resamp = "montecarlo", nboot=5)
 

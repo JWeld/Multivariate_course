@@ -163,7 +163,7 @@ Next we do some PCA analyses and plot the results
 ## PCA plot 2:
 # Then make a PCA, with scaling of (=standardising) the data
 env.pca <-
-  rda(dune.env, scale = TRUE) #vegan uses the same function for PCA and RDA, just depends on if it is constrained or not.
+  pca(dune.env, scale = TRUE) 
 biplot(env.pca, main = "Plot 1") #plot the results using the default plot scaling which is "species"
 env.pca #summarise results
 summary(eigenvals(env.pca)) #see variance explained
@@ -171,7 +171,7 @@ summary(eigenvals(env.pca)) #see variance explained
 ## PCA plot 3:
 # Continue with a PCA on the same data, but without scaling of the data
 env.pca2 <-
-  rda(dune.env, scale = FALSE) #vegan uses the same function for PCA and RDA, just depends on if it is constrained or #not.
+  pca(dune.env, scale = FALSE) 
 biplot(env.pca2, main = "Plot 2")#plot the results
 env.pca2 #summarise results
 summary(eigenvals(env.pca2)) #see variance explained
@@ -248,7 +248,7 @@ lines(coords, col="blue")
 #### [5.1 Give a conceptual description on why objects/samples and descriptors/species to the left differ from objects and descriptors to the right, and those at the bottom from those at the top! (Plant ecologists may give a more detailed description, using their knowledge about the species in the dataset).]{style="color:forestgreen"}
 
 ```{r, warning=FALSE, message=FALSE}
-dune.ca <- cca(dune)
+dune.ca <- ca(dune)
 plot(dune.ca)
 dune.ca
 summary(eigenvals(dune.ca)) #proportion variance explained
