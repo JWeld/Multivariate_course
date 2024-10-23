@@ -101,7 +101,6 @@ help(vegdist)
 (dt.bray <- vegdist(dt, method = "bray"))
 (dt.manhattan <- vegdist(dt, method = "manhattan"))
 (dt.euclidean <- vegdist(dt, method = "euclidean"))
-(dt.mahalanobis <- vegdist(dt, method = "mahalanobis"))
 
 ```
 

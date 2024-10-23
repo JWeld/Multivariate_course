@@ -239,7 +239,7 @@ Now, you have concluded that both soil characteristics and management type are d
 
 #### [Questions:]{style="color:forestgreen"}
 
-#### [19.1 What does the permutation test tell you?]{style="color:forestgreen"}
+#### [19.1 What does the result of the permutation test tell you?]{style="color:forestgreen"}
 
 #### [19.2 Compare the results with the results from the permutation test on only management types]{style="color:forestgreen"}
 
