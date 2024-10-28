@@ -13,7 +13,6 @@ library("clustertend")
 library("factoextra")
 library("NbClust")
 library("dendextend")
-library("clustertend")
 library("dplyr")
 ```
 
@@ -237,7 +236,7 @@ baci.cca
 ```
 
 ```{r, warning=FALSE, message=FALSE}
-with(EnvTS, anova(baci.cca, by="term", permutations=500, strata=Treat))
+with(EnvTS, anova(baci.cca, by="term", model = "full", permutations=999, strata=Treat))
 #Here with() is a special function that makes variables in dune.env visible to
 #the following command. If you only type Moisture in an R prompt, you will get
 #an error of missing variables
@@ -365,62 +364,62 @@ hierarchical clustering technique. Also try Ward's method
 # see how many clusters there appear to be in the data
 kk <- cascadeKM(dune,inf.gr=2,sup.gr=6)
 plot(kk)
+# or maybe we should hellinger transform our species data?
+dune.h <- vegdist(dune, method = "hellinger")
+kkh <- cascadeKM(dune.h,inf.gr=2,sup.gr=6)
+plot(kkh)
 #
 # K-Means Cluster Analysis based on the previously identified number of clusters
 #
 dune.fit.3 <- kmeans(dune, 3, nstart = 50) 
-#
-# As the final result of k-means clustering result is sensitive to the random starting assignments, 
-# we specify nstart = 50. This means that R will try 50 different random starting assignments and then
-# select the best results corresponding to the one with the lowest within cluster variation.
-# Note that k-means clustering involves randomness so you won't neccessarily get exactly the same results 
-# if you repeat it.
-#
-# There are also several different algorithms that can be used in k-means clustering, and different software 
-#can use different defaults.Check out the help file for the kmeans function if you want to know more
-# about these.
-#
+```
+
+As the final result of k-means clustering result is sensitive to the
+random starting assignments, we specified nstart = 50. This means that R
+will try 50 different random starting assignments and then select the
+best results corresponding to the one with the lowest within cluster
+variation. Note that k-means clustering involves randomness so you won't
+neccessarily get exactly the same results if you repeat it. There are
+also several different algorithms that can be used in k-means
+clustering, and different software can use different defaults.Check out
+the help file for the kmeans function if you want to know more about
+these.
+
+```{r}
 #cluster number for each data point
-#
 dune.fit.3$cluster
 #
 #cluster sizes
-#
 dune.fit.3$size
 #
 #compare clusters to management category
-#
 table(dune.fit.3$cluster, dune.env.original$Management)
 #
 # there are four management categories, try k-means clustering with k=4
-#
 dune.fit.4 <- kmeans(dune, 4, nstart = 50) 
 #
 #cluster number for each data point
-#
 dune.fit.4$cluster
 #
 #cluster sizes
-#
 dune.fit.4$size
 #
 #compare clusters to management category
-#
 table(dune.fit.4$cluster, dune.env.original$Management)
 #
 #try some approaches to hierarchical clustering
-#
 dend2 <- dune %>% # data
   dist(method = "euclidean") %>% # calculate a distance matrix, choose method
   hclust(method = "ward.D") %>% # Hierarchical clustering, choose method
   as.dendrogram # Turn the object into a dendrogram.
 dend2 %>% set("labels_color") %>% set("branches_lwd") %>%  set("branches_k_color", k = 4) %>% plot(main = "Euclidean")
-#
-# the dist() function does not include Bray-Curtis but we can make a distance matrix using 
-# the vegdist() function from vegan.
-#
-# make a distance matrix using the Bray-Curtis method
-#
+```
+
+The dist() function does not include Bray-Curtis but we can make a
+distance matrix using the vegdist() function from vegan. Make a distance
+matrix using the Bray-Curtis method
+
+```{r}
 dune.dist <- vegdist(dune, method = "bray")
 #
 dend3 <- dune.dist %>% # data (Bray-Curtis)
@@ -435,15 +434,18 @@ dend3 %>% set("labels_color", dune.fit.3$cluster) %>% set("branches_lwd") %>%  s
 #tanglegram is a nice function to compare dendrograms that you might want to try out as an extra
 #
 tanglegram(dend2, dend3)
-#
-# finally, should the Dune data be clustered at all?
-#
-# Compute Hopkins statistic for the Dune dataset.
-# Calculated values 0-0.3 indicate regularly-spaced data. Values around 0.5 indicate random # # data. Values 0.7-1 indicate clustered data.
-# BUT NOTE! The value returned by this function is actually 1-Hopkins statistic.
+```
+
+Finally, should the Dune data be clustered at all? Compute Hopkins
+statistic for the Dune dataset.Calculated values 0-0.3 indicate
+regularly-spaced data. Values around 0.5 indicate random data. Values
+0.7-1 indicate clustered data. BUT NOTE! The value returned by this
+function is actually 1-Hopkins statistic.
+
+```{r}
 set.seed(123)
-#
-hopkins(dune, n = nrow(dune)-1)
+hopkins(dune)
+
 ```
 
 ------------------------------------------------------------------------
@@ -473,6 +475,7 @@ discrimination.<https://en.wikipedia.org/wiki/Iris_flower_data_set>
 if(!is.element("psych",installed.packages()[,1])) {install.packages("psych") }
 library(psych)
 library(rpart)
+library(rpart.plot)
 #
 # create pairwise plots of the variables in the iris data set
 #
@@ -488,17 +491,17 @@ iris.tree.model<-rpart(Species ~ Sepal.Length + Sepal.Width + Petal.Length + Pet
 # 
 # display the partition tree
 #
-plot(iris.tree.model)
-text(iris.tree.model)
+rpart.plot(iris.tree.model, extra=0, box.palette =list("red", "blue", "forestgreen"))
+
 #
 # plots for confirmatory visual analysis
 #
 plot(iris$Petal.Length, col = c("red", "blue", "forestgreen")[iris$Species], xlab = "", ylab = "Petal Length (cm)")
-legend(120, 2, c("setosa","versicolor","virginica"), col = c("red", "blue", "forestgreen"), pch = 1)
+legend(120, 2, c("setosa","versicolor","virginica"), col = c("red", "blue", "forestgreen"), pch = 0.7)
 abline(h = 2.45)
 #
 plot(iris$Petal.Width, col = c("red", "blue", "forestgreen")[iris$Species], xlab = "", ylab = "Petal Width (cm)")
-legend(20, 1.5, c("setosa","versicolor","virginica"), col = c("red", "blue", "forestgreen"), pch = 1)
+legend(20, 1.5, c("setosa","versicolor","virginica"), col = c("red", "blue", "forestgreen"), pch = 0.7)
 abline(h = 1.75)
 ```
 
