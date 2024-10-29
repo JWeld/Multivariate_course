@@ -122,20 +122,37 @@ plot(dune.ano, xlab = "Anosim, Dune meadow management types") #note the error me
 
 #ANOSIM gives you the P value and a R value. R value close to 1 indicates high separation between levels of your factor while R value #close to 0 indicate no separation between levels of your factor.
 
-# Try also the recommended alternative "adonis" - Analysis of variance using distance matrices - for partitioning distance matrices among sources of variation and fitting linear models (e.g., factors, polynomial regression) to distance matrices; uses a permutation test with pseudo-F ratios.
+```
 
+Also try the recommended alternative "adonis" - Analysis of variance
+using distance matrices - for partitioning distance matrices among
+sources of variation and fitting linear models (e.g., factors,
+polynomial regression) to distance matrices; this uses a permutation
+test with pseudo-F ratios. We can also do pairwise comparisons to see
+which groups differ from each other.
+
+```{r}
 dune.ado<-adonis2(formula = dune~Management, data = dune.env.original, method = "bray")
 dune.ado
 
 # You can also have more advanced models in adonis
 dune.ado2<-adonis2(dune~Management*A1, data = dune.env.original)
 dune.ado2
+
+# Install the pairwiseAdonis function
+library(devtools)
+install_github("pmartinezarbizu/pairwiseAdonis/pairwiseAdonis")
+library(pairwiseAdonis)
+
+#The adonis test tells us that there is a difference between our grouping factors, but the pairwise test can tell us exactly #which pairs of groups differ from each other
+
+pairwise.adonis2(dune~Management, data = dune.env.original)
 ```
 
-After a significant ANOSIM, you may want to know which species are
-primarily responsible for the observed difference between clusters.
-SIMPER (Similarity Percentage) will do this for you. The test gives
-by-species p values for changes in abundance, but does not do
+After a significant ANOSIM or PERMANOVA, you may want to know which
+species are primarily responsible for the observed difference between
+clusters. SIMPER (Similarity Percentage) will do this for you. The test
+gives by-species p values for changes in abundance, but does not do
 significance testing for overall difference between groups. In the
 output tables, taxa are sorted in descending order of contribution to
 group difference. Consider those contributions (effect sizes), not just
