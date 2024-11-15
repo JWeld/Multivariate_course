@@ -38,7 +38,7 @@ dune.env <-
 
 #### [13.1 Compare the ordination diagrams and numerical results! What does the significance test tell you?]{style="color:forestgreen"}
 
-#### [13.2 When only looking at the results, which method explains the variation best?]{style="color:forestgreen"}
+#### [13.2 When only looking at the numerical results, which method explains the variation best?]{style="color:forestgreen"}
 
 #### [13.3 Taking the nature of the data into account, which method (RDA or CCA) should be used?]{style="color:forestgreen"}
 
@@ -101,7 +101,7 @@ vif.cca <- vif.cca(dune.cca)
 vif.cca
 ```
 
-Function vif.cca gives the variance inflation factors for each constraint or contrast in factor constraints. In partial ordination, conditioning variables are analysed together with constraints. Variance inflation is a diagnostic tool to identify useless constraints. A common rule is that values over 10 indicate redundant constraints.
+Function vif.cca gives the variance inflation factors for each constraint or contrast in factor constraints. In partial ordination, conditioning variables are analysed together with constraints. Variance inflation is a diagnostic tool to identify useless constraints. A common suggestion is that values over 10 indicate redundant constraints.
 
 ------------------------------------------------------------------------
 
@@ -109,7 +109,7 @@ Function vif.cca gives the variance inflation factors for each constraint or con
 
 #### [Questions:]{style="color:forestgreen"}
 
-#### [15.1 Compare the constrained and unconstrained ordinations. What is the difference between the methods?]{style="color:forestgreen"}
+#### [15.1 What is the difference in how explanatory variables are added inconstrained and unconstrained ordinations?]{style="color:forestgreen"}
 
 #### [15.2 When could an unconstrained ordination with explanatory variables be a good option?]{style="color:forestgreen"}
 
@@ -185,7 +185,7 @@ Next, you should investigate whether the four different management regimes (SF s
 
 #### [Question:]{style="color:forestgreen"}
 
-#### [17.1 Inspect and interpret the results of the permutations and graph! Compare with the CCA on the full set of explanatory data in exercise 15.]{style="color:forestgreen"}
+#### [17.1 Inspect and interpret the results of the significance test and graph! Compare with the CCA on the full set of explanatory data in exercise 15.]{style="color:forestgreen"}
 
 To investigate if the vegetational pattern is an effect of management, or if the pattern is random, Monte Carlo permutations will be used.
 
@@ -271,8 +271,6 @@ The amount of applied manure is a third important variable given in the environm
 
 #### [20.1 What was the effect of adding manure to the set of covariates?]{style="color:forestgreen"}
 
-We may expect that Management and Manure are related, check visually by making a boxplot of Manure vs Management type using the R code: boxplot(Manure\~Management, data = dune.env.original).
-
 #### [20.2 What does the result tell you?]{style="color:forestgreen"}
 
 ```{r ex18, inclue=TRUE, warning=FALSE, message=FALSE}
@@ -295,6 +293,12 @@ ordihull(
 
 # Are Management and Manure correlated, check visually
 # Make a boxplot manure~Management!
+```
+
+We may expect that Management and Manure are related, check visually by making a boxplot of Manure vs Management. Let's have a look...
+
+```{r}
+boxplot(Manure~Management, data = dune.env.original)
 ```
 
 ------------------------------------------------------------------------

@@ -120,7 +120,8 @@ The R base statistics library offers the routine cmdscale() for performing MDS. 
 dune.bray.distance.matrix <- vegdist(dune, method = "bray")
 dune.jaccard.distance.matrix <- vegdist(dune, method = "jaccard")
 dune.euclidean.distance.matrix <- vegdist(dune, method = "euclidean")
-dune.mahalanobis.distance.matrix <- vegdist(dune, method = "mahalanobis")
+dune.hellinger.distance.matrix <- vegdist(dune, method = "hellinger")
+
 #
 # what can be accomplished with the MDS routine?
 #
@@ -131,10 +132,18 @@ help(cmdscale)
 dune.bray.location <- cmdscale(dune.bray.distance.matrix)
 dune.jaccard.location <- cmdscale(dune.jaccard.distance.matrix)
 dune.euclidean.location <- cmdscale(dune.euclidean.distance.matrix)
-dune.mahalanobis.location <-
-  cmdscale(dune.mahalanobis.distance.matrix)
+dune.hellinger.location <- cmdscale(dune.hellinger.distance.matrix)
+
 #
 # now take a look at some plots
+
+plot(dune.euclidean.location, xlab = "PCoA 1", ylab = "PCoA 2")
+title(main = "PCoA on Euclidean distances of dune sites")
+text(
+  dune.euclidean.location,
+  labels = row.names(dune.euclidean.location),
+  pos = 2
+)
 #
 plot(dune.bray.location, xlab = "PCoA 1", ylab = "PCoA 2")
 title(main = "PCoA on Bray Curtis distances of dune sites")
@@ -148,19 +157,12 @@ text(dune.jaccard.location,
      labels = row.names(dune.jaccard.location),
      pos = 2)
 #
-plot(dune.euclidean.location, xlab = "PCoA 1", ylab = "PCoA 2")
-title(main = "PCoA on Euclidean distances of dune sites")
+
+plot(dune.hellinger.location, xlab = "PCoA 1", ylab = "PCoA 2")
+title(main = "PCoA on Hellinger distances of dune sites")
 text(
-  dune.euclidean.location,
-  labels = row.names(dune.euclidean.location),
-  pos = 2
-)
-#
-plot(dune.mahalanobis.location, xlab = "PCoA 1", ylab = "PCoA 2")
-title(main = "PCoA on Mahalanobis distances of dune sites")
-text(
-  dune.mahalanobis.location,
-  labels = row.names(dune.mahalanobis.location),
+  dune.hellinger.location,
+  labels = row.names(dune.hellinger.location),
   pos = 2
 )
 ```

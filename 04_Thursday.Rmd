@@ -48,7 +48,11 @@ similar traits occur together. This is possible if you have good
 knowledge about plant species' ecological preferences, and if there are
 relatively few species in your dataset. In this exercise we will use
 tabulated data on species ecological preferences (the Ellenberg
-indicator values) to interpret the results of the ordinations.
+indicator values) to interpret the results of the ordinations. The
+indicator values are abbreviated as follows- L = Light, T = Temperature,
+K = Contintentality (i.e. preference for an oceanic or inland
+contintental climate), F = Moisture, R = Reaction (i.e. soil pH
+preference), N = Nitrogen, S = Salinity.
 
 #### [Questions:]{style="color:forestgreen"}
 
@@ -150,7 +154,7 @@ between the ten plots.
 
 #### [24.1 Is there a significant change in species composition over time?]{style="color:forestgreen"}
 
-#### [24.2 What is the effect of defining Plots as co-factors?]{style="color:forestgreen"}
+#### [24.2 Why should plots be defined as co-factors in this analysis?]{style="color:forestgreen"}
 
 ```{r, warning=FALSE, message=FALSE}
 #This partials out the effect of Plot before analysing the effects of Time
@@ -268,7 +272,7 @@ new data is insect abundance at the different plots.
 
 #### [Questions:]{style="color:forestgreen"}
 
-#### [26.1 How similar is the arrangement of sites in ordination space based on plant and insect data?]{style="color:forestgreen"}
+#### [26.1 How similar is the arrangement of sites in the two ordinations based on plant and insect data?]{style="color:forestgreen"}
 
 #### [26.2 Do the three analyses (Procrustes, Co-Correspondence and Mantel) indicate similar ordinations of sites based on plant vs. insect data?]{style="color:forestgreen"}
 
@@ -361,17 +365,15 @@ hierarchical clustering technique. Also try Ward's method
 
 ```{r}
 
-# see how many clusters there appear to be in the data
-kk <- cascadeKM(dune,inf.gr=2,sup.gr=6)
-plot(kk)
-# or maybe we should hellinger transform our species data?
+# See how many clusters there appear to be in the data
+# As K-means is based on Euclidean disatnces, we should hellinger transform our species data
 dune.h <- vegdist(dune, method = "hellinger")
 kkh <- cascadeKM(dune.h,inf.gr=2,sup.gr=6)
 plot(kkh)
 #
 # K-Means Cluster Analysis based on the previously identified number of clusters
 #
-dune.fit.3 <- kmeans(dune, 3, nstart = 50) 
+dune.fit.4 <- kmeans(dune.h, 4, nstart = 50) 
 ```
 
 As the final result of k-means clustering result is sensitive to the
@@ -387,18 +389,6 @@ these.
 
 ```{r}
 #cluster number for each data point
-dune.fit.3$cluster
-#
-#cluster sizes
-dune.fit.3$size
-#
-#compare clusters to management category
-table(dune.fit.3$cluster, dune.env.original$Management)
-#
-# there are four management categories, try k-means clustering with k=4
-dune.fit.4 <- kmeans(dune, 4, nstart = 50) 
-#
-#cluster number for each data point
 dune.fit.4$cluster
 #
 #cluster sizes
@@ -407,6 +397,13 @@ dune.fit.4$size
 #compare clusters to management category
 table(dune.fit.4$cluster, dune.env.original$Management)
 #
+
+```
+
+We should also try the other family of clustering methods, hierarchical
+clustering. this gives you the relationship among the samples
+
+```{r}
 #try some approaches to hierarchical clustering
 dend2 <- dune %>% # data
   dist(method = "euclidean") %>% # calculate a distance matrix, choose method
@@ -422,103 +419,32 @@ matrix using the Bray-Curtis method
 ```{r}
 dune.dist <- vegdist(dune, method = "bray")
 #
-dend3 <- dune.dist %>% # data (Bray-Curtis)
+dend4 <- dune.dist %>% # data (Bray-Curtis)
   hclust(method = "aver") %>% # Hierarchical clustering, choose method
   as.dendrogram # Turn the object into a dendrogram.
-dend3 %>% set("labels_color") %>% set("branches_lwd") %>%  set("branches_k_color", k = 4) %>% plot(main = "Average")
+dend4 %>% set("labels_color") %>% set("branches_lwd") %>%  set("branches_k_color", k = 4) %>% plot(main = "Average")
 #
 #we can colour the labels based on their grouping in the kmeans analysis to compare clusters
 #
-dend3 %>% set("labels_color", dune.fit.3$cluster) %>% set("branches_lwd") %>%  set("branches_k_color", k = 4) %>% plot(main = "Average")
+dend4 %>% set("labels_color", dune.fit.4$cluster) %>% set("branches_lwd") %>%  set("branches_k_color", k = 4) %>% plot(main = "Average")
 #
-#tanglegram is a nice function to compare dendrograms that you might want to try out as an extra
+#tanglegram is a function to compare dendrograms that you might want to try out as an extra
 #
-tanglegram(dend2, dend3)
-```
-
-Finally, should the Dune data be clustered at all? Compute Hopkins
-statistic for the Dune dataset.Calculated values 0-0.3 indicate
-regularly-spaced data. Values around 0.5 indicate random data. Values
-0.7-1 indicate clustered data. BUT NOTE! The value returned by this
-function is actually 1-Hopkins statistic.
-
-```{r}
-set.seed(123)
-hopkins(dune)
-
+tanglegram(dend2, dend4)
 ```
 
 ------------------------------------------------------------------------
 
-### [Exercise 28: Classification 2: Partition and Regression Trees]{style="color:cornflowerblue"}
-
-Most of the code is taken from
-<https://jonlefcheck.net/2015/02/06/a-practical-guide-to-machine-learning-in-ecology/>
-Here, we will use the iris data. This is a "classic" data set used for
-exploring multivariate methods for
-discrimination.<https://en.wikipedia.org/wiki/Iris_flower_data_set>
-
-#### [Questions:]{style="color:forestgreen"}
-
-#### [28.1 Based on a visual analysis, which dimensions provide the best separation between iris species?]{style="color:forestgreen"}
-
-#### [28.2 Are your insights from the visual analysis confirmed by the partition tree analysis?]{style="color:forestgreen"}
-
-#### [28.3 Does the partition tree provide a perfect species identification or are there misclassifications?]{style="color:forestgreen"}
-
-```{r}
-# Before starting the analysis, we will generate pairwise scatterplots of the data
-#
-# the following line will first check to see inf the "psych" library is loaded, and only 
-# load it if it is not present
-#
-if(!is.element("psych",installed.packages()[,1])) {install.packages("psych") }
-library(psych)
-library(rpart)
-library(rpart.plot)
-#
-# create pairwise plots of the variables in the iris data set
-#
-pairs.panels(iris[,-5],gap=0,bg=c("red","blue","yellow")[iris$Species],pch=21)
-#
-# what does rpart() do ?
-#
-help(rpart)
-#
-# set up the partition tree model for the iris data
-#
-iris.tree.model<-rpart(Species ~ Sepal.Length + Sepal.Width + Petal.Length + Petal.Width, data = iris)
-# 
-# display the partition tree
-#
-rpart.plot(iris.tree.model, extra=0, box.palette =list("red", "blue", "forestgreen"))
-
-#
-# plots for confirmatory visual analysis
-#
-plot(iris$Petal.Length, col = c("red", "blue", "forestgreen")[iris$Species], xlab = "", ylab = "Petal Length (cm)")
-legend(120, 2, c("setosa","versicolor","virginica"), col = c("red", "blue", "forestgreen"), pch = 0.7)
-abline(h = 2.45)
-#
-plot(iris$Petal.Width, col = c("red", "blue", "forestgreen")[iris$Species], xlab = "", ylab = "Petal Width (cm)")
-legend(20, 1.5, c("setosa","versicolor","virginica"), col = c("red", "blue", "forestgreen"), pch = 0.7)
-abline(h = 1.75)
-```
-
-------------------------------------------------------------------------
-
-### [Exercise 29: Principal Response Curves]{style="color:cornflowerblue"}
+### [Exercise 28: Principal Response Curves]{style="color:cornflowerblue"}
 
 In the following exercise, we will attempt to identify temporal
-structure in a data set in two ways. First, we will perform an RDA
-against time, we will then perform a more appropriate analysis using
-Principal Response Curves (PRC).
+structure in a data set using Principal Response Curves (PRC).
 
 #### [Questions:]{style="color:forestgreen"}
 
-#### [29.1 Was there an effect of dose over time on the invertebrate community?]{style="color:forestgreen"}
+#### [28.1 Was there an effect of dose over time on the invertebrate community?]{style="color:forestgreen"}
 
-#### [29.2 Which species were most affected, i.e changed most under the highest dose compared to the control ?]{style="color:forestgreen"}
+#### [28.2 Which species were most affected, i.e changed most under the highest dose compared to the control ?]{style="color:forestgreen"}
 
 ```{r}
 # We will use the pyrifos data set, which we have not previously seen.
@@ -532,26 +458,7 @@ ditch_ <- gl(12, 1, length=132)
 week_ <- gl(11, 12, labels=c(-4, -1, 0.1, 1, 2, 4, 8, 12, 15, 19, 24))
 dose_ <- factor(rep(c(0.1, 0, 0, 0.9, 0, 44, 6, 0.1, 44, 0.9, 0, 6), 11)) 
 #
-# First, let's see if there is temporal structure in the data by performing an RDA with time as # the predictor variable. Here, ditch_ is added as cofactor to remove the spatial variation to # disentangle it from the temporal variation (as in exercise 22).
-#
-pyrifos.RDA.week<-rda(pyrifos ~ week_ + Condition(ditch_))
-pyrifos.RDA.week
-# Display the ordination plot to see if there may be interpretable temporal structure
-#
-pyrifos.RDA.week.plot<-ordiplot(pyrifos.RDA.week)
-text(pyrifos.RDA.week.plot,"centroids", col="blue",pos=2,cex=1)
-#
-# now can we say anything about dose effects?
-#
-pyrifos.RDA.dose<-rda(pyrifos ~ dose_)
-pyrifos.RDA.dose
-#
-# Display the ordination plot to see if there is interpretable structure related to dose
-#
-pyrifos.RDA.dose.plot<-ordiplot(pyrifos.RDA.dose)
-text(pyrifos.RDA.dose.plot,"centroids", col="blue",pos=2,cex=1)
-#
-# Now perform the appropriate analysis for exploring temporal structure
+# An appropriate analysis for exploring temporal structure...
 #
 pyrifos.PRC<-prc(pyrifos, treatment=dose_, time=week_)
 pyrifos.PRC  
@@ -577,3 +484,84 @@ anova(pyrifos.PRC, permutations = pyrifos.PRC.ctrl, first = TRUE)
 ```
 
 ------------------------------------------------------------------------
+
+### [Exercise 29: PLS]{style="color:cornflowerblue"}
+
+PLS regression, like PCA, seeks to find components which maximize the
+variability of predictors but differs from PCA as PLS requires the
+components to have maximum correlation with the response. The predictor
+variables are mapped to a smaller set of variables, and within that
+smaller space we perform a regression against the outcome variable. PLS
+aims to choose new mapped variables that maximally explain the outcome
+variable.
+
+#### [Questions:]{style="color:forestgreen"}
+
+#### [29.1 Which explanatory variables are most important to explain the response variables (A1 and Moisture)?]{style="color:forestgreen"}
+
+#### [29.2 Are there any obvious outliers in the dataset?]{style="color:forestgreen"}
+
+#### [29.3 Does the data seem to be in need of a transformation?]{style="color:forestgreen"}
+
+```{r PLS, echo=TRUE, message=FALSE, warning=FALSE}
+
+library(pls)
+
+#This function takes the same form as a lot of regression models in R:
+#plsr(Response variable ~ Explanatory Variables, data = yourdata, scale = TRUE/FALSE)
+#However the response variable can be a matrix of variables.
+
+#Here we will use the dune species to predict environmental variables A1 and moisture.
+#We have mostly done this in the other direction, but correlations go both ways! 
+pls.response <- dplyr::select(dune.env.original, A1, Moisture)
+pls.response$Moisture <-  as.numeric(pls.response$Moisture)
+pls.response <- as.matrix(pls.response)
+pls.exp <- as.matrix(dune)
+pls.fit <- plsr(pls.response ~ pls.exp,
+                na.action = na.omit,
+                validation = "LOO")
+
+#Cross validation is used to help us find the optimal number of retained dimensions.
+#Then the model is rebuilt with this optimal number of dimensions.
+#Find the number of dimensions with lowest cross validation error
+cv <- RMSEP(pls.fit)
+best.dims <- which.min(cv$val[estimate = "adjCV", ,]) - 1
+best.dims #3 seems optimal
+
+summary(pls.fit)
+
+# Rerun the model with optimal dimensions
+pls.fit2 <-
+  plsr(pls.response ~ pls.exp, ncomp = best.dims, na.action = na.omit)
+#Finally, we extract the useful information and format the output.
+coefficients <-  coef(pls.fit2)
+sum.coef <-  sum(sapply(coefficients, abs))
+coefficients <-  coefficients * 100 / sum.coef
+coefficients <-  sort(coefficients[, 1 , 1])
+barplot(tail(coefficients, 3))
+#The regression coefficients are normalized so their absolute sum is 100 and the result is sorted.
+
+#You can run the following to see the other end of the scale for negative predictors.
+barplot(head(coefficients, 3))
+
+summary(pls.fit2)
+#pls.fit2$loadings
+#We can plot the scores
+corrplot(pls.fit2,
+         comps = 1:3,
+         labels = names(coefficients))
+
+#This gives a pairwise plot of the score values for the three first components.
+#Score plots are often used to look for patterns, groups or outliers in the data.
+#The scores represents the different locations
+plot(pls.fit2, plottype = "scores", comps = 1:3)
+#study the predicted vs. measured plot to see if the data needs to be transformed
+plot(pls.fit2,
+     ncomp = best.dims,
+     asp = 1,
+     line = TRUE)
+
+
+ 
+
+```

@@ -41,6 +41,10 @@ library(readxl)
 library(mvabund)
 library(lattice)
 library(pls)
+
+library(devtools)
+install_github("pmartinezarbizu/pairwiseAdonis/pairwiseAdonis")
+library(pairwiseAdonis)
 ```
 
 Load the data we are using
@@ -139,12 +143,17 @@ dune.ado
 dune.ado2<-adonis2(dune~Management*A1, data = dune.env.original)
 dune.ado2
 
-# Install the pairwiseAdonis function
-library(devtools)
-install_github("pmartinezarbizu/pairwiseAdonis/pairwiseAdonis")
-library(pairwiseAdonis)
+```
 
-#The adonis test tells us that there is a difference between our grouping factors, but the pairwise test can tell us exactly #which pairs of groups differ from each other
+The adonis test tells us that there is a difference between our grouping
+factors, but the pairwise test can tell us exactly which pairs of groups
+differ from each other. Note that this only makes sense if the overall
+test is significant!
+
+#### [Q30.3 Which pairs of groups significantly differ from each other?]{style="color:forestgreen"}
+
+```{r}
+# Run the pairwiseAdonis function
 
 pairwise.adonis2(dune~Management, data = dune.env.original)
 ```
@@ -163,6 +172,9 @@ nevertheless yield a p value under 0.05...
 
 #### [30.3 Compare the different groups and check which species contribute mostly to the difference between pairs of clusters.]{style="color:forestgreen"}
 
+In the output there are columns for "ava" and "avb". As you may suspect,
+these are average abundances of the species in group A and group B.
+
 ```{r message=FALSE, warning=FALSE}
 sim <- simper(dune, dune.env.original$Management) #try management groupings
 summary(sim)
@@ -179,7 +191,7 @@ with(dune.env.original, ordihull(dune.ca, Management, scaling = "species",label 
 ```
 
 A complementary/alternative approach to identifying which species are
-most reposnisble for the differences between the groups is that of
+most responsible for the differences between the groups is that of
 indicator species - which species best characterise the groups or
 clusters that we have identified?
 
@@ -305,7 +317,64 @@ confusionMatrix(test.data$Species, predictions$class)
 
 ------------------------------------------------------------------------
 
-### [Exercise 32: Model based ordination]{style="color:cornflowerblue"}
+### [Exercise 32: Classification 2: Partition and Regression Trees]{style="color:cornflowerblue"}
+
+Most of the code is taken from
+<https://jonlefcheck.net/2015/02/06/a-practical-guide-to-machine-learning-in-ecology/>
+Here, we will use the iris data. This is a "classic" data set used for
+exploring multivariate methods for
+discrimination.<https://en.wikipedia.org/wiki/Iris_flower_data_set>
+
+#### [Questions:]{style="color:forestgreen"}
+
+#### [32.1 Based on a visual analysis, which dimensions provide the best separation between iris species?]{style="color:forestgreen"}
+
+#### [32.2 Are your insights from the visual analysis confirmed by the partition tree analysis?]{style="color:forestgreen"}
+
+#### [32.3 Does the partition tree provide a perfect species identification or are there misclassifications?]{style="color:forestgreen"}
+
+```{r}
+# Before starting the analysis, we will generate pairwise scatterplots of the data
+#
+# the following line will first check to see inf the "psych" library is loaded, and only 
+# load it if it is not present
+#
+if(!is.element("psych",installed.packages()[,1])) {install.packages("psych") }
+library(psych)
+library(rpart)
+library(rpart.plot)
+#
+# create pairwise plots of the variables in the iris data set
+#
+pairs.panels(iris[,-5],gap=0,bg=c("red","blue","yellow")[iris$Species],pch=21)
+#
+# what does rpart() do ?
+#
+help(rpart)
+#
+# set up the partition tree model for the iris data
+#
+iris.tree.model<-rpart(Species ~ Sepal.Length + Sepal.Width + Petal.Length + Petal.Width, data = iris)
+# 
+# display the partition tree
+#
+rpart.plot(iris.tree.model, extra=0, box.palette =list("red", "blue", "forestgreen"))
+
+#
+# plots for confirmatory visual analysis
+#
+plot(iris$Petal.Length, col = c("red", "blue", "forestgreen")[iris$Species], xlab = "", ylab = "Petal Length (cm)")
+legend(120, 2, c("setosa","versicolor","virginica"), col = c("red", "blue", "forestgreen"), pch = 0.7)
+abline(h = 2.45)
+#
+plot(iris$Petal.Width, col = c("red", "blue", "forestgreen")[iris$Species], xlab = "", ylab = "Petal Width (cm)")
+legend(20, 1.5, c("setosa","versicolor","virginica"), col = c("red", "blue", "forestgreen"), pch = 0.7)
+abline(h = 1.75)
+```
+
+------------------------------------------------------------------------
+
+### [Exercise 33: Model based ordination]{style="color:cornflowerblue"}
 
 Dissimilarity-based ordination methods begin by calculating a
 dissimilarity or distance matrix between sites (or more generally,
@@ -322,7 +391,7 @@ covariates.
 
 #### [Question:]{style="color:forestgreen"}
 
-#### [32.1 How do the ordinations produced compare to a distance based ordination (for example an NMDS) of the same species data?]{style="color:forestgreen"}
+#### [33.1 How do the ordinations produced compare to a distance based ordination (for example an NMDS) of the same species data?]{style="color:forestgreen"}
 
 ```{r}
 #load species abundance data
@@ -379,7 +448,7 @@ on traits and perform a fourth corner analysis.
 
 ------------------------------------------------------------------------
 
-### [Exercise 33: Fourth Corner]{style="color:cornflowerblue"}
+### [Exercise 34: Fourth Corner]{style="color:cornflowerblue"}
 
 Here we will use another model based method (the "mvabund" package for
 analysing multivariate abundance data) to perform a fourth corner
@@ -389,7 +458,7 @@ traits and environmental variables.
 
 #### [Question:]{style="color:forestgreen"}
 
-#### [33.1 Do the correlations in the plot make sense ecologically?]{style="color:forestgreen"}
+#### [34.1 Do the correlations in the plot make sense ecologically?]{style="color:forestgreen"}
 
 ```{r}
 # Read and treat data
@@ -430,7 +499,7 @@ plot.4th = levelplot(
 )
 print(plot.4th)
 
-plot(fitfourth) # for a Dunn-smyth residual plot
+#Goodness of fit check - do the points lie mostly along the diagonal line? If not you may have a problem!
 qqnorm(residuals(fitfourth)); abline(c(0,1),col="red") # for a normal quantile plot.
 
 
@@ -464,98 +533,3 @@ using only those you are really interested in.
 ```
 
 ------------------------------------------------------------------------
-
-### [Exercise 34: PLS]{style="color:cornflowerblue"}
-
-PLS regression, like PCA, seeks to find components which maximize the
-variability of predictors but differs from PCA as PLS requires the
-components to have maximum correlation with the response. The predictor
-variables are mapped to a smaller set of variables, and within that
-smaller space we perform a regression against the outcome variable. PLS
-aims to choose new mapped variables that maximally explain the outcome
-variable.
-
-#### [Questions:]{style="color:forestgreen"}
-
-#### [34.1 Which explanatory variables are most important to explain the response variables (A1 and Moisture)?]{style="color:forestgreen"}
-
-#### [34.2 Are there any obvious outliers in the dataset?]{style="color:forestgreen"}
-
-#### [34.3 Does the data seem to be in need of a transformation?]{style="color:forestgreen"}
-
-```{r PLS, echo=TRUE, message=FALSE, warning=FALSE}
-
-library(pls)
-
-#This function takes the same form as a lot of regression models in R:
-#plsr(Response variable ~ Explanatory Variables, data = yourdata, scale = TRUE/FALSE)
-#However the response variable can be a matrix of variables.
-
-#Here we will use the dune species to predict environmental variables A1 and moisture.
-#We have mostly done this in the other direction, but correlations go both ways! 
-pls.response <- dplyr::select(dune.env.original, A1, Moisture)
-pls.response$Moisture <-  as.numeric(pls.response$Moisture)
-pls.response <- as.matrix(pls.response)
-pls.exp <- as.matrix(dune)
-pls.fit <- plsr(pls.response ~ pls.exp,
-                na.action = na.omit,
-                validation = "LOO")
-
-#Cross validation is used to help us find the optimal number of retained dimensions.
-#Then the model is rebuilt with this optimal number of dimensions.
-#Find the number of dimensions with lowest cross validation error
-cv <- RMSEP(pls.fit)
-best.dims <- which.min(cv$val[estimate = "adjCV", ,]) - 1
-best.dims #3 seems optimal
-
-summary(pls.fit)
-
-# Rerun the model with optimal dimensions
-pls.fit2 <-
-  plsr(pls.response ~ pls.exp, ncomp = best.dims, na.action = na.omit)
-#Finally, we extract the useful information and format the output.
-coefficients <-  coef(pls.fit2)
-sum.coef <-  sum(sapply(coefficients, abs))
-coefficients <-  coefficients * 100 / sum.coef
-coefficients <-  sort(coefficients[, 1 , 1])
-barplot(tail(coefficients, 3))
-#The regression coefficients are normalized so their absolute sum is 100 and the result is sorted.
-
-#You can run the following to see the other end of the scale for negative predictors.
-barplot(head(coefficients, 3))
-
-summary(pls.fit2)
-#pls.fit2$loadings
-#We can plot the scores
-corrplot(pls.fit2,
-         comps = 1:3,
-         labels = names(coefficients))
-
-#This gives a pairwise plot of the score values for the three first components.
-#Score plots are often used to look for patterns, groups or outliers in the data.
-#The scores represents the different locations
-plot(pls.fit2, plottype = "scores", comps = 1:3)
-#study the predicted vs. measured plot to see if the data needs to be transformed
-plot(pls.fit2,
-     ncomp = best.dims,
-     asp = 1,
-     line = TRUE)
-
-#IGNORE THIS CODE # included for backup purposes
-#.rs.restartR()
-#library(pls)
-#library(dplyr)
-#library(vegan)
-#data("dune.env")
-#data("dune")
-
-#pls.response <- dplyr::select(dune.env, A1, Moisture)
-#pls.response$Moisture <-  as.numeric(pls.response$Moisture)
-#pls.response <- as.matrix(pls.response)
-#pls.exp <- as.matrix(dune)
-#pls.fit <- plsr(pls.response ~ pls.exp,
-#                na.action = na.omit,
-#                validation = "LOO")
- 
-
-```
