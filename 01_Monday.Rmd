@@ -246,9 +246,9 @@ lines(coords, col="blue")
 
 #### [5.1 Give a conceptual description of why objects/samples and descriptors/species to the left differ from objects and descriptors to the right, and those at the bottom from those at the top!]{style="color:forestgreen"}
 
-#### [5.2 Can you see an edge effect (a mathematical artifact that compresses the samples at one or both ends of a gradient)?]{style="color:forestgreen"}
+#### 5.2 Can you see an edge effect (a mathematical artifact that compresses the samples at one or both ends of a gradient)?
 
-#### [5.3 Can you see an arch effect?]{style="color:forestgreen"}
+#### 5.3 Can you see an arch effect (if there is an arch, samples will appear in an arch in the same order as in the input data file)?
 
 ```{r, warning=FALSE, message=FALSE}
 dune.ca <- ca(dune)
@@ -263,7 +263,7 @@ summary(eigenvals(dune.ca)) #proportion variance explained
 
 #### [Question:]{style="color:forestgreen"}
 
-#### [6.1 If you found artifacts in the CA in question 5, did the detrending remove them?]{style="color:forestgreen"}
+6.1 If you found artifacts in the CA in question 5, did the detrending remove them?
 
 #### [6.2 Look at the eigenvalues, the length of gradient, the total variation and the ordination diagram. Explain the differences between results from CA and DCA.]{style="color:forestgreen"}
 
