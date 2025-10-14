@@ -1,6 +1,6 @@
 # Multivariate methods for ecologists course
 
-This is where you will find the R code for the SLU course [Multivariate Methods for Ecologists](https://www.slu.se/en/departments/aquatic-sciences-assessment/education/post-graduate-education/phd-courses/multivariate-methods-for-ecologists/)
+This is where you will find the R code for the SLU course [Multivariate Methods for Ecologists](https://www.slu.se/en/about-slu/organisation/departments/aquatic-sciences/education/Post-graduate-education/Multivariate-methods-for-ecologists/)
 
 The exercises for each day are found in the appropriate file (Tuesday.rmd etc).
 
