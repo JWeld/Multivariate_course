@@ -53,9 +53,6 @@ SpeciesNewSp <- data.frame(dune, NewSp)
 # run a new DCA with the extra species
 DCANewSp <- decorana(SpeciesNewSp)
 DCANewSp
-```
-
-```{r ex6plot, inclue=TRUE, warning=FALSE, message=FALSE}
 # plot the DCA
 ordiplot(DCANewSp, type="text", main="DCA with new sp.")
 ```
@@ -74,7 +71,7 @@ Add one new sample to the data, then add a cover of 9 for the existing species C
 
 #### [8.2 Why did we choose to add these two species in the new sample?]{style="color:forestgreen"}
 
-```{r ex7, inclue=TRUE, warning=FALSE, message=FALSE}
+```{r, inclue=TRUE, warning=FALSE, message=FALSE}
 # figure out the column number for Chenopodium album (abbreviated "Chenalbu")
 which(colnames(dune) == "Chenalbu")
 # create a new data frame with a new sample containing Chenopodium album with a cover of 9
@@ -177,7 +174,7 @@ NMDS does not use the absolute abundances of species in communities, but rather 
 
 #### [10.1 Compare the vegan default NMDS to the results of a CA and a DCA.]{style="color:forestgreen"}
 
-```{r ex8, inclue=TRUE, warning=FALSE, message=FALSE}
+```{r, inclue=TRUE, warning=FALSE, message=FALSE}
 # run NMDS with the defaults and 2 dimensions, what is the stress?
 #
 dune.NMDS.bray.2 <- metaMDS(dune, k = 2)
@@ -225,7 +222,7 @@ These are only a few examples on how to assess data quality.
 
 #### [11.2 Would you say that the original Dune Meadow data set is OK for further analyses? Motivate your answer!]{style="color:forestgreen"}
 
-```{r ex10, inclue=TRUE, message=FALSE, warning=FALSE}
+```{r, inclue=TRUE, message=FALSE, warning=FALSE}
 #data(dune)
 
 # Create some outliers and missing values in a temporary dataset called mvo.dune (acronym for MultiVariate Outlier)

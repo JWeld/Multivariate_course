@@ -102,9 +102,13 @@ In usual analysis of variance experiments, the variance is decomposed
 into components. The same can be done in multivariate analyses. In this
 exercise you will decompose the variance in the Dune meadow data set
 into different variance components. You will use two groups of variance
-components: Group 1 is Management and Group 2 is the soil variables (A1
-and Moisture). In ordinations, the variance is expressed by the sum of
-the eigenvalues.
+components:
+
+-   Group 1 is Management
+
+-   Group 2 is the soil variables (A1 and Moisture)
+
+In ordinations, the variance is expressed by the sum of the eigenvalues.
 
 The result gives you the fraction of the total variation that is
 explained by: a) uniquely by Management (effect of soil removed), b)
@@ -157,7 +161,7 @@ between the ten plots.
 #### [24.2 Why should plots be defined as co-factors in this analysis?]{style="color:forestgreen"}
 
 ```{r, warning=FALSE, message=FALSE}
-#This partials out the effect of Plot before analysing the effects of Time
+#This partials out (removes) the effect of Plot before analysing the effects of Time
 #First load the time series versions of the data
 SpeTS <- readRDS("Data/SpeTS.RDS")
 EnvTS <- readRDS("Data/EnvTS.RDS")
@@ -218,15 +222,15 @@ ordihull(
 
 In this exercise we will continue to use the rearranged Dune Meadow data
 from exercise 24. A difference is that the plots are now divided into
-four groups: 1. Control plots before a treatment (i.e. not treated) 2.
-Control plots after a treatment (i.e. not treated) 3. Impact plots
-before treatment (i.e. not treated) 4. Impact plots after treatment
-(this is where the treatment is made)
+four groups:
 
-The four groups are indicated in variable Treat in the environmental
-data set (EnvTS). The question you want to answer is if the treatment
-caused a change in species composition that is significantly different
-from the change in the control plots.
+1.  Control plots before a treatment (i.e. not treated)
+
+2.  Control plots after a treatment (i.e. not treated)
+
+3.  Impact plots before treatment (i.e. not treated)
+
+4.  Impact plots after treatment (this is where the treatment is made)
 
 #### [Questions:]{style="color:forestgreen"}
 
@@ -324,7 +328,8 @@ mantel(insects.distance, plants.distance)
 mantel(insects.distance, plants.distance, method = "spear")
 ```
 
-We can also take the output from one ordination and use it in another...
+We can also take the output from one ordination and use it as
+explanatory variables in another ordination....
 
 ```{r}
 
@@ -361,8 +366,6 @@ hierarchical clustering technique. Also try Ward's method
 
 #### [27.3 Do the two approaches to hierarchical clustering reveal similar patterns in the Dune data set?]{style="color:forestgreen"}
 
-#### [27.4 Interpret the Hopkins statistic for the Dune data set.]{style="color:forestgreen"}
-
 ```{r}
 
 # See how many clusters there appear to be in the data
@@ -383,7 +386,7 @@ best results corresponding to the one with the lowest within cluster
 variation. Note that k-means clustering involves randomness so you won't
 neccessarily get exactly the same results if you repeat it. There are
 also several different algorithms that can be used in k-means
-clustering, and different software can use different defaults.Check out
+clustering, and different software can use different defaults. Check out
 the help file for the kmeans function if you want to know more about
 these.
 
@@ -401,7 +404,7 @@ table(dune.fit.4$cluster, dune.env.original$Management)
 ```
 
 We should also try the other family of clustering methods, hierarchical
-clustering. this gives you the relationship among the samples
+clustering. This gives you the relationship among the samples
 
 ```{r}
 #try some approaches to hierarchical clustering

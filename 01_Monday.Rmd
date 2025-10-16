@@ -2,6 +2,8 @@
 title: "Monday"
 ---
 
+In this first chunk of code we load the R packages we will be using today
+
 ```{r setup, include=FALSE, message=FALSE, warning=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(vegan)
@@ -263,7 +265,7 @@ summary(eigenvals(dune.ca)) #proportion variance explained
 
 #### [Question:]{style="color:forestgreen"}
 
-6.1 If you found artifacts in the CA in question 5, did the detrending remove them?
+#### [6.1 If you found artifacts in the CA in question 5, did the detrending remove them?]{style="color:forestgreen"}
 
 #### [6.2 Look at the eigenvalues, the length of gradient, the total variation and the ordination diagram. Explain the differences between results from CA and DCA.]{style="color:forestgreen"}
 

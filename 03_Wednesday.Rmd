@@ -46,7 +46,7 @@ dune.env <-
 
 #### [13.5 How can you determine in which order your terms should be, in a sequential test?]{style="color:forestgreen"}
 
-```{r ex13, echo=FALSE, message=FALSE, warning=FALSE, inclue=TRUE}
+```{r, echo=FALSE, message=FALSE, warning=FALSE, inclue=TRUE}
 
 # RDA
 dune.rda <- rda(dune ~ . , dune.env)
@@ -94,7 +94,7 @@ par(mfrow = c(1, 1))
 
 #### [14.1 Look at and interpret the inflation factors for each environmental variable.]{style="color:forestgreen"}
 
-```{r ex14, inclue=TRUE, warning=FALSE, message=FALSE}
+```{r, inclue=TRUE, warning=FALSE, message=FALSE}
 # VIF for CCA 
 dune.cca <- cca(dune ~ . , dune.env)
 vif.cca <- vif.cca(dune.cca)
@@ -109,11 +109,11 @@ Function vif.cca gives the variance inflation factors for each constraint or con
 
 #### [Questions:]{style="color:forestgreen"}
 
-#### [15.1 What is the difference in how explanatory variables are added inconstrained and unconstrained ordinations?]{style="color:forestgreen"}
+#### [15.1 What is the difference in how explanatory variables are added in constrained and unconstrained ordinations?]{style="color:forestgreen"}
 
 #### [15.2 When could an unconstrained ordination with explanatory variables be a good option?]{style="color:forestgreen"}
 
-```{r ex15, inclue=TRUE, warning=FALSE, message=FALSE}
+```{r, inclue=TRUE, warning=FALSE, message=FALSE}
 # CA with env. variables fitted afterwards
 dune.ca <- ca(dune)
 fit <- envfit(dune.ca, dune.env, perm = 999)
@@ -126,11 +126,12 @@ dune.cca <- cca(dune ~ . , dune.env)
 dune.cca
 ordiplot(dune.cca, type = "text", main = "CCA")
 
-par(mfrow = c(1, 2))
+par(mfrow = c(1,2))
 ordiplot(dune.ca,  type = "text", main = "CA with env. fitted after")
 plot(fit)
 ordiplot(dune.cca, type = "text", main = "CCA")
-par(mfrow = c(1, 1))
+par(mfrow = c(1,1))
+
 ```
 
 ------------------------------------------------------------------------
@@ -189,7 +190,7 @@ Next, you should investigate whether the four different management regimes (SF s
 
 To investigate if the vegetational pattern is an effect of management, or if the pattern is random, Monte Carlo permutations will be used.
 
-```{r ex15, inclue=TRUE, warning=FALSE, message=FALSE}
+```{r, inclue=TRUE, warning=FALSE, message=FALSE}
 # CCA using only Management as the environmental variable
 dune.ccaMN <- cca(dune ~ Management , dune.env.original)
 summary(dune.ccaMN)
@@ -217,7 +218,7 @@ To do this, do another CCA with A1 and Moisture as environmental variables and p
 
 #### [18.1 Explain the results of the permutations! Compare the results in exercises 16 and 17]{style="color:forestgreen"}
 
-```{r ex16, inclue=TRUE, warning=FALSE, message=FALSE}
+```{r, inclue=TRUE, warning=FALSE, message=FALSE}
 # CCA using A1 and moisture as the environmental variable
 dune.ccaA1ms <- cca(dune, dune.env[,1:2])
 summary(dune.ccaA1ms)
@@ -243,7 +244,7 @@ Now, you have concluded that both soil characteristics and management type are d
 
 #### [19.2 Compare the results with the results from the permutation test on only management types]{style="color:forestgreen"}
 
-```{r ex17, inclue=TRUE, warning=FALSE, message=FALSE}
+```{r, inclue=TRUE, warning=FALSE, message=FALSE}
 #This partials out the effect of A1 and Moisture before analysing the effects of management
 MN.cca <-
   cca(dune ~ Management + Condition(A1 + Moisture), data = dune.env.original)
@@ -273,7 +274,7 @@ The amount of applied manure is a third important variable given in the environm
 
 #### [20.2 What does the result tell you?]{style="color:forestgreen"}
 
-```{r ex18, inclue=TRUE, warning=FALSE, message=FALSE}
+```{r, inclue=TRUE, warning=FALSE, message=FALSE}
 #This partials out the effect of A1, Moisture, and Manure before analysing the effects of management
 MN.cca2 <-
   cca(dune ~ Management + Condition(A1 + Moisture + Manure), data = dune.env.original)
@@ -291,8 +292,7 @@ ordihull(
   label = T
 )
 
-# Are Management and Manure correlated, check visually
-# Make a boxplot manure~Management!
+
 ```
 
 We may expect that Management and Manure are related, check visually by making a boxplot of Manure vs Management. Let's have a look...
@@ -317,7 +317,7 @@ We have now concluded that management type is of subordinate importance. Now, yo
 
 #### [21.4 Why would one perform a p-value correction?]{style="color:forestgreen"}
 
-```{r ex19, echo=TRUE, message=FALSE, warning=FALSE, inclue=TRUE}
+```{r, echo=TRUE, message=FALSE, warning=FALSE, inclue=TRUE}
 # A first CCA with all environmental variables
 cca.dune.all <-
   cca(dune ~ ., data = dune.env) # the dot after the tilde (~) means "include all from data"
