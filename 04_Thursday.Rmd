@@ -353,10 +353,13 @@ Start by testing the non-hierarchical K-means clustering, using Multivar
 / K-Means. Note that it is recommended that K-means need at least 100
 observations (500 according to some sources) to be reliable! Let us
 ignore the sample size issue for the moment, and ask for 4 clusters (for
-later comparison with the four management types). Test different
-hierarchical agglomeration algorithms and similarity indices. Use at
-least the Euclidian and the Bray-Curtis similarity measures for the
-hierarchical clustering technique. Also try Ward's method
+later comparison with the four management types).
+
+After the non-hierarchical K-means exercise, change to test hierarchical
+methods. Try different combinations of agglomeration algorithms and
+similarity indices. The code below is for all combinations of average
+and Wards agglomeration and Euclidian and the Bray-Curtis similarity
+measures.
 
 #### [Questions:]{style="color:forestgreen"}
 
@@ -407,12 +410,20 @@ We should also try the other family of clustering methods, hierarchical
 clustering. This gives you the relationship among the samples
 
 ```{r}
-#try some approaches to hierarchical clustering
+#Euclidean distance and “average” agglomeration algorithm 
 dend2 <- dune %>% # data
   dist(method = "euclidean") %>% # calculate a distance matrix, choose method
-  hclust(method = "ward.D") %>% # Hierarchical clustering, choose method
+  hclust(method = "average") %>% # Hierarchical clustering, avagare method
   as.dendrogram # Turn the object into a dendrogram.
-dend2 %>% set("labels_color") %>% set("branches_lwd") %>%  set("branches_k_color", k = 4) %>% plot(main = "Euclidean")
+dend2 %>% set("labels_color") %>% set("branches_lwd") %>%  set("branches_k_color", k = 4) %>% plot(main = "Euclidean and average")
+#
+#Euclidean distance and “Ward’s” agglomeration algorithm 
+dend3 <- dune %>% # data
+  dist(method = "euclidean") %>% # calculate a distance matrix, choose method
+  hclust(method = "ward.D") %>% # Hierarchical clustering, Ward’s method
+  as.dendrogram # Turn the object into a dendrogram.
+dend3 %>% set("labels_color") %>% set("branches_lwd") %>%  set("branches_k_color", k = 4) %>% plot(main = "Euclidean and Ward*s")
+
 ```
 
 The dist() function does not include Bray-Curtis but we can make a
@@ -423,17 +434,28 @@ matrix using the Bray-Curtis method
 dune.dist <- vegdist(dune, method = "bray")
 #
 dend4 <- dune.dist %>% # data (Bray-Curtis)
-  hclust(method = "aver") %>% # Hierarchical clustering, choose method
+  hclust(method = "aver") %>% # Hierarchical clustering, average method
   as.dendrogram # Turn the object into a dendrogram.
-dend4 %>% set("labels_color") %>% set("branches_lwd") %>%  set("branches_k_color", k = 4) %>% plot(main = "Average")
+dend4 %>% set("labels_color") %>% set("branches_lwd") %>%  set("branches_k_color", k = 4) %>% plot(main = "Bray-Curtis, Average")
 #
 #we can colour the labels based on their grouping in the kmeans analysis to compare clusters
 #
 dend4 %>% set("labels_color", dune.fit.4$cluster) %>% set("branches_lwd") %>%  set("branches_k_color", k = 4) %>% plot(main = "Average")
 #
-#tanglegram is a function to compare dendrograms that you might want to try out as an extra
-#
-tanglegram(dend2, dend4)
+dend5 <- dune.dist %>% # data (Bray-Curtis)
+  hclust(method = "ward.D") %>% # Hierarchical clustering, Ward’s method
+  as.dendrogram # Turn the object into a dendrogram.
+dend5 %>% set("labels_color") %>% set("branches_lwd") %>%  set("branches_k_color", k = 4) %>% plot(main = "Bray-Curtis, Ward’s")
+
+```
+
+Tanglegram is a function to compare dendrograms that you might want to
+try out as an extra
+
+```{r}
+tanglegram(dend2, dend3)
+tanglegram(dend4, dend5)
+tanglegram(dend3, dend5)
 ```
 
 ------------------------------------------------------------------------
