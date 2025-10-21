@@ -168,9 +168,13 @@ text(
 
 NMDS does not use the absolute abundances of species in communities, but rather their *rank orders*. The use of ranks omits some of the issues associated with using absolute distance (e.g., sensitivity to transformation). At the conclusion of this exercise, you should be able to: State which metrics are supported in the vegan implementation of NMDS. Evaluate the appropriate number of dimensions for the ordination. Evaluate the consequences of using different distance metrics.
 
-#### [Question:]{style="color:forestgreen"}
+#### [Questions:]{style="color:forestgreen"}
 
 #### [10.1 Compare the vegan default NMDS to the results of a CA and a DCA.]{style="color:forestgreen"}
+
+#### [10.2 What are the consequences of changing the number of dimensions in an NMDS (i.e. from 2 to 3 dimensions)? Which is best for an NMDS on the dune meadow data, based on Bray-Curtis distance?]{style="color:forestgreen"}
+
+#### [10.3 Compare the NMDS on the dune meadow data based on Bray-Curtis distances with the NMDS based on Euclidean distances.]{style="color:forestgreen"}
 
 ```{r, inclue=TRUE, warning=FALSE, message=FALSE}
 # run NMDS with the defaults and 2 dimensions, what is the stress?
@@ -218,7 +222,7 @@ These are only a few examples on how to assess data quality.
 
 #### [11.1 Is there a pattern in the distribution of missing values that may lead to the omission of a species or a sample?]{style="color:forestgreen"}
 
-#### [11.2 Would you say that the original Dune Meadow data set is OK for further analyses? Motivate your answer!]{style="color:forestgreen"}
+#### [11.2 Based on the multivariate outlier analyses, would you say that the original Dune Meadow data set is OK for further analyses? Motivate your answer!]{style="color:forestgreen"}
 
 ```{r, inclue=TRUE, message=FALSE, warning=FALSE}
 #data(dune)
@@ -250,52 +254,37 @@ We can also try testing for outliers in the data. Be aware that this is only ind
 
 ```{r}
 
-# Indicative search for outliers in a multivariate data set.
-# Multiple peaks and high SD indicate outliers may occur
-dist1 <-
-  vegdist(
-    mvo.dune,
-    method = "euclidean",
-    binary = FALSE,
-    diag = FALSE,
-    upper = FALSE,
-    na.rm = TRUE
+# Function to detect multivariate outliers via mean distance analysis
+detect_outliers <- function(data, title_suffix) {
+  # Calculate pairwise Euclidean distances
+  dist_matrix <- vegdist(data, method = "euclidean", na.rm = TRUE)
+  dist_full <- as.matrix(dist_matrix)
+  
+  # Calculate mean distance for each observation (excluding diagonal)
+  n <- nrow(dist_full)
+  mean_dist <- sapply(1:n, function(i) mean(dist_full[i, -i]))
+  
+  # Calculate standard deviation (threshold: > 3 indicates strong outliers)
+  sd_val <- sd(mean_dist)
+  
+  # Plot density distribution
+  plot(
+    density(mean_dist),
+    col = "red",
+    xlab = "Distance between observations",
+    main = paste0("Indicative test of multivariate outliers\n", title_suffix)
   )
-d1 <- data.frame(unmatrix(as.matrix(dist1), byrow = TRUE))
-d1r <- t(data.frame(strsplit(row.names(d1), ":")))
-d1rr <- data.frame(d1, d1r)
-d1mean <- tapply(d1rr$unmatrix.as.matrix.dist1.., d1rr$X1, mean)
-sd(d1mean) # Standard deviation of the mean distances. If > 3: strong outlier(s)
-plot(
-  stats::density(d1mean),
-  col = "red",
-  xlab = "Distance between observations",
-  main = "Indicative test of multivariate outliers\nData with noise"
-)
-legend("topright", paste("SD =", round(sd(d1mean), 1))) # Legend with standard deviation
+  legend("topright", paste("SD =", round(sd_val, 1)))
+  
+  return(sd_val)
+}
 
-# Same as above but on the original dune meadow dataset (i.e. without outliers)
-dist1 <-
-  vegdist(
-    dune,
-    method = "euclidean",
-    binary = FALSE,
-    diag = FALSE,
-    upper = FALSE,
-    na.rm = TRUE
-  )
-d1 <- data.frame(unmatrix(as.matrix(dist1), byrow = TRUE))
-d1r <- t(data.frame(strsplit(row.names(d1), ":")))
-d1rr <- data.frame(d1, d1r)
-d1mean <- tapply(d1rr$unmatrix.as.matrix.dist1.., d1rr$X1, mean)
-sd(d1mean) # Standard deviation of the mean distances. If > 3: strong outlier(s)
-plot(
-  stats::density(d1mean),
-  col = "red",
-  xlab = "Distance between observations",
-  main = "Indictive test of multivariate outliers\nOriginal Dune Meadow data"
-)
-legend("topright", paste("SD =", round(sd(d1mean), 1))) # Legend with standard deviation
+# Apply to both datasets
+sd_noisy <- detect_outliers(mvo.dune, "Data with noise")
+sd_original <- detect_outliers(dune, "Original Dune Meadow data")
+
+
+
 
 ```
 
