@@ -86,7 +86,7 @@ All methods you will meet this week are based on similarities or dissimilarities
 
 #### [2.1 How do the metrics differ (conceptually, not a detailed mathematical explanation)?]{style="color:forestgreen"}
 
-#### [2.2 Which metric corresponds to a geographic distance]{style="color:forestgreen"}, and which to a species community distance?
+#### [2.2 Which metric corresponds to a geographic distance, and which to a species community distance?]{style="color:forestgreen"}
 
 ```{r message=FALSE, warning=FALSE}
 # create a triangular data set with 2 columns (x and y) and 3 rows
@@ -248,9 +248,9 @@ lines(coords, col="blue")
 
 #### [5.1 Give a conceptual description of why objects/samples and descriptors/species to the left differ from objects and descriptors to the right, and those at the bottom from those at the top!]{style="color:forestgreen"}
 
-#### 5.2 Can you see an edge effect (a mathematical artifact that compresses the samples at one or both ends of a gradient)?
+#### [5.2 Can you see an edge effect (a mathematical artifact that compresses the samples at one or both ends of a gradient)?]{style="color:forestgreen"}
 
-#### 5.3 Can you see an arch effect?
+#### [5.3 Can you see an arch effect?]{style="color:forestgreen"}
 
 ```{r, warning=FALSE, message=FALSE}
 dune.ca <- ca(dune)

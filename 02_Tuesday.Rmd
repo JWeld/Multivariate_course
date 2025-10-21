@@ -57,8 +57,6 @@ DCANewSp
 ordiplot(DCANewSp, type="text", main="DCA with new sp.")
 ```
 
-You may be surprised that you haven't got any total inertia values when printing decorana results, although in other software (e.g. CANOCO) these are available, together with percentage variance explained by particular axes. The reason for this is that DCA does not support the concept of total inertia values (also, it produces only four axes, i.e. four eigenvalues). See the explanation in the introduction to Exercise 6.
-
 ------------------------------------------------------------------------
 
 ### [Excercise 8: Effects from increased variation.]{style="color:cornflowerblue"}
