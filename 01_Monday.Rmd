@@ -250,7 +250,7 @@ lines(coords, col="blue")
 
 #### 5.2 Can you see an edge effect (a mathematical artifact that compresses the samples at one or both ends of a gradient)?
 
-#### 5.3 Can you see an arch effect (if there is an arch, samples will appear in an arch in the same order as in the input data file)?
+#### 5.3 Can you see an arch effect?
 
 ```{r, warning=FALSE, message=FALSE}
 dune.ca <- ca(dune)
