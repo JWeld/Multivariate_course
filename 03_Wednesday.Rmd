@@ -216,7 +216,7 @@ To do this, do another CCA with A1 and Moisture as environmental variables and p
 
 #### [Question:]{style="color:forestgreen"}
 
-#### [18.1 Explain the results of the permutations! Compare the results in exercises 16 and 17]{style="color:forestgreen"}
+#### [18.1 Explain the results of the permutations! Compare the results in exercises 17 and 18]{style="color:forestgreen"}
 
 ```{r, inclue=TRUE, warning=FALSE, message=FALSE}
 # CCA using A1 and moisture as the environmental variable
