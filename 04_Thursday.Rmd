@@ -453,9 +453,10 @@ Tanglegram is a function to compare dendrograms that you might want to
 try out as an extra
 
 ```{r}
-tanglegram(dend2, dend3)
-tanglegram(dend4, dend5)
-tanglegram(dend3, dend5)
+tanglegram(dend2, dend3, main = "Eucl. average vs. Ward")
+tanglegram(dend4, dend5, main = "B-C average vs. Ward")
+tanglegram(dend3, dend5, main = "Eucl. Ward vs. B-C Ward")
+ 
 ```
 
 ------------------------------------------------------------------------
