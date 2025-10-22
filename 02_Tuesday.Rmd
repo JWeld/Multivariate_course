@@ -226,15 +226,15 @@ These are only a few examples on how to assess data quality.
 
 ```{r, inclue=TRUE, message=FALSE, warning=FALSE}
 #data(dune)
+# Set seed for reproducibility
+set.seed(111) 
 
-# Create some outliers and missing values in a temporary dataset called mvo.dune (acronym for MultiVariate Outlier)
+# Create some outliers and missing values in a temporary dataset called mvo.dune
 mvo.dune <- as.matrix(dune)
 n_outl <- 5 # Give number of outliers to be created, here 5
 v_outl <- 30 # Give value of the outlier(s), here 30
-mvo.dune[sample(1:length(mvo.dune), n_outl, replace = FALSE)] <-
-  v_outl # Replace some data with outliers, at random positions
-mvo.dune[sample(1:length(mvo.dune), n_outl, replace = FALSE)] <-
-  NA # Replace some data with NAs, at random positions
+mvo.dune[sample(1:length(mvo.dune), n_outl, replace = FALSE)] <- v_outl # Replace some data with outliers, at random positions
+mvo.dune[sample(1:length(mvo.dune), n_outl, replace = FALSE)] <- NA # Replace some data with NAs, at random positions
 
 # Cleveland plot to inspect data
 dotchart(as.matrix(mvo.dune), main = "Cleveland plot", xlab = "Observerd value")
@@ -258,11 +258,10 @@ We can also try testing for outliers in the data. Be aware that this is only ind
 detect_outliers <- function(data, title_suffix) {
   # Calculate pairwise Euclidean distances
   dist_matrix <- vegdist(data, method = "euclidean", na.rm = TRUE)
-  dist_full <- as.matrix(dist_matrix)
   
-  # Calculate mean distance for each observation (excluding diagonal)
-  n <- nrow(dist_full)
-  mean_dist <- sapply(1:n, function(i) mean(dist_full[i, -i]))
+  # Extract mean distance for each observation
+  dist_long <- as.matrix(dist_matrix)
+  mean_dist <- rowMeans(dist_long, na.rm = TRUE)
   
   # Calculate standard deviation (threshold: > 3 indicates strong outliers)
   sd_val <- sd(mean_dist)
@@ -282,8 +281,6 @@ detect_outliers <- function(data, title_suffix) {
 # Apply to both datasets
 sd_noisy <- detect_outliers(mvo.dune, "Data with noise")
 sd_original <- detect_outliers(dune, "Original Dune Meadow data")
-
-
 
 
 ```
