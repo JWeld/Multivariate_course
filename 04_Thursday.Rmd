@@ -260,7 +260,7 @@ ordihull(
   draw = "polygon",
   col = "grey70",
   label = T
-)#draw hulls around area of each level of factor "Time"
+) #draw hulls around area of each level of factor "Treat"
 ```
 
 ------------------------------------------------------------------------
