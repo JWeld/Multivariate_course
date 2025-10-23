@@ -278,7 +278,7 @@ new data is insect abundance at the different plots.
 
 #### [26.1 How similar is the arrangement of sites in the two ordinations based on plant and insect data?]{style="color:forestgreen"}
 
-#### [26.2 Do the three analyses (Procrustes, Co-Correspondence and Mantel) indicate similar ordinations of sites based on plant vs. insect data?]{style="color:forestgreen"}
+#### [26.2 Do the two analyses (Procrustes, and Mantel) indicate similar ordinations of sites based on plant vs. insect data?]{style="color:forestgreen"}
 
 ```{r ex24, inclue=TRUE, warning=FALSE, message=FALSE}
 #
@@ -307,12 +307,7 @@ plot(plants.and.insects.from.DCA,
 #
 ProCsig <- protest(plants.DCA, insects.DCA)
 ProCsig
-#
-# Co-correspondence analysis
-#
-CoCor <- coca(dune ~ ., data = insects, method = "symmetric")
-summary(CoCor)
-corAxis(CoCor)
+
 #
 # set up and perform the Mantel test
 #
