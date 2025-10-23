@@ -150,7 +150,7 @@ factors, but the pairwise test can tell us exactly which pairs of groups
 differ from each other. Note that this only makes sense if the overall
 test is significant!
 
-#### [Q30.3 Which pairs of groups significantly differ from each other?]{style="color:forestgreen"}
+#### [30.3 Which pairs of groups significantly differ from each other?]{style="color:forestgreen"}
 
 ```{r}
 # Run the pairwiseAdonis function
@@ -170,7 +170,7 @@ important! Especially if you have a large dataset, you may find some
 small differences that are probably ecologically unimportant
 nevertheless yield a p value under 0.05...
 
-#### [30.3 Compare the different groups and check which species contribute mostly to the difference between pairs of clusters.]{style="color:forestgreen"}
+#### [30.4 Compare the different groups and check which species contribute mostly to the difference between pairs of clusters.]{style="color:forestgreen"}
 
 In the output there are columns for "ava" and "avb". As you may suspect,
 these are average abundances of the species in group A and group B.
@@ -198,7 +198,7 @@ clusters that we have identified?
 In this exercise we will investigate if any particular species are
 indicative for the four different management types.
 
-#### [30.4 Use the resulting data table to find the two top indicator species for each of the four Management types!]{style="color:forestgreen"}
+#### [30.5 Use the resulting data table to find the two top indicator species for each of the four Management types!]{style="color:forestgreen"}
 
 ```{r, warning=FALSE, message=FALSE}
 iva <- indval(dune, dune.env.original$Management) #this time we don't need dummy variables for management
