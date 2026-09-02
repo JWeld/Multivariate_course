@@ -5,8 +5,8 @@ title: "Tuesday"
 ```{r setup, include=FALSE, message=FALSE, warning=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library("vegan")
-library("reshape2")
-library("outliers")
+#library("reshape2")
+#library("outliers")
 library("gdata") # for unmatrix
 library("VIM") # For matrixplot
 library("dplyr") 
@@ -42,7 +42,7 @@ dune.env <-
 
 #### [7.1: What happens with the eigenvalues and ordination diagram?]{style="color:forestgreen"}
 
-```{r ex6, inclue=TRUE, warning=FALSE, message=FALSE}
+```{r ex6, include=TRUE, warning=FALSE, message=FALSE}
 # calculate the number of species present in each plot
 rowSums(dune != 0)
 # find the plot with the lowest number of species
@@ -69,7 +69,7 @@ Add one new sample to the data, then add a cover of 9 for the existing species C
 
 #### [8.2 Why did we choose to add these two species in the new sample?]{style="color:forestgreen"}
 
-```{r, inclue=TRUE, warning=FALSE, message=FALSE}
+```{r, include=TRUE, warning=FALSE, message=FALSE}
 # figure out the column number for Chenopodium album (abbreviated "Chenalbu")
 which(colnames(dune) == "Chenalbu")
 # create a new data frame with a new sample containing Chenopodium album with a cover of 9
@@ -176,7 +176,7 @@ NMDS does not use the absolute abundances of species in communities, but rather 
 
 #### [10.3 Compare the NMDS on the dune meadow data based on Bray-Curtis distances with the NMDS based on Euclidean distances.]{style="color:forestgreen"}
 
-```{r, inclue=TRUE, warning=FALSE, message=FALSE}
+```{r, include=TRUE, warning=FALSE, message=FALSE}
 # run NMDS with the defaults and 2 dimensions, what is the stress?
 #
 dune.NMDS.bray.2 <- metaMDS(dune, k = 2)
@@ -224,7 +224,7 @@ These are only a few examples on how to assess data quality.
 
 #### [11.2 Based on the multivariate outlier analyses, would you say that the original Dune Meadow data set is OK for further analyses? Motivate your answer!]{style="color:forestgreen"}
 
-```{r, inclue=TRUE, message=FALSE, warning=FALSE}
+```{r, include=TRUE, message=FALSE, warning=FALSE}
 #data(dune)
 # Set seed for reproducibility
 set.seed(111) 
@@ -297,7 +297,7 @@ By now you have seen a number of ordination plots, and probably realised that so
 dune.ca <- ca(dune)
 # goodness of fit
 gf <- goodness(dune.ca, model = "CA", display = "species", choices = 1:2)
-head(gf)#the values in column PC2 are the cummulative goodness of fit values over the two axes
+head(gf)#the values in column CA2 are the cummulative goodness of fit values over the two axes
 take <- gf[,2] >= 0.4 # which species to label. Here we choose species where fitted abundance on the two axes is at least 40%
 scl <- "symmetric"    # choose scaling to use
 
