@@ -89,7 +89,7 @@ All methods you will meet this week are based on similarities or dissimilarities
 #### [2.2 Which metric corresponds to a geographic distance, and which to a species community distance?]{style="color:forestgreen"}
 
 ```{r message=FALSE, warning=FALSE}
-# create a triangular data set with 2 columns (x and y) and 3 rows
+# create a  data set with 2 columns (x and y) and 4 rows
 #
 dt <- data.frame(x = c(5, 5, 10, 0), y = c(5, 10, 10,0))
 #plot dt
@@ -165,7 +165,7 @@ Next we do some PCA analyses and plot the results
 # Then make a PCA, with scaling of (=standardising) the data
 env.pca <-
   pca(dune.env, scale = TRUE) 
-biplot(env.pca, main = "Plot 1") #plot the results using the default plot scaling which is "species"
+biplot(env.pca, main = "Plot 2") #plot the results using the default plot scaling which is "species"
 env.pca #summarise results
 summary(eigenvals(env.pca)) #see variance explained
 
@@ -173,7 +173,7 @@ summary(eigenvals(env.pca)) #see variance explained
 # Continue with a PCA on the same data, but without scaling of the data
 env.pca2 <-
   pca(dune.env, scale = FALSE) 
-biplot(env.pca2, main = "Plot 2")#plot the results
+biplot(env.pca2, main = "Plot 3")#plot the results
 env.pca2 #summarise results
 summary(eigenvals(env.pca2)) #see variance explained
 
@@ -198,7 +198,7 @@ biplot(env.pca, scaling = "species", main = "PCA, plot scaling on species")
 par(mfrow = c(1, 1))
 
 ## PCA plot 6:
-# Same as plot 6, but without species for better visual inspection of the sites
+# Same as plot 5, but without species for better visual inspection of the sites
 par(mfrow = c(1,2))
 biplot(env.pca, scaling = "sites", display = "sites", main = "Plot scaling on sites")
 biplot(env.pca, scaling = "species", display = "sites", main = "Plot scaling on species \n not correct projection of sites")

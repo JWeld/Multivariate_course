@@ -96,7 +96,7 @@ ordiplot(DCANewSampleJunc, type = "text", main = "DCA with new sample of Juncbuf
 
 ### [Exercise 9: Principal Coordinates Analysis (PCoA)]{style="color:cornflowerblue"}
 
-Principal Coordinates Analysis (PCoA), also known as Multidimensional Scaling (MDS), is a generalization of the ordination techniques we have already seen as it can be estimated with any distance matrix. In contrast, PCA is restricted to Euclidean distances while CA preserves Chi-Square distances. Here, we will explore PCoA on four different distance matrices: (i) Bray-Curtis (ii) Jaccard (iii) Euclidean (iv) Mahalanobis
+Principal Coordinates Analysis (PCoA), also known as Multidimensional Scaling (MDS), is a generalization of the ordination techniques we have already seen as it can be estimated with any distance matrix. In contrast, PCA is restricted to Euclidean distances while CA preserves Chi-Square distances. Here, we will explore PCoA on four different distance matrices: (i) Bray-Curtis (ii) Jaccard (iii) Euclidean (iv) Hellinger
 
 The R base statistics library offers the routine cmdscale() for performing MDS. There are numerous other libraries offering PCoA analysis
 

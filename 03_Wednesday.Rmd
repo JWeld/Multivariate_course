@@ -46,7 +46,7 @@ dune.env <-
 
 #### [13.5 How can you determine in which order your terms should be, in a sequential test?]{style="color:forestgreen"}
 
-```{r, echo=FALSE, message=FALSE, warning=FALSE, inclue=TRUE}
+```{r, echo=FALSE, message=FALSE, warning=FALSE, include=TRUE}
 
 # RDA
 dune.rda <- rda(dune ~ . , dune.env)

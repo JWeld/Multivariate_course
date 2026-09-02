@@ -104,9 +104,9 @@ exercise you will decompose the variance in the Dune meadow data set
 into different variance components. You will use two groups of variance
 components:
 
--   Group 1 is Management
+- Group 1 is Management
 
--   Group 2 is the soil variables (A1 and Moisture)
+- Group 2 is the soil variables (A1 and Moisture)
 
 In ordinations, the variance is expressed by the sum of the eigenvalues.
 
@@ -280,7 +280,7 @@ new data is insect abundance at the different plots.
 
 #### [26.2 Do the two analyses (Procrustes, and Mantel) indicate similar ordinations of sites based on plant vs. insect data?]{style="color:forestgreen"}
 
-```{r ex24, inclue=TRUE, warning=FALSE, message=FALSE}
+```{r ex24, include=TRUE, warning=FALSE, message=FALSE}
 #
 # DCA on the plant species data
 #
@@ -368,7 +368,7 @@ measures.
 
 # See how many clusters there appear to be in the data
 # As K-means is based on Euclidean disatnces, we should hellinger transform our species data
-dune.h <- vegdist(dune, method = "hellinger")
+dune.h <- decostand(dune, method = "hellinger")
 kkh <- cascadeKM(dune.h,inf.gr=2,sup.gr=6)
 plot(kkh)
 #
