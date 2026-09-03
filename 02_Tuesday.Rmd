@@ -9,7 +9,6 @@ knitr::opts_chunk$set(echo = TRUE)
 library("vegan")
 #library("reshape2")
 #library("outliers")
-library("gdata") # for unmatrix
 library("VIM") # For matrixplot
 library("dplyr") 
 ```
@@ -61,13 +60,13 @@ ordiplot(DCANewSp, type="text", main="DCA with new sp.")
 
 ------------------------------------------------------------------------
 
-### [Excercise 8: Effects from increased variation.]{style="color:cornflowerblue"}
+### [Exercise 8: Effects from increased variation.]{style="color:cornflowerblue"}
 
-Add one new sample to the data, then add a cover of 9 for the existing species Chenopodium album "Chealbu" in the new sample. Make a new DCA-ordination. Next, remove the Chealbu = 9, and add instead a cover of 5 for the exisiting species Juncbufo and make a new DCA.
+Add one new sample to the data, then add a cover of 9 for the existing species Chenopodium album "Chenalbu" in the new sample. Make a new DCA-ordination. Next, remove the Chenalbu = 9, and add instead a cover of 5 for the existing species Juncbufo and make a new DCA.
 
 #### [Questions:]{style="color:forestgreen"}
 
-#### [8.1 What happens with the eigenvalues and ordination after adding Chealbu and after adding Juncbufo?]{style="color:forestgreen"}
+#### [8.1 What happens with the eigenvalues and ordination after adding Chenalbu and after adding Juncbufo?]{style="color:forestgreen"}
 
 #### [8.2 Why did we choose to add these two species in the new sample?]{style="color:forestgreen"}
 
@@ -239,7 +238,7 @@ mvo.dune[sample(1:length(mvo.dune), n_outl, replace = FALSE)] <- v_outl # Replac
 mvo.dune[sample(1:length(mvo.dune), n_outl, replace = FALSE)] <- NA # Replace some data with NAs, at random positions
 
 # Cleveland plot to inspect data
-dotchart(as.matrix(mvo.dune), main = "Cleveland plot", xlab = "Observerd value")
+dotchart(as.matrix(mvo.dune), main = "Cleveland plot", xlab = "Observed value")
 
 # Find data > 9, as no value should be higher than 9 in the dune meadow data set
 (GT9 <- which(mvo.dune > 9, arr.ind = TRUE))
@@ -287,7 +286,7 @@ sd_original <- detect_outliers(dune, "Original Dune Meadow data")
 
 ```
 
-### Exercise 12: Messy ordination plots {style="color:cornflowerblue"}
+### [Exercise 12: Messy ordination plots]{style="color:cornflowerblue"}
 
 By now you have seen a number of ordination plots, and probably realised that some plots get messy with a lot of species overlapping. To solve this, we can plot only those species that contribute the most to the ordination. The vegan function, goodness(), tells us how well species abundances are fitted by the ordination axes. We can then reduce the amount of information presented by labeling only those species which are well-fitted by the ordination axes being displayed. The function computes goodness of fit values for all species and you can then select a cut-off value for which species that should get a label (note that goodness of fit can also be useful information for purposes other than tidying up plots!). Here we try this with the CA from exercise 5 yesterday.
 
@@ -299,7 +298,7 @@ By now you have seen a number of ordination plots, and probably realised that so
 dune.ca <- ca(dune)
 # goodness of fit
 gf <- goodness(dune.ca, model = "CA", display = "species", choices = 1:2)
-head(gf)#the values in column CA2 are the cummulative goodness of fit values over the two axes
+head(gf)#the values in column CA2 are the cumulative goodness of fit values over the two axes
 take <- gf[,2] >= 0.4 # which species to label. Here we choose species where fitted abundance on the two axes is at least 40%
 scl <- "symmetric"    # choose scaling to use
 

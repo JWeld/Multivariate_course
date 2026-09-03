@@ -52,9 +52,9 @@ relatively few species in your dataset. In this exercise we will use
 tabulated data on species ecological preferences (the Ellenberg
 indicator values) to interpret the results of the ordinations. The
 indicator values are abbreviated as follows- L = Light, T = Temperature,
-K = Contintentality (i.e. preference for an oceanic or inland
-contintental climate), F = Moisture, R = Reaction (i.e. soil pH
-preference), N = Nitrogen, S = Salinity.
+K = Continentality (i.e. preference for an oceanic or inland continental
+climate), F = Moisture, R = Reaction (i.e. soil pH preference), N =
+Nitrogen, S = Salinity.
 
 #### [Questions:]{style="color:forestgreen"}
 
@@ -93,8 +93,6 @@ plot(cca1, main = "CCA, all data")
 step2 <- ordistep(cca0, scope = formula(cca1), direction = "forward")
 step2$anova # which three are most significant in the final selection?
 ```
-
-#### 
 
 ------------------------------------------------------------------------
 
@@ -187,7 +185,7 @@ with(time.cca,
 
 ```{r}
 #permutation test
-with(EnvTS, anova(time.cca, by="term", perm=999, strata=Plot))
+with(EnvTS, anova(time.cca, by="term", permutations = 999, strata=Plot))
 ```
 
 ```{r, warning=FALSE, message=FALSE}
@@ -195,7 +193,7 @@ with(EnvTS, anova(time.cca, by="term", perm=999, strata=Plot))
 time2.cca <- cca(SpeTS ~ Time, data=EnvTS)
 time2.cca
 #permutation test
-with(EnvTS, anova(time2.cca, by="term", perm=999))
+with(EnvTS, anova(time2.cca, by="term", permutations = 999))
 ```
 
 ```{r, warning=FALSE, message=FALSE}
@@ -247,9 +245,9 @@ baci.cca
 
 ```{r, warning=FALSE, message=FALSE}
 with(EnvTS, anova(baci.cca, by="term", model = "full", permutations=999, strata=Treat))
-#Here with() is a special function that makes variables in dune.env visible to
-#the following command. If you only type Moisture in an R prompt, you will get
-#an error of missing variables
+#Here with() is a special function that makes the variables in EnvTS visible to
+#the following command. If you only type Treat at the R prompt, you will get
+#an error about a missing object
 ```
 
 ```{r, warning=FALSE, message=FALSE}
@@ -369,7 +367,7 @@ measures.
 ```{r}
 
 # See how many clusters there appear to be in the data
-# As K-means is based on Euclidean disatnces, we should hellinger transform our species data
+# As K-means is based on Euclidean distances, we should hellinger transform our species data
 dune.h <- decostand(dune, method = "hellinger")
 kkh <- cascadeKM(dune.h,inf.gr=2,sup.gr=6)
 plot(kkh)
@@ -384,7 +382,7 @@ random starting assignments, we specified nstart = 50. This means that R
 will try 50 different random starting assignments and then select the
 best results corresponding to the one with the lowest within cluster
 variation. Note that k-means clustering involves randomness so you won't
-neccessarily get exactly the same results if you repeat it. There are
+necessarily get exactly the same results if you repeat it. There are
 also several different algorithms that can be used in k-means
 clustering, and different software can use different defaults. Check out
 the help file for the kmeans function if you want to know more about
@@ -412,14 +410,14 @@ dend2 <- dune %>% # data
   dist(method = "euclidean") %>% # calculate a distance matrix, choose method
   hclust(method = "average") %>% # Hierarchical clustering, average method
   as.dendrogram # Turn the object into a dendrogram.
-dend2 %>% set("labels_color") %>% set("branches_lwd") %>%  set("branches_k_color", k = 4) %>% plot(main = "Euclidean and average")
+dend2 %>% set("labels_color") %>%  set("branches_k_color", k = 4) %>% plot(main = "Euclidean and average")
 #
 #Euclidean distance and “Ward’s” agglomeration algorithm 
 dend3 <- dune %>% # data
   dist(method = "euclidean") %>% # calculate a distance matrix, choose method
   hclust(method = "ward.D") %>% # Hierarchical clustering, Ward’s method
   as.dendrogram # Turn the object into a dendrogram.
-dend3 %>% set("labels_color") %>% set("branches_lwd") %>%  set("branches_k_color", k = 4) %>% plot(main = "Euclidean and Ward*s")
+dend3 %>% set("labels_color") %>%  set("branches_k_color", k = 4) %>% plot(main = "Euclidean and Ward's")
 
 ```
 
@@ -431,9 +429,9 @@ matrix using the Bray-Curtis method
 dune.dist <- vegdist(dune, method = "bray")
 #
 dend4 <- dune.dist %>% # data (Bray-Curtis)
-  hclust(method = "aver") %>% # Hierarchical clustering, average method
+  hclust(method = "average") %>% # Hierarchical clustering, average method
   as.dendrogram # Turn the object into a dendrogram.
-dend4 %>% set("labels_color") %>% set("branches_lwd") %>%  set("branches_k_color", k = 4) %>% plot(main = "Bray-Curtis, Average")
+dend4 %>% set("labels_color") %>%  set("branches_k_color", k = 4) %>% plot(main = "Bray-Curtis, Average")
 #
 #we can colour the labels based on their grouping in the kmeans analysis to compare clusters
 #
@@ -442,7 +440,7 @@ dend4 %>% set("labels_color", dune.fit.4$cluster) %>% set("branches_lwd") %>%  s
 dend5 <- dune.dist %>% # data (Bray-Curtis)
   hclust(method = "ward.D") %>% # Hierarchical clustering, Ward’s method
   as.dendrogram # Turn the object into a dendrogram.
-dend5 %>% set("labels_color") %>% set("branches_lwd") %>%  set("branches_k_color", k = 4) %>% plot(main = "Bray-Curtis, Ward’s")
+dend5 %>% set("labels_color") %>%  set("branches_k_color", k = 4) %>% plot(main = "Bray-Curtis, Ward’s")
 
 ```
 
@@ -474,7 +472,7 @@ structure in a data set using Principal Response Curves (PRC).
 #
 help(pyrifos)
 #
-# As you will have seen from the description of the pyrifos data set, we need to do some data # # manipulation before it will be possible to perform any analysis.
+# As you will have seen from the description of the pyrifos data set, we need to do some data manipulation before it will be possible to perform any analysis.
 #
 data(pyrifos)
 ditch_ <- gl(12, 1, length=132)

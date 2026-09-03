@@ -101,7 +101,6 @@ with pseudo-F ratios.
 ```{r}
 # Start with a CA with Management as environmental factor and hulls around the different management types
 dune.ca <- cca(dune)
-fit.mgm <- envfit(dune.ca ~ Management, dune.env.original, perm = 0)
 plot(dune.ca, type = "n", scaling = "symmetric")
 with(
   dune.env.original,
@@ -125,7 +124,7 @@ dune.dist <-
 dune.ano <-
   anosim(dune.dist, dune.env.original$Management) #Comparing groupings based on management
 summary(dune.ano)
-plot(dune.ano, xlab = "Anosim, Dune meadow management types") #note the error message here:
+plot(dune.ano, xlab = "Anosim, Dune meadow management types") #note the warning message here:
 #notches are used in box plots to help visually assess whether the medians of distributions #differ. If the notches do not overlap, this is evidence that the medians are different.Here #the confidence region (the notch) went past the bounds (or hinges) of one of the boxes. 
 
 #ANOSIM gives you the P value and a R value. R value close to 1 indicates high separation between levels of your factor while R value #close to 0 indicate no separation between levels of your factor.
@@ -144,7 +143,7 @@ dune.ado<-adonis2(formula = dune~Management, data = dune.env.original, method = 
 dune.ado
 
 # You can also have more advanced models in adonis
-dune.ado2<-adonis2(dune~Management*A1, data = dune.env.original)
+dune.ado2<-adonis2(dune~Management*A1, by = "terms", data = dune.env.original)
 dune.ado2
 
 ```
@@ -207,7 +206,7 @@ indicative for the four different management types.
 ```{r, warning=FALSE, message=FALSE}
 iva <- indval(dune, dune.env.original$Management) #this time we don't need dummy variables for management
 iva.df <- as.data.frame(iva$indval)
-#arrange in descending order to find best indicator species, change BF to other management types as needed
+#arrange in descending order to find best indicator species, change HF to other management types as needed
 dplyr::arrange(rownames_to_column(iva.df), desc(HF))
 ```
 
@@ -310,9 +309,6 @@ ggplot(lda.data, aes(LD1, LD2)) +
   scale_colour_manual(name="",  
                       values = c("setosa"="blue", "versicolor"="orange", "virginica"="black"))
 
-# Model accuracy
-mean(predictions$class==test.transformed$Species)
-
 #More detailed assessment (probably more information than we need!)
 #Calculates a cross-tabulation of predicted and observed classes with associated statistics.
 confusionMatrix(predictions$class,test.data$Species)
@@ -368,11 +364,11 @@ rpart.plot(iris.tree.model, extra=0, box.palette =list("red", "blue", "forestgre
 # plots for confirmatory visual analysis
 #
 plot(iris$Petal.Length, col = c("red", "blue", "forestgreen")[iris$Species], xlab = "", ylab = "Petal Length (cm)")
-legend(120, 2, c("setosa","versicolor","virginica"), col = c("red", "blue", "forestgreen"), pch = 0.7)
+legend(120, 2, c("setosa","versicolor","virginica"), col = c("red", "blue", "forestgreen"), pch = 1)
 abline(h = 2.45)
 #
 plot(iris$Petal.Width, col = c("red", "blue", "forestgreen")[iris$Species], xlab = "", ylab = "Petal Width (cm)")
-legend(20, 1.5, c("setosa","versicolor","virginica"), col = c("red", "blue", "forestgreen"), pch = 0.7)
+legend(20, 1.5, c("setosa","versicolor","virginica"), col = c("red", "blue", "forestgreen"), pch = 1)
 abline(h = 1.75)
 ```
 
@@ -503,14 +499,14 @@ names(traits)
 
 Given that there are many traits and even environmental factors that are
 not strong predictors of abundance, we can reduce the number of
-#predictor terms in our models.LASSO is an optimization algorithm (Least
+predictor terms in our models. LASSO is an optimization algorithm (Least
 Absolute Shrinkage and Selection Operator) that is used in this case.
 
 ```{r}
 
 fitfourth = traitglm(spe, env, traits, method = "glm1path")
-fitfourth$fourth #examine fourth corner terms, you may want to convert to a dataframe for further analysis
-#View(as.data.frame(fitfourth$fourth))
+fitfourth$fourth.corner #examine fourth corner terms, you may want to convert to a dataframe for further analysis
+#View(as.data.frame(fitfourth$fourth.corner))
 
 #and plot the results
 a        = max(abs(fitfourth$fourth.corner))
