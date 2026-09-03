@@ -5,6 +5,8 @@ editor_options:
     wrap: 72
 ---
 
+Load today's packages
+
 ```{r setup, include=FALSE, message=FALSE, warning=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 #library("cocorresp")
@@ -344,7 +346,7 @@ plot(dune.bugs.cca)
 
 ### [Exercise 27 : Classification 1]{style="color:cornflowerblue"}
 
-Start by testing the non-hierarchical K-means clustering.. Note that it
+Start by testing the non-hierarchical K-means clustering. Note that it
 is recommended that K-means need at least 100 observations (500
 according to some sources) to be reliable! Let us ignore the sample size
 issue for the moment, and ask for 4 clusters (for later comparison with
@@ -408,7 +410,7 @@ clustering. This gives you the relationship among the samples
 #Euclidean distance and “average” agglomeration algorithm 
 dend2 <- dune %>% # data
   dist(method = "euclidean") %>% # calculate a distance matrix, choose method
-  hclust(method = "average") %>% # Hierarchical clustering, avagare method
+  hclust(method = "average") %>% # Hierarchical clustering, average method
   as.dendrogram # Turn the object into a dendrogram.
 dend2 %>% set("labels_color") %>% set("branches_lwd") %>%  set("branches_k_color", k = 4) %>% plot(main = "Euclidean and average")
 #

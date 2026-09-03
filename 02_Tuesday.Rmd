@@ -2,6 +2,8 @@
 title: "Tuesday"
 ---
 
+Load today's packages
+
 ```{r setup, include=FALSE, message=FALSE, warning=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library("vegan")
@@ -42,7 +44,7 @@ dune.env <-
 
 #### [7.1: What happens with the eigenvalues and ordination diagram?]{style="color:forestgreen"}
 
-```{r ex6, include=TRUE, warning=FALSE, message=FALSE}
+```{r ex7, include=TRUE, warning=FALSE, message=FALSE}
 # calculate the number of species present in each plot
 rowSums(dune != 0)
 # find the plot with the lowest number of species

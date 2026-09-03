@@ -2,6 +2,8 @@
 title: "Wednesday"
 ---
 
+Load today's packages
+
 ```{r setup, include=FALSE, message=FALSE, warning=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(vegan)
@@ -205,7 +207,7 @@ par(mfrow =c(1,2))
 ordiplot(dune.cca, type="text", main="CCA w. all env.")
 ordiplot(dune.ccaMN, type = "points", main = "CCA only Management")
 ordihull(dune.ccaMN,groups = dune.env.original$Management,draw = "polygon",col = "grey70", label = T)
-par(mfrow =c(1,2))
+par(mfrow =c(1,1))
 ```
 
 ------------------------------------------------------------------------
