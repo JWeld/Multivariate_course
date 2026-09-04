@@ -165,6 +165,8 @@ between the ten plots.
 #First load the time series versions of the data
 SpeTS <- readRDS("Data/SpeTS.RDS")
 EnvTS <- readRDS("Data/EnvTS.RDS")
+EnvTS$Plot <- as.factor(EnvTS$Plot)
+EnvTS$Time <- as.factor(EnvTS$Time)
 time.cca <- cca(SpeTS ~ Time + Condition(Plot), data = EnvTS)
 time.cca
 treat <- EnvTS$Time 
