@@ -230,14 +230,18 @@ As you saw in the lecture, you can also run approximate significance tests for a
 
 ```{r, warning=FALSE, message=FALSE}
 # Equilibrium Circle 
-biplot(env.pca, scaling="species", main="Scaling = species")
-d <- 2 # Two axes plotted (axis 1 and axis 2)
-p <- ncol(dune.env) # Number of descriptors
-radi <- sqrt(d/p)
+n <- nrow(env.pca$CA$u) #take n and p from the fitted object rather than the source dataframe
+p <- nrow(env.pca$CA$v)
+const <- ((n - 1) * env.pca$tot.chi)^0.25
+radi  <- sqrt(2 / p) * const
 
-circ <- seq(0,2*pi,length=100)
-coords <- t(rbind(sin(circ)*radi, cos(circ)*radi))
-lines(coords, col="blue")
+sc  <- scores(env.pca, display = c("sites", "species"), scaling = 1, choices = 1:2)
+lim <- range(c(unlist(sc), -radi, radi))
+
+biplot(env.pca, scaling = "sites", xlim = lim, ylim = lim) #can only draw circle on scaling 1
+circ <- seq(0, 2 * pi, length.out = 361)
+lines(cbind(cos(circ), sin(circ)) * radi, col = "blue")
+
 ```
 
 ------------------------------------------------------------------------
