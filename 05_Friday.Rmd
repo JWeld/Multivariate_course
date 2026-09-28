@@ -146,6 +146,12 @@ dune.ado
 dune.ado2<-adonis2(dune~Management*A1, by = "terms", data = dune.env.original)
 dune.ado2
 
+# adonis can also do the same kind of analysis as the CCA in exercise 21: does
+# Management still explain anything once Manure is in the model?
+# (by = "terms" tests the terms sequentially, so the order matters, as in CCA)
+dune.ado3<-adonis2(dune~Manure+Management, by = "terms", data = dune.env.original)
+dune.ado3
+
 ```
 
 The adonis test tells us that there is a difference between our grouping

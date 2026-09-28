@@ -9,7 +9,7 @@ Load today's packages
 
 ```{r setup, include=FALSE, message=FALSE, warning=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-#library("cocorresp")
+library("cocorresp") # for co-correspondence analysis in exercise 26
 library("vegan")
 #library("clustertend")
 #library("factoextra")
@@ -246,9 +246,12 @@ baci.cca
 ```
 
 ```{r, warning=FALSE, message=FALSE}
-with(EnvTS, anova(baci.cca, by="term", model = "full", permutations=999, strata=Treat))
+with(EnvTS, anova(baci.cca, by="term", model = "full", permutations=999, strata=Plot))
+#strata = Plot restricts the permutations to within each plot, i.e. the "before"
+#and "after" samples are swapped within a plot but never moved between plots.
+#That is the permutation scheme for a paired (blocked) design like this one.
 #Here with() is a special function that makes the variables in EnvTS visible to
-#the following command. If you only type Treat at the R prompt, you will get
+#the following command. If you only type Plot at the R prompt, you will get
 #an error about a missing object
 ```
 
@@ -269,7 +272,7 @@ ordihull(
 
 ### [Exercise 26: Comparing ordinations]{style="color:cornflowerblue"}
 
-These are two ways of comparing ordinations or the structure in related
+These are three ways of comparing ordinations or the structure in related
 multivariate datasets. They are used to compare how objects differ when
 they are described by different sets of descriptors, or if there are
 repeated samplings of the same objects using the same descriptors. In
@@ -280,7 +283,7 @@ new data is insect abundance at the different plots.
 
 #### [26.1 How similar is the arrangement of sites in the two ordinations based on plant and insect data?]{style="color:forestgreen"}
 
-#### [26.2 Do the two analyses (Procrustes, and Mantel) indicate similar ordinations of sites based on plant vs. insect data?]{style="color:forestgreen"}
+#### [26.2 Do the three analyses (Procrustes, Co-Correspondence and Mantel) indicate similar ordinations of sites based on plant vs. insect data?]{style="color:forestgreen"}
 
 ```{r ex24, include=TRUE, warning=FALSE, message=FALSE}
 #
@@ -323,6 +326,16 @@ help(mantel)
 # perform the mantel test using parametric and non-parametric correlations
 mantel(insects.distance, plants.distance)
 mantel(insects.distance, plants.distance, method = "spear")
+#
+# Co-correspondence analysis (package cocorresp) ordinates the two community
+# matrices together, so that the site scores of one are as closely related as
+# possible to the site scores of the other. There is no significance test in the
+# symmetric version, but the correlation between the plant and insect site
+# scores on each shared axis (corAxis) shows how well the two agree.
+#
+plants.insects.coca <- coca(dune ~ ., data = insects, method = "symmetric")
+plants.insects.coca
+corAxis(plants.insects.coca)
 ```
 
 We can also take the output from one ordination and use it as
@@ -376,6 +389,7 @@ plot(kkh)
 #
 # K-Means Cluster Analysis based on the previously identified number of clusters
 #
+set.seed(123) # k-means starts from random centres, so set a seed for reproducible output
 dune.fit.4 <- kmeans(dune.h, 4, nstart = 50) 
 ```
 
@@ -399,6 +413,11 @@ dune.fit.4$size
 #
 #compare clusters to management category
 table(dune.fit.4$cluster, dune.env.original$Management)
+#
+#the cascadeKM plot above suggested 3 clusters, so compare that solution too
+set.seed(123)
+dune.fit.3 <- kmeans(dune.h, 3, nstart = 50)
+table(dune.fit.3$cluster, dune.env.original$Management)
 #
 
 ```
