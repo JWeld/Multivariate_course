@@ -301,6 +301,8 @@ We may expect that Management and Manure are related, check visually by making a
 
 ```{r}
 boxplot(Manure~Management, data = dune.env.original)
+#and test it with a one-way ANOVA (Manure is stored as a factor, so convert it to numeric first)
+summary(aov(as.numeric(as.character(Manure)) ~ Management, data = dune.env.original))
 ```
 
 ------------------------------------------------------------------------
@@ -352,6 +354,14 @@ Since there is (a potentially high) number of tests of significance during the f
 sel.env.dune_adj <- sel.env.dune
 sel.env.dune_adj$anova$`Pr(>F)` <- p.adjust(sel.env.dune$anova$`Pr(>F)`, method = 'holm', n = ncol(dune.env)) # 7 other methods available
 sel.env.dune_adj$anova
+```
+
+Forward selection picked NM, but we saw in exercise 20 that Manure and Management are strongly related. Is a model with Manure instead of NM just as good? Compare the constrained inertia and the test with the forward-selected model above.
+
+```{r}
+cca.dune.MM <- cca(dune ~ Moisture + Manure, data = dune.env)
+cca.dune.MM
+anova(cca.dune.MM)
 ```
 
 ------------------------------------------------------------------------
