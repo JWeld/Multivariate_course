@@ -1,18 +1,8 @@
-# The original PLS code in Exercise 29 had four problems.
-# 
-# Wrong number of components. The cross-validation results for a two-response model are stored as a three-dimensional array, one slice per response. The line which.min(cv$val[estimate = "adjCV", , ]) - 1 ran which.min over the whole two by nineteen matrix and returned the position in the flattened matrix, not a component count. The comment said three components were optimal, but the code actually refitted the model with nine. The named argument estimate = "adjCV" was also silently ignored by the subsetting operator, so the code only picked the right slice by luck of position.
-# 
-# Coefficients normalised across the wrong set. The absolute coefficients were summed over both responses together, then only the A1 column was plotted. The bars therefore did not sum to one hundred as the comment claimed, and Moisture was never shown even though question 29.1 asks about both responses.
-# 
-# Mislabelled correlation plot. The correlation plot was given labels = names(coefficients), where coefficients had just been sorted by value. The labels were applied in variable order, so most species names ended up next to the wrong points.
-# 
-# Plots tied to the refitted model. The score and correlation plots asked for components one to three from the refitted model. That works only if the selected number of components is at least three, which the corrected selection does not guarantee.
-# 
-# The revised chunk selects components from the adjCV slice by averaging each response's error relative to its intercept-only error, normalises coefficients per response and plots both, draws the score and correlation plots from the full cross-validated fit with labels = "names", and then deliberately overrides the selection to three components for illustration, with a note in the text explaining why.
-
-
 library(pls)
-
+#Note: loading pls masks the scores() function from vegan (the same kind of
+#package conflict described at the start of Friday's notebook). This is the last
+#exercise today so it does no harm here, but if you go back to earlier exercises
+#in the same session, call vegan::scores() explicitly.
 
 #This function takes the same form as a lot of regression models in R:
 #plsr(Response variable ~ Explanatory Variables, data = yourdata, scale = TRUE/FALSE)
@@ -21,12 +11,18 @@ library(pls)
 #Here we will use the dune species to predict environmental variables A1 and moisture.
 #We have mostly done this in the other direction, but correlations go both ways! 
 pls.response <- dplyr::select(dune.env.original, A1, Moisture)
-pls.response$Moisture <-  as.numeric(pls.response$Moisture)
+#Moisture is stored as a factor with levels 1, 2, 4 and 5. as.numeric() on a
+#factor returns the level codes (1, 2, 3, 4), not the values, so we go via
+#as.character() to get the real moisture classes back.
+pls.response$Moisture <- as.numeric(as.character(pls.response$Moisture))
 pls.response <- as.matrix(pls.response)
 pls.exp <- as.matrix(dune)
 pls.fit <- plsr(pls.response ~ pls.exp,
                 na.action = na.omit,
                 validation = "LOO")
+#Note that we have not scaled the responses. A1 (cm) has about three times the
+#variance of Moisture (1-5 classes), so the PLS components are pulled somewhat
+#more towards A1. Try adding scale = TRUE to see how much this matters.
 
 summary(pls.fit)
 
@@ -39,7 +35,8 @@ cv <- RMSEP(pls.fit)
 adjCV <- cv$val["adjCV", , ]
 round(adjCV, 3)
 
-#Each response on its own would choose a different number of components:
+#Each response on its own may choose a different number of components
+#(here they happen to agree, but that is not guaranteed):
 best.per.response <- apply(adjCV, 1, which.min) - 1
 best.per.response
 
@@ -55,11 +52,11 @@ best.dims
 
 #Cross validation suggests a single component, which is a rather thin model
 #for illustrating the plots below. For teaching purposes we keep three
-#components instead. Try setting this to the cross-validated value (or to
-#best.per.response["Moisture"]) and see how the results change!
+#components instead. Try setting this to the cross-validated value and see
+#how the results change!
 best.dims <- 3
 
-# Rerun the model with optimal dimensions
+# Rerun the model with the chosen number of dimensions
 pls.fit2 <-
   plsr(pls.response ~ pls.exp, ncomp = best.dims, na.action = na.omit)
 summary(pls.fit2)
@@ -87,8 +84,11 @@ for (resp in colnames(coefficients)) {
 }
 par(mfrow = c(1, 1))
 
-#We can plot the scores. Use the full cross-validated fit here, since pls.fit2
-#may have fewer than 3 components. The first components are the same in both fits.
+#The next two plots use the full cross-validated fit (pls.fit) rather than
+#pls.fit2, so that they always have three components to show whatever value
+#you give best.dims above. PLS components are nested, so the first three
+#components are identical in the two fits.
+
 #This gives a pairwise plot of the correlation of each species with the three first components.
 corrplot(pls.fit,
          comps = 1:3,
@@ -96,12 +96,12 @@ corrplot(pls.fit,
 
 #This gives a pairwise plot of the score values for the three first components.
 #Score plots are often used to look for patterns, groups or outliers in the data.
-#The scores represent the different sites.
-plot(pls.fit, plottype = "scores", comps = 1:3)
+#The scores represent the different sites; labels = "names" prints the site numbers
+#so that you can see which site is which (question 29.2).
+plot(pls.fit, plottype = "scores", comps = 1:3, labels = "names")
 
 #Study the predicted vs. measured plot to see if the data needs to be transformed.
 plot(pls.fit2,
      ncomp = best.dims,
      asp = 1,
      line = TRUE)
-
