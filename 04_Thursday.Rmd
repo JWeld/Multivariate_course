@@ -274,12 +274,12 @@ ordihull(
 
 ### [Exercise 26: Comparing ordinations]{style="color:cornflowerblue"}
 
-These are three ways of comparing ordinations or the structure in related
-multivariate datasets. They are used to compare how objects differ when
-they are described by different sets of descriptors, or if there are
-repeated samplings of the same objects using the same descriptors. In
-this exercise you will use a third data set from the dune meadow. The
-new data is insect abundance at the different plots.
+These are three ways of comparing ordinations or the structure in
+related multivariate datasets. They are used to compare how objects
+differ when they are described by different sets of descriptors, or if
+there are repeated samplings of the same objects using the same
+descriptors. In this exercise you will use a third data set from the
+dune meadow. The new data is insect abundance at the different plots.
 
 #### [Questions:]{style="color:forestgreen"}
 
@@ -395,16 +395,15 @@ set.seed(123) # k-means starts from random centres, so set a seed for reproducib
 dune.fit.4 <- kmeans(dune.h, 4, nstart = 50) 
 ```
 
-As the final result of k-means clustering is sensitive to the
-random starting assignments, we specified nstart = 50. This means that R
-will try 50 different random starting assignments and then select the
-best results corresponding to the one with the lowest within cluster
-variation. Because k-means involves randomness, we also set a seed so that
-you get the same result each time you run the chunk. There are
-also several different algorithms that can be used in k-means
-clustering, and different software can use different defaults. Check out
-the help file for the kmeans function if you want to know more about
-these.
+As the final result of k-means clustering is sensitive to the random
+starting assignments, we specified nstart = 50. This means that R will
+try 50 different random starting assignments and then select the best
+results corresponding to the one with the lowest within cluster
+variation. Because k-means involves randomness, we also set a seed so
+that you get the same result each time you run the chunk. There are also
+several different algorithms that can be used in k-means clustering, and
+different software can use different defaults. Check out the help file
+for the kmeans function if you want to know more about these.
 
 ```{r}
 #cluster number for each data point
@@ -547,12 +546,13 @@ variable.
 
 #### [29.3 Does the data seem to be in need of a transformation?]{style="color:forestgreen"}
 
-Note that we use cross validation to find the number of components with the
-lowest prediction error. For this small dataset that turns out to be a single
-component, which makes for rather uninformative plots. In the code below we
-therefore override the cross-validated choice and keep three components for
-illustration. In a real analysis you would normally stick with the
-cross-validated value, or at least justify a different choice.
+Note that we use cross validation to find the number of components with
+the lowest prediction error. For this small dataset that turns out to be
+a single component, which makes for rather uninformative plots. In the
+code below we therefore override the cross-validated choice and keep
+three components for illustration. In a real analysis you would normally
+stick with the cross-validated value, or at least justify a different
+choice.
 
 ```{r PLS, echo=TRUE, message=FALSE, warning=FALSE}
 library(pls)
