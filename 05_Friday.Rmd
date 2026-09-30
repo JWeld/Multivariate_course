@@ -42,11 +42,16 @@ library(mvabund)
 library(lattice)
 library(pls)
 
-# pairwiseAdonis is not on CRAN, so install it from GitHub the first time only.
+# pairwiseAdonis is not on CRAN, so we install it from GitHub. We use an updated
+# fork of the original package (pmartinezarbizu/pairwiseAdonis), maintained for
+# this course at https://github.com/JWeld/pairwiseAdonis
+# The install only runs if the package is missing or older than the fork
+# (version 0.4.2), so knitting does not reinstall it every time.
 # remotes is a lightweight alternative to devtools for this purpose.
-if (!requireNamespace("pairwiseAdonis", quietly = TRUE)) {
+if (!requireNamespace("pairwiseAdonis", quietly = TRUE) ||
+    packageVersion("pairwiseAdonis") < "0.4.2") {
   if (!requireNamespace("remotes", quietly = TRUE)) install.packages("remotes")
-  remotes::install_github("pmartinezarbizu/pairwiseAdonis/pairwiseAdonis")
+  remotes::install_github("JWeld/pairwiseAdonis/pairwiseAdonis")
 }
 library(pairwiseAdonis)
 ```
