@@ -524,4 +524,3 @@ anova(pyrifos.PRC, permutations = pyrifos.PRC.ctrl, first = TRUE)
 ```
 
 ------------------------------------------------------------------------
-
