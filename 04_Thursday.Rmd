@@ -11,9 +11,6 @@ Load today's packages
 knitr::opts_chunk$set(echo = TRUE)
 library("cocorresp") # for co-correspondence analysis in exercise 26
 library("vegan")
-#library("clustertend")
-#library("factoextra")
-#library("NbClust")
 library("dendextend")
 library("dplyr")
 ```

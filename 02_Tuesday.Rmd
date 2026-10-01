@@ -7,8 +7,6 @@ Load today's packages
 ```{r setup, include=FALSE, message=FALSE, warning=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library("vegan")
-#library("reshape2")
-#library("outliers")
 library("VIM") # For matrixplot
 library("dplyr") 
 ```
