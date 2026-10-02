@@ -7,6 +7,8 @@ In this first chunk of code we load the R packages we will be using today
 ```{r setup, include=FALSE, message=FALSE, warning=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(vegan)
+# pca() and ca(), which we use this week, need vegan 2.6-8 or newer
+if (packageVersion("vegan") < "2.6-8") stop("Please update vegan: install.packages(\"vegan\")")
 library(tidyverse)
 library(corrplot)
 

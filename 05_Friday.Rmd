@@ -129,9 +129,11 @@ pls.exp <- as.matrix(dune)
 pls.fit <- plsr(pls.response ~ pls.exp,
                 na.action = na.omit,
                 validation = "LOO")
-#Note that we have not scaled the responses. A1 (cm) has about three times the
+#Note that we have not scaled the responses. A1 (cm) has about 1.5 times the
 #variance of Moisture (1-5 classes), so the PLS components are pulled somewhat
-#more towards A1. Try adding scale = TRUE to see how much this matters.
+#more towards A1. To give the two responses equal weight, standardise them
+#before fitting: pls.response <- scale(pls.response)
+#(plsr's own scale = TRUE argument standardises the species, not the responses.)
 
 summary(pls.fit)
 
@@ -304,8 +306,16 @@ test is significant!
 
 ```{r}
 # Run the pairwiseAdonis function
+pw <- pairwise.adonis2(dune~Management, data = dune.env.original)
+pw
+# Note that the R2 in each table is for that pair of groups only, so it is not
+# comparable to the R2 of the overall adonis test above.
 
-pairwise.adonis2(dune~Management, data = dune.env.original)
+# With four groups we have run six tests, so we should correct the p-values for
+# multiple testing, as we did after the forward selection on Wednesday.
+# pairwise.adonis2() does not do this for us. Here we use the Holm correction.
+pw.p <- sapply(pw[-1], function(x) x$`Pr(>F)`[1])
+round(cbind(p = pw.p, p.holm = p.adjust(pw.p, method = "holm")), 3)
 ```
 
 After a significant ANOSIM or PERMANOVA, you may want to know which
@@ -314,11 +324,15 @@ clusters. SIMPER (Similarity Percentage) will do this for you. The test
 gives by-species p values for changes in abundance, but does not do
 significance testing for overall difference between groups. In the
 output tables, taxa are sorted in descending order of contribution to
-group difference. Consider those contributions (effect sizes), not just
-the p values - statistically significant does not mean ecologically
-important! Especially if you have a large dataset, you may find some
-small differences that are probably ecologically unimportant
-nevertheless yield a p value under 0.05...
+group difference. Consider those contributions, not just the p values -
+statistically significant does not mean ecologically important!
+Especially if you have a large dataset, you may find some small
+differences that are probably ecologically unimportant nevertheless
+yield a p value under 0.05...
+
+For a model-based test of which species differ between groups, see the mvabund
+package that we use in exercise 34: manyglm() followed by anova(...,
+p.uni = "adjusted") gives a test for each species.
 
 #### [30.4 Compare the different groups and check which species contribute mostly to the difference between pairs of clusters.]{style="color:forestgreen"}
 
@@ -690,15 +704,15 @@ using only those you are really interested in.
 #pvalues <- anova.traitglm(fitfourth2,nBoot=20) #overall significant
 
 #INDIVIDUAL TRAITS#
-#We will limit the number of bootstrap reps to 5 (nBoot=5) but at least several hundred should be used for reliable results/final analyses. Given how slow this is with nBoot=5, I guess this would take many hours
+#We will limit the number of bootstrap reps to 5 (nBoot=5) but at least several hundred should be used for reliable results/final analyses. Even with nBoot=5 this takes a few minutes, so several hundred would take hours
 
-#summary(fitfourth2, resamp = "montecarlo", nboot=5)
+#summary(fitfourth2, resamp = "montecarlo", nBoot=5)
 
 #Example of output if you don't want to wait for the code to run...
 
-#UsePasture.N_fix1           0.467     0.115    
+#UsePasture.Grazing                        0.063     0.500
 
-#The numbers returned are a test statistic and a P-value calculated by resampling rows of the data. In this case the interaction is not significant (p=0.115)
+#The numbers returned are a test statistic and a P-value calculated by resampling rows of the data. In this case the interaction is not significant (p=0.5). Note that with only 5 reps the smallest possible P-value is 1/6 = 0.167, so nothing can be significant here - another reason to use many more reps in a real analysis
 ```
 
 ------------------------------------------------------------------------

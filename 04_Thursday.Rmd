@@ -108,11 +108,16 @@ components:
 - Group 2 is the soil variables (A1 and Moisture)
 
 In ordinations, the variance is expressed by the sum of the eigenvalues.
+varpart() reports each fraction as an adjusted R², i.e. the proportion
+of the total variation explained, corrected for the number of
+explanatory variables.
 
 The result gives you the fraction of the total variation that is
 explained by: a) uniquely by Management (effect of soil removed), b)
 uniquely by soil (effect of Management removed), c) jointly by Soil and
-Management (the interaction).
+Management: variation that both sets of variables explain but that
+cannot be attributed to either set alone, because the two sets are
+correlated.
 
 The total explained variation is the sum of a), b) and c).
 
@@ -121,7 +126,7 @@ eigenvalues.
 
 #### [Questions:]{style="color:forestgreen"}
 
-#### [23.1 Perform the analyses and interpret the results - how much of the total variation (% of All) is explained by: - uniquely by Management (effect of Soil removed), - uniquely by Soil (effect of Management removed), - jointly by Soil and Management (the interaction) - Not by Soil or Management?]{style="color:forestgreen"}
+#### [23.1 Perform the analyses and interpret the results - how much of the total variation (% of All) is explained by: - uniquely by Management (effect of Soil removed), - uniquely by Soil (effect of Management removed), - jointly by Soil and Management (the shared fraction) - Not by Soil or Management?]{style="color:forestgreen"}
 
 ```{r, warning=FALSE, message=FALSE}
 
@@ -453,8 +458,10 @@ dend4 <- dune.dist %>% # data (Bray-Curtis)
 dend4 %>% set("labels_color") %>%  set("branches_k_color", k = 4) %>% plot(main = "Bray-Curtis, Average")
 #
 #we can colour the labels based on their grouping in the kmeans analysis to compare clusters
+#The kmeans clusters are in site order (1-20) but the labels are coloured in the
+#left-to-right order of the leaves, so reorder the clusters with order.dendrogram()
 #
-dend4 %>% set("labels_color", dune.fit.4$cluster) %>% set("branches_k_color", k = 4) %>% plot(main = "Average")
+dend4 %>% set("labels_color", dune.fit.4$cluster[order.dendrogram(dend4)]) %>% set("branches_k_color", k = 4) %>% plot(main = "Average")
 #
 dend5 <- dune.dist %>% # data (Bray-Curtis)
   hclust(method = "ward.D") %>% # Hierarchical clustering, Ward’s method

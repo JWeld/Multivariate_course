@@ -95,7 +95,7 @@ ordiplot(DCANewSampleJunc, type = "text", main = "DCA with new sample of Juncbuf
 
 ### [Exercise 9: Principal Coordinates Analysis (PCoA)]{style="color:cornflowerblue"}
 
-Principal Coordinates Analysis (PCoA), also known as Multidimensional Scaling (MDS), is a generalization of the ordination techniques we have already seen as it can be estimated with any distance matrix. In contrast, PCA is restricted to Euclidean distances while CA preserves Chi-Square distances. Here, we will explore PCoA on four different distance matrices: (i) Bray-Curtis (ii) Jaccard (iii) Euclidean (iv) Hellinger
+Principal Coordinates Analysis (PCoA), also known as Multidimensional Scaling (MDS), is a generalization of the ordination techniques we have already seen as it can be estimated with any distance matrix. In contrast, PCA is restricted to Euclidean distances while CA preserves Chi-Square distances. Here, we will explore PCoA on four different distance matrices: (i) Bray-Curtis (ii) Jaccard (presence-absence) (iii) Euclidean (iv) Hellinger
 
 The R base statistics library offers the routine cmdscale() for performing MDS. There are numerous other libraries offering PCoA analysis
 
@@ -112,7 +112,7 @@ The R base statistics library offers the routine cmdscale() for performing MDS. 
 ```{r}
 # generate the four distance matrices
 dune.bray.distance.matrix <- vegdist(dune, method = "bray")
-dune.jaccard.distance.matrix <- vegdist(dune, method = "jaccard")
+dune.jaccard.distance.matrix <- vegdist(dune, method = "jaccard", binary = TRUE) # binary = TRUE gives presence-absence Jaccard; without it vegdist uses abundances
 dune.euclidean.distance.matrix <- vegdist(dune, method = "euclidean")
 dune.hellinger.distance.matrix <- vegdist(dune, method = "hellinger")
 
@@ -146,7 +146,7 @@ text(dune.bray.location,
      pos = 2)
 #
 plot(dune.jaccard.location, xlab = "PCoA 1", ylab = "PCoA 2")
-title(main = "PCoA on Jaccard distances of dune sites")
+title(main = "PCoA on presence-absence Jaccard distances of dune sites")
 text(dune.jaccard.location,
      labels = row.names(dune.jaccard.location),
      pos = 2)
@@ -165,7 +165,7 @@ text(
 
 ### [Exercise 10: Non Metric Multidimensional Scaling]{style="color:cornflowerblue"}
 
-NMDS does not use the absolute abundances of species in communities, but rather their *rank orders*. The use of ranks omits some of the issues associated with using absolute distance (e.g., sensitivity to transformation). At the conclusion of this exercise, you should be able to: State which metrics are supported in the vegan implementation of NMDS. Evaluate the appropriate number of dimensions for the ordination. Evaluate the consequences of using different distance metrics.
+NMDS does not try to reproduce the dissimilarities between sites exactly, only their *rank order*: sites that are more dissimilar are placed further apart. Any change to the dissimilarities that keeps their order therefore gives the same NMDS. Transforming the species data before the dissimilarities are calculated is a different matter: it changes which sites are most similar, and so it can change the NMDS. Note that metaMDS() may transform your data automatically (autotransform = TRUE is the default); read the printed output to see whether it did, and set autotransform = FALSE if you have already transformed your data yourself. At the conclusion of this exercise, you should be able to: State which metrics are supported in the vegan implementation of NMDS. Evaluate the appropriate number of dimensions for the ordination. Evaluate the consequences of using different distance metrics.
 
 #### [Questions:]{style="color:forestgreen"}
 
