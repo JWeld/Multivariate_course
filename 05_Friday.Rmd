@@ -168,7 +168,7 @@ best.dims <- 3
 
 # Rerun the model with the chosen number of dimensions
 pls.fit2 <-
-  plsr(pls.response ~ pls.exp, ncomp = best.dims, na.action = na.omit, scale = TRUE)
+  plsr(pls.response ~ pls.exp, ncomp = best.dims, scale = TRUE)
 summary(pls.fit2)
 
 #Finally, we extract the useful information and format the output.
