@@ -305,7 +305,12 @@ test is significant!
 
 ```{r}
 # Run the pairwiseAdonis function
-pw <- pairwise.adonis2(dune~Management, data = dune.env.original)
+# We use more permutations (nperm) than the default 999, because after the
+# correction for multiple testing below, the p-value for SF vs NM is close to
+# 0.05. Permutation p-values vary a little from run to run, and a result this
+# close to the threshold can land on either side of 0.05. Try running the chunk
+# a few times and watch how the p-values change.
+pw <- pairwise.adonis2(dune~Management, data = dune.env.original, nperm = 9999)
 pw
 # Note that the R2 in each table is for that pair of groups only, so it is not
 # comparable to the R2 of the overall adonis test above.
