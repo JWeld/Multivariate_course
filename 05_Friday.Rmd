@@ -313,13 +313,7 @@ test is significant!
 pw <- pairwise.adonis2(dune~Management, data = dune.env.original, nperm = 9999)
 pw
 # Note that the R2 in each table is for that pair of groups only, so it is not
-# comparable to the R2 of the overall adonis test above.
-
-# With four groups we have run six tests, so we should correct the p-values for
-# multiple testing, as we did after the forward selection on Wednesday.
-# pairwise.adonis2() does not do this for us. Here we use the Holm correction.
-pw.p <- sapply(pw[-1], function(x) x$`Pr(>F)`[1])
-round(cbind(p = pw.p, p.holm = p.adjust(pw.p, method = "holm")), 3)
+# comparable to the R2 of the overall adonis test above. If you have many groups this results in many tests so consider if you need to apply correction for multiple testing.
 ```
 
 After a significant ANOSIM or PERMANOVA, you may want to know which
