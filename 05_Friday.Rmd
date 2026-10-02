@@ -107,10 +107,9 @@ stick with the cross-validated value, or at least justify a different
 choice.
 
 ```{r PLS, echo=TRUE, message=FALSE, warning=FALSE}
-library(pls)
+
 #Note: loading pls masks the scores() function from vegan (the same kind of
-#package conflict described at the start of Friday's notebook). This is the last
-#exercise today so it does no harm here, but if you go back to earlier exercises
+#package conflict described at the start of today's notebook). If you go back to earlier exercises
 #in the same session, call vegan::scores() explicitly.
 
 #This function takes the same form as a lot of regression models in R:
@@ -169,7 +168,7 @@ best.dims <- 3
 
 # Rerun the model with the chosen number of dimensions
 pls.fit2 <-
-  plsr(pls.response ~ pls.exp, ncomp = best.dims, na.action = na.omit)
+  plsr(pls.response ~ pls.exp, ncomp = best.dims, na.action = na.omit, scale = TRUE)
 summary(pls.fit2)
 
 #Finally, we extract the useful information and format the output.
@@ -619,7 +618,7 @@ traits and environmental variables.
 
 #### [Question:]{style="color:forestgreen"}
 
-#### [34.1 Do the correlations in the plot make sense ecologically?]{style="color:forestgreen"}
+#### [34.1 Do the associations in the plot make sense ecologically?]{style="color:forestgreen"}
 
 ```{r}
 # Read and treat data

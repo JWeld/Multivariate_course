@@ -439,7 +439,7 @@ dend2 %>% set("labels_color") %>%  set("branches_k_color", k = 4) %>% plot(main 
 #Euclidean distance and “Ward’s” agglomeration algorithm 
 dend3 <- dune %>% # data
   dist(method = "euclidean") %>% # calculate a distance matrix, choose method
-  hclust(method = "ward.D") %>% # Hierarchical clustering, Ward’s method
+  hclust(method = "ward.D2") %>% # Hierarchical clustering, Ward’s method
   as.dendrogram # Turn the object into a dendrogram.
 dend3 %>% set("labels_color") %>%  set("branches_k_color", k = 4) %>% plot(main = "Euclidean and Ward's")
 
@@ -464,7 +464,7 @@ dend4 %>% set("labels_color") %>%  set("branches_k_color", k = 4) %>% plot(main 
 dend4 %>% set("labels_color", dune.fit.4$cluster[order.dendrogram(dend4)]) %>% set("branches_k_color", k = 4) %>% plot(main = "Average")
 #
 dend5 <- dune.dist %>% # data (Bray-Curtis)
-  hclust(method = "ward.D") %>% # Hierarchical clustering, Ward’s method
+  hclust(method = "ward.D2") %>% # Hierarchical clustering, Ward’s method
   as.dendrogram # Turn the object into a dendrogram.
 dend5 %>% set("labels_color") %>%  set("branches_k_color", k = 4) %>% plot(main = "Bray-Curtis, Ward’s")
 
