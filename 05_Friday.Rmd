@@ -329,9 +329,9 @@ Especially if you have a large dataset, you may find some small
 differences that are probably ecologically unimportant nevertheless
 yield a p value under 0.05...
 
-For a model-based test of which species differ between groups, see the mvabund
-package that we use in exercise 34: manyglm() followed by anova(...,
-p.uni = "adjusted") gives a test for each species.
+For a model-based test of which species differ between groups, see the
+mvabund package that we use in exercise 34: manyglm() followed by
+anova(..., p.uni = "adjusted") gives a test for each species.
 
 #### [30.4 Compare the different groups and check which species contribute mostly to the difference between pairs of clusters.]{style="color:forestgreen"}
 
