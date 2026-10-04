@@ -128,11 +128,6 @@ pls.exp <- as.matrix(dune)
 pls.fit <- plsr(pls.response ~ pls.exp,
                 na.action = na.omit,
                 validation = "LOO")
-#Note that we have not scaled the responses. A1 (cm) has about 1.5 times the
-#variance of Moisture (1-5 classes), so the PLS components are pulled somewhat
-#more towards A1. To give the two responses equal weight, standardise them
-#before fitting: pls.response <- scale(pls.response)
-#(plsr's own scale = TRUE argument standardises the species, not the responses.)
 
 summary(pls.fit)
 
@@ -150,7 +145,7 @@ round(adjCV, 3)
 best.per.response <- apply(adjCV, 1, which.min) - 1
 best.per.response
 
-#To choose ONE number of components for the joint model, first express each
+#To choose a number of components for the joint model, first express each
 #response's error relative to its intercept-only error (so that A1, measured in
 #cm, does not dominate Moisture, measured on a 1-5 scale), then average the two
 #responses and take the minimum.
@@ -162,13 +157,12 @@ best.dims
 
 #Cross validation suggests a single component, which is a rather thin model
 #for illustrating the plots below. For teaching purposes we keep three
-#components instead. Try setting this to the cross-validated value and see
-#how the results change!
+#components instead.
 best.dims <- 3
 
 # Rerun the model with the chosen number of dimensions
 pls.fit2 <-
-  plsr(pls.response ~ pls.exp, ncomp = best.dims, scale = TRUE)
+  plsr(pls.response ~ pls.exp, ncomp = best.dims)
 summary(pls.fit2)
 
 #Finally, we extract the useful information and format the output.
@@ -305,15 +299,10 @@ test is significant!
 
 ```{r}
 # Run the pairwiseAdonis function
-# We use more permutations (nperm) than the default 999, because after the
-# correction for multiple testing below, the p-value for SF vs NM is close to
-# 0.05. Permutation p-values vary a little from run to run, and a result this
-# close to the threshold can land on either side of 0.05. Try running the chunk
-# a few times and watch how the p-values change.
-pw <- pairwise.adonis2(dune~Management, data = dune.env.original, nperm = 9999)
+# Permutation based p-values vary a little from run to run, and results close to the threshold can land on either side of 0.05. Try running the chunk a few times and watch how the p-values change.
+pw <- pairwise.adonis2(dune~Management, data = dune.env.original, nperm = 999)
 pw
-# Note that the R2 in each table is for that pair of groups only, so it is not
-# comparable to the R2 of the overall adonis test above. If you have many groups this results in many tests so consider if you need to apply correction for multiple testing.
+# If you have many groups this results in many tests so consider if you need to apply correction for multiple testing.
 ```
 
 After a significant ANOSIM or PERMANOVA, you may want to know which
