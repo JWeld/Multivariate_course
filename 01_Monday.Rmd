@@ -186,7 +186,7 @@ It can often be useful to put plots side by side to compare the results
 ```{r}
 ## PCA plot 4:
 # Put plot 2 and 3 beside each other
-# Default scaling of the plots, which is "species"
+# Default scaling of the plots, which is "species" . Remember that we are working only with the environmental data here so species does not mean plant species!
 par(mfrow = c(1, 2)) #This puts the plots below in 1 row and two columns
 biplot(env.pca, main = "PCA, with scaling of data")
 biplot(env.pca2, main = "PCA, without scaling of data")
@@ -203,7 +203,7 @@ par(mfrow = c(1, 1))
 # Same as plot 5, but without species for better visual inspection of the sites
 par(mfrow = c(1,2))
 biplot(env.pca, scaling = "sites", display = "sites", main = "Plot scaling on sites")
-biplot(env.pca, scaling = "species", display = "sites", main = "Plot scaling on species \n not correct projection of sites")
+biplot(env.pca, scaling = "species", display = "sites", main = "Plot scaling on environmental variables \n not correct projection of sites")
 par(mfrow = c(1,1))
 # In this case there are only minor differences between the two plots
 ```
@@ -228,7 +228,7 @@ sort(abs(loadings[,2]), decreasing = TRUE) # Loadings axis 2
 
 As you saw in the lecture, you can also run approximate significance tests for a PCA. You can do this with e.g. the BiodiversityR package, but unfortunately we are unable to install that in the Posit Cloud environment (because it requires installing things in the underlying operating system as well as in R). We can anyway draw an Equilibrium Contribution Circle, by adding the equations for the circle in our code. This defines a region beyond which variables can be interpreted with greatest confidence.
 
-#### [4.2 Which variables are unimportant for the two-dimensional projection of your sites along axis 1 and 2?]{style="color:forestgreen"}
+#### [4.2 Which variables are unimportant for the two-dimensional projection of your sites along axis 1 and 2 together?]{style="color:forestgreen"}
 
 ```{r, warning=FALSE, message=FALSE}
 # Equilibrium Circle 
