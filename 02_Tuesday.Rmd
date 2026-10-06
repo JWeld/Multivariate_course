@@ -297,7 +297,7 @@ dune.ca <- ca(dune)
 # goodness of fit
 gf <- goodness(dune.ca, model = "CA", display = "species", choices = 1:2)
 head(gf)#the values in column CA2 are the cumulative goodness of fit values over the two axes
-take <- gf[,2] >= 0.4 # which species to label. Here we choose species where fitted abundance on the two axes is at least 40%
+take <- gf[,2] >= 0.4 # which species to label in the ordination diagram. Here we choose species where fitted abundance on the two axes is at least 40%
 scl <- "symmetric"    # choose scaling to use
 
 # make an empty plot
