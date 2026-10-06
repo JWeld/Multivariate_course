@@ -105,9 +105,9 @@ The R base statistics library offers the routine cmdscale() for performing MDS. 
 
 #### [9.2 Why are some plots more similar than others?]{style="color:forestgreen"}
 
-#### [9.3 Which PCoA plot is most similar to the output from a PCA?]{style="color:forestgreen"}
+#### [9.3 Which PCoA plot would you expect to resemble the output from a PCA? Does it?]{style="color:forestgreen"}
 
-#### [9.4 Which PCoA plot is most similar to the output from a CA?]{style="color:forestgreen"}
+#### [9.4 Which PCoA plots would you expect to resemble the output from a CA? Do they?]{style="color:forestgreen"}
 
 ```{r}
 # generate the four distance matrices
