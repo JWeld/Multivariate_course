@@ -138,7 +138,7 @@ par(mfrow = c(1,1))
 
 ------------------------------------------------------------------------
 
-### [Exercise 16: Site scores can be calculated in two ways; Weighted Average and Linear Combination. Here you will do both and compare the results. Both options are available in most software, but the default varies.]{style="color:cornflowerblue"}
+### DROP THIS IN 2027! [Exercise 16: Site scores can be calculated in two ways; Weighted Average and Linear Combination. Here you will do both and compare the results. Both options are available in most software, but the default varies.]{style="color:cornflowerblue"}
 
 #### [Questions:]{style="color:forestgreen"}
 
