@@ -275,6 +275,8 @@ test with pseudo-F ratios. We can also do pairwise comparisons to see
 which groups differ from each other.
 
 ```{r}
+# Start by testing for differences between the four management regimes
+# and increase the complexity in subsequent model specifications
 dune.ado<-adonis2(formula = dune~Management, data = dune.env.original, method = "bray")
 dune.ado
 
