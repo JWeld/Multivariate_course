@@ -114,7 +114,7 @@ choice.
 
 #This function takes the same form as a lot of regression models in R:
 #plsr(Response variable ~ Explanatory Variables, data = yourdata, scale = TRUE/FALSE)
-#However the response variable can be a matrix of variables.
+#However the response variable can be a matrix of environmental variables.
 
 #Here we will use the dune species to predict environmental variables A1 and moisture.
 #We have mostly done this in the other direction, but correlations go both ways! 
@@ -123,7 +123,10 @@ pls.response <- dplyr::select(dune.env.original, A1, Moisture)
 #factor returns the level codes (1, 2, 3, 4), not the values, so we go via
 #as.character() to get the real moisture classes back.
 pls.response$Moisture <- as.numeric(as.character(pls.response$Moisture))
-pls.response <- as.matrix(pls.response)
+#This must happen before scale(), which only accepts numeric input. We scale
+#the responses because plsr(scale = TRUE) only scales the predictors; without
+#this, A1 (cm) would dominate Moisture (1-5 scale) when the components are built.
+pls.response <- scale(as.matrix(pls.response))
 pls.exp <- as.matrix(dune)
 pls.fit <- plsr(pls.response ~ pls.exp,
                 na.action = na.omit,
@@ -170,7 +173,7 @@ summary(pls.fit2)
 #matrix for the fitted number of components (columns = A1 and Moisture).
 coefficients <- coef(pls.fit2)[, , 1]
 
-#Normalise EACH response separately so that the absolute values of the
+#Normalise each response separately so that the absolute values of the
 #coefficients sum to 100 within a response. That makes the two responses
 #comparable and means the bars really do show "percent of total effect".
 coefficients <- sweep(coefficients, 2, colSums(abs(coefficients)), "/") * 100

@@ -146,7 +146,7 @@ dune.env <-
                       SF = ManagementSF)
 ```
 
-Start by looking at pairwise correlations among the variables.
+Start by looking at pairwise correlations among the explanatory/environmental variables.
 
 ```{r}
 #Plot 1
@@ -164,7 +164,7 @@ Next we do some PCA analyses and plot the results
 
 ```{r, warning=FALSE, message=FALSE}
 ## PCA plot 2:
-# Then make a PCA, with scaling of (=standardising) the data
+# Then make a PCA, with scaling of (=standardising) the data. Note that this is just the environmental variables, no information about plant species goes into this model.
 env.pca <-
   pca(dune.env, scale = TRUE) 
 biplot(env.pca, main = "Plot 2") #plot the results using the default plot scaling which is "species"
