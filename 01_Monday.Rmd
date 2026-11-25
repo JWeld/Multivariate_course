@@ -82,47 +82,203 @@ We will also be using some slightly modified and extended versions of the dune d
 
 ### [Exercise 2: Simple exercise for illustrating effects of different distance metrics.]{style="color:cornflowerblue"}
 
-All methods you will meet this week are based on similarities or dissimilarities among your objects. These can be calculated in many different ways. Here, we will create a simple data set consisting of 2 columns of measurement made on 4 objects (or sites). We will then calculate a series of distance metrics using the vegdist() function.
+All methods you will meet this week are based on similarities or dissimilarities among your objects. These can be calculated in many different ways. For this exercise only, we will create a simple data set consisting of abundance data for 5 descriptors (species) in 5 objects (sites). We will then calculate the distance between the five objects using three different distance metrics and compare the results.
 
 #### [Questions:]{style="color:forestgreen"}
 
-#### [2.1 How do the metrics differ (conceptually, not a detailed mathematical explanation)?]{style="color:forestgreen"}
+#### [2.1. Which distance measure considers sites A and B most similar? Why?]{style="color:forestgreen"}
 
-#### [2.2 Which metric corresponds to a geographic distance, and which to a species community distance?]{style="color:forestgreen"}
+#### [2.2 How does Euclidean distance respond to differences in total abundance?]{style="color:forestgreen"}
+
+#### [2.3. Why might Bray-Curtis be more suitable than Euclidean distance for many community ecology datasets?]{style="color:forestgreen"}
+
+#### [2.4 Which distance measure would you choose if you were primarily interested in:]{style="color:forestgreen"}
+
+##### [a) Differences in absolute abundance?]{style="color:forestgreen"}
+
+##### [b) Differences in species composition?]{style="color:forestgreen"}
+
+##### [c) Differences in relative species abundances?]{style="color:forestgreen"}
+
+#### [2.5. Could two sites be considered very similar according to one distance measure but very different according to another? Explain why this might happen?]{style="color:forestgreen"}
 
 ```{r message=FALSE, warning=FALSE}
-# create a  data set with 2 columns (x and y) and 4 rows
+
+library(vegan)
+
+# ------------------------------------------------------------
+# 1. Create a small artificial community dataset
+# ------------------------------------------------------------
 #
-dt <- data.frame(x = c(5, 5, 10, 0), y = c(5, 10, 10,0))
-#plot dt
-plot(dt, xlim = c(0, 15), ylim = c(0, 15))
-# what does vegdist() do?
+# The dataset contains some deliberately interesting cases:
+# - Sites A and B have similar species composition but
+#   different total abundances.
+# - Sites A and C have similar total abundance but different
+#   species composition.
+# - Site D has a very different species composition.
+# - Site E has relatively low total abundance.
+
+comm <- matrix(
+  c(
+    20, 10,  0,  0,  0,  # Site A
+    40, 20,  0,  0,  0,  # Site B
+    10,  0, 15,  5,  0,  # Site C
+    0,  0,  5, 15, 10,  # Site D
+    2,  1,  0,  0,  0   # Site E
+  ),
+  nrow = 5,
+  byrow = TRUE
+)
+
+rownames(comm) <- paste("Site", LETTERS[1:5])
+colnames(comm) <- paste("Sp", 1:5)
+
+comm
+
+# Check total abundance per site
+rowSums(comm)
+
+
+# ------------------------------------------------------------
+# 2. Calculate three different distance matrices
+# ------------------------------------------------------------
+
+# Bray-Curtis:
+# Based on differences in species abundances, relative to the
+# combined abundance of the two plots/sites. Unaffected by joint absences.
+# Still sensitive to differences in total abundance between sites
+# (compare A, B and E) unless the data are standardised first
+
+dist_bray <- vegdist(comm, method = "bray")
+
+# Jaccard:
+# Compares species presence-absence only.
+# Abundance information is discarded.
+
+dist_jaccard <- vegdist(comm > 0, method = "jaccard")
+
+# Euclidean:
+# Straight-line distance in multidimensional space.
+# Sensitive to differences in absolute abundance and scale.
+
+dist_eucl <- vegdist(comm, method = "euclidean")
+
+
+# ------------------------------------------------------------
+# 3. Compare the distance matrices
+# ------------------------------------------------------------
+
+cat("\nBray-Curtis distances:\n"); print(round(as.matrix(dist_bray), 2))
+
+cat("\nJaccard distances:\n"); print(round(as.matrix(dist_jaccard), 2))
+
+cat("\nEuclidean distances:\n"); print(round(as.matrix(dist_eucl), 2))
+
+# ------------------------------------------------------------
+# 4. Focus on selected comparisons
+# ------------------------------------------------------------
 #
-help(vegdist)
+# Compare sites A and B:
+# Same species composition, but different total abundance.
 #
-# create some distance matrices with using different metrics
+# Compare sites A and C:
+# Similar total abundance, but different species composition.
+
+comparisons <- data.frame(
+  Comparison = c("Site A vs Site B", "Site A vs Site C", "Site A vs Site D", "Site A vs Site E"),
+  Bray = as.numeric(dist_bray)[
+    c(1, 2, 3, 4)
+  ],
+  Jaccard = as.numeric(dist_jaccard)[
+    c(1, 2, 3, 4)
+  ],
+  Euclidean = as.numeric(dist_eucl)[
+    c(1, 2, 3, 4)
+  ]
+)
+
+comparisons[, -1] <- round(comparisons[, -1], 2)
+print(comparisons)
+
+
+# ------------------------------------------------------------
+# 5. Visualise the differences using PCoA
+# ------------------------------------------------------------
 #
-(dt.bray <- vegdist(dt, method = "bray"))
-(dt.euclidean <- vegdist(dt, method = "euclidean"))
-(dt.hellinger <- vegdist(dt, method = "hellinger"))
+# A visual representation of the distance matrices.
+# 
+# We will bring up "cmdscale" later in the course. 
+# Focus on the output, not the "cmdscale" command!
+#
+# Note that the axes in the different plots are not directly
+# comparable. Focus on the relative positions of the sites.
+
+par(mfrow = c(1, 3))
+
+plot(
+  cmdscale(dist_bray, k = 2),
+  type = "n",
+  main = "Bray-Curtis",
+  asp = 1,
+  xlab = "Axis 1",
+  ylab = "Axis 2"
+)
+text(
+  cmdscale(dist_bray, k = 2),
+  labels = rownames(comm),
+  cex = 0.6
+)
+
+plot(
+  cmdscale(dist_jaccard, k = 2),
+  type = "n",
+  main = "Jaccard",
+  asp = 1,
+  xlab = "Axis 1",
+  ylab = "Axis 2"
+)
+text(
+  cmdscale(dist_jaccard, k = 2),
+  labels = rownames(comm),
+  cex = 0.6
+)
+
+plot(
+  cmdscale(dist_eucl, k = 2),
+  type = "n",
+  main = "Euclidean",
+  asp = 1,
+  xlab = "Axis 1",
+  ylab = "Axis 2"
+)
+text(
+  cmdscale(dist_eucl, k = 2),
+  labels = rownames(comm),
+  cex = 0.6
+)
+par(mfrow = c(1, 1))
 
 ```
 
 ------------------------------------------------------------------------
 
-### [Exercise 3: In this exercise we will use Principal Components Analysis on the dune meadow explanatory data. We will also explore the effects of different kinds of scaling on the ordination plot. NOTE that the scaling issues applies to all ordination techniques!]{style="color:cornflowerblue"}
+### [Exercise 3: We are now ready to start expore the Dune Maedow data set. We start by looking at the explanatory (or environmental) data.]{style="color:cornflowerblue"}
 
-Compare the plots on the PCA with and without scaling (PCA plot 4) and discuss the differences.
+### [For this we will use Principal Components Analysis (PCA). We will also explore the effects of different kinds of scaling on the ordination plots. NOTE that the scaling issues applies to all ordination techniques!]{style="color:cornflowerblue"}
+
+In this exercise we are only working with the explanatory data. However, in the outputs the descriptors (or variables) will be called "species" as this is how the vegan package calls the descriptors.
 
 #### [Questions:]{style="color:forestgreen"}
 
-#### [3.1 Why is there a difference between the two plots in "PCA plot 4" ? Which one is best to use?]{style="color:forestgreen"}
+#### [3.1 Look at plot 1 and 2 from the code below and estimate which of the Dune Meadow environmental variables that seem to be correlated and uncorrelated.]{style="color:forestgreen"}
 
-#### [3.2 Is there any way to see if a PCA plot is based on scaled or unscaled data, just by looking at the plot?]{style="color:forestgreen"}
+#### [3.2 Why is there a difference between the two plots in "PCA plot 4" ? Which one is best to use?]{style="color:forestgreen"}
 
-#### [3.3 Why is there a difference between the plots in plot 5? Which one is best to use?]{style="color:forestgreen"}
+#### [3.3 Is there any way to see if a PCA plot is based on scaled or unscaled data, just by looking at the plot?]{style="color:forestgreen"}
 
-First we load the Dune vegetation data we will use and clean it up a little.
+#### [3.4 Why is there a difference between the plots in plot 5? Which one is best to use?]{style="color:forestgreen"}
+
+First we load the Dune Meadow data we will use, and clean it up a little.
 
 ```{r}
 data("dune") # the dune species data
@@ -169,15 +325,15 @@ env.pca <-
   pca(dune.env, scale = TRUE) 
 biplot(env.pca, main = "Plot 2") #plot the results using the default plot scaling which is "species"
 env.pca #summarise results
-summary(eigenvals(env.pca)) #see variance explained
+summary(eigenvals(env.pca)) # see variance explained
 
 ## PCA plot 3:
 # Continue with a PCA on the same data, but without scaling of the data
 env.pca2 <-
   pca(dune.env, scale = FALSE) 
-biplot(env.pca2, main = "Plot 3")#plot the results
+biplot(env.pca2, main = "Plot 3")# plot the results
 env.pca2 #summarise results
-summary(eigenvals(env.pca2)) #see variance explained
+summary(eigenvals(env.pca2)) # see variance explained
 
 ```
 
@@ -232,7 +388,7 @@ As you saw in the lecture, you can also run approximate significance tests for a
 
 ```{r, warning=FALSE, message=FALSE}
 # Equilibrium Circle 
-n <- nrow(env.pca$CA$u) #take n and p from the fitted object rather than the source dataframe
+n <- nrow(env.pca$CA$u) #take n and p from the fitted object
 p <- nrow(env.pca$CA$v)
 const <- ((n - 1) * env.pca$tot.chi)^0.25
 radi  <- sqrt(2 / p) * const
@@ -240,7 +396,7 @@ radi  <- sqrt(2 / p) * const
 sc  <- scores(env.pca, display = c("sites", "species"), scaling = 1, choices = 1:2)
 lim <- range(c(unlist(sc), -radi, radi))
 
-biplot(env.pca, scaling = "sites", xlim = lim, ylim = lim) #can only draw circle on scaling 1
+biplot(env.pca, scaling = "sites", xlim = lim, ylim = lim) #can only draw circle on scaling "species"
 circ <- seq(0, 2 * pi, length.out = 361)
 lines(cbind(cos(circ), sin(circ)) * radi, col = "blue")
 
@@ -248,7 +404,7 @@ lines(cbind(cos(circ), sin(circ)) * radi, col = "blue")
 
 ------------------------------------------------------------------------
 
-### [Exercise 5: Do a CA-ordination on the Dune Meadow species dataset. What are the results telling you?]{style="color:cornflowerblue"}
+### [Exercise 5: After exploring the environmental data in the previous exrecise, we will start looking at the species data. You will start by doing a CA-ordination on the Dune Meadow species dataset. What are the results telling you?]{style="color:cornflowerblue"}
 
 #### [Question:]{style="color:forestgreen"}
 
@@ -267,13 +423,15 @@ summary(eigenvals(dune.ca)) #proportion variance explained
 
 ------------------------------------------------------------------------
 
-### [Exercise 6: Repeat exercise 5, but with DCA ordination instead.]{style="color:cornflowerblue"}
+### [Exercise 6: CA may have arch and/or edge effects that mask the true structure in the data. Repeat exercise 5, but with DCA ordination instead.]{style="color:cornflowerblue"}
 
 #### [Question:]{style="color:forestgreen"}
 
 #### [6.1 If you found artifacts in the CA in question 5, did the detrending remove them?]{style="color:forestgreen"}
 
-#### [6.2 Look at the eigenvalues, the length of gradient, the total variation and the ordination diagram. Explain the differences between results from CA and DCA.]{style="color:forestgreen"}
+#### [6.2 Look at the eigenvalues, the total variation and the ordination diagram. Explain the differences between results from CA and DCA.]{style="color:forestgreen"}
+
+#### [6.3 When you have unimodal data sampled along a short environmetal gradient, length of DCA axis 1 can indicate which family of ordination methods that should be used. What is the length of gradient in this case, and which]{style="color:forestgreen"}[family of ordination methods would you suggest?]{style="color: forestgreen;"}
 
 Note that we do not get "variation explained" in the R implementation of DCA (and some other functions). The developer of the vegan package explains: "*The total amount of variation is undefined in detrended correspondence analysis and therefore proportions from total are unknown and undefined. DCA is not a method for decomposition of variation, and therefore these proportions would not make sense either.*"
 
